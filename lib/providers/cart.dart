@@ -1,5 +1,4 @@
 import 'package:flutter/foundation.dart';
-
 import '../models/catalog.dart';
 
 class CartModel extends ChangeNotifier {

@@ -40,6 +40,8 @@ dependencies:
   #for services
   get_it: ^6.0.0
 
+  expandable: ^5.0.1
+  month_picker_dialog: ^0.4.0
   flutter_localizations:
     sdk: flutter
 
