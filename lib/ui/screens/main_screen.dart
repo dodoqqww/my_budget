@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:expandable/expandable.dart';
 import 'package:month_picker_dialog/month_picker_dialog.dart';
+import 'package:my_budget/models/transaction.dart';
 
 class MainScreen extends StatelessWidget {
   @override
@@ -16,13 +17,13 @@ class MainScreen extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("Date"),
+                  Text("yyyy.MM"),
                   IconButton(
                       onPressed: () {
                         showMonthPicker(
                           context: context,
-                          firstDate: DateTime(DateTime.now().year - 1, 5),
-                          lastDate: DateTime(DateTime.now().year + 1, 9),
+                          // firstDate: DateTime(DateTime.now().year - 1, 5),
+                          // lastDate: DateTime(DateTime.now().year + 1, 9),
                           initialDate: DateTime.now(),
                           //locale: Locale("es"),
                         ).then((date) {
@@ -46,8 +47,13 @@ class MainScreen extends StatelessWidget {
 }
 
 class IncomeWidget extends StatelessWidget {
+  Transaction asd1 =
+      Transaction("id1", "name1", DateTime.now(), 120.4, "desc1");
+  Transaction asd2 = Transaction("id2", "name2", DateTime.now(), 12.4, "desc2");
+
   @override
   Widget build(BuildContext context) {
+    print("IncomeWidget build()");
     return ExpandableNotifier(
       // <-- Provides ExpandableController to its children
       child: Card(
@@ -64,10 +70,10 @@ class IncomeWidget extends StatelessWidget {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("Income"),
+                      Text("Income:"),
                       Text(
-                        "000000000000 Ft",
-                        style: TextStyle(fontSize: 24),
+                        "+ 000000000000 Ft",
+                        style: TextStyle(fontSize: 24, color: Colors.green),
                       ),
                     ],
                   ),
@@ -90,10 +96,9 @@ class IncomeWidget extends StatelessWidget {
                 ),
                 expanded: Column(children: [
                   Container(
-                      width: double.infinity, child: Text("Transactions")),
-                  Text("data1"),
-                  Text("data2"),
-                  Text("data3"),
+                      width: double.infinity, child: Text("Transactions:")),
+                  TrxListItem(asd1, Colors.green),
+                  TrxListItem(asd2, Colors.green),
                   Container(
                     padding: EdgeInsets.all(5),
                     alignment: Alignment.centerRight,
@@ -107,6 +112,42 @@ class IncomeWidget extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class TrxListItem extends StatelessWidget {
+  final Transaction trx;
+  final Color amountColor;
+
+  const TrxListItem(this.trx, this.amountColor);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(5),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(trx.name),
+              InkWell(
+                  onTap: () {
+                    print(trx.id + " info");
+                  },
+                  child: Text("info"))
+            ],
+          ),
+          Divider(color: Colors.black),
+          Container(
+              alignment: Alignment.centerRight,
+              child: Text(
+                "+ ${trx.amount} Ft",
+                style: TextStyle(color: amountColor),
+              ))
+        ],
       ),
     );
   }

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class UserScreen extends StatelessWidget {
+class GraphScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    print("UserScreen build()");
+    print("GraphScreen build()");
     return Scaffold(
       body: Container(
         padding: EdgeInsets.all(10),
-        child: Text("User"),
+        child: Text("Graph"),
       ),
     );
   }

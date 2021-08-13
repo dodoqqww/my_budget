@@ -1,38 +1,35 @@
+import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:my_budget/providers/bottom_nav_state.dart';
 import 'package:provider/provider.dart';
 
 import './screens/main_screen.dart';
 import './screens/settings_screen.dart';
-import './screens/user_screen.dart';
+import 'screens/graph_screen.dart';
 
-class AppNavigations extends StatelessWidget {
+class BottomNavigation extends StatelessWidget {
   final currentTab = [
-    UserScreen(),
+    GraphScreen(),
     MainScreen(),
     SettingsScreen(),
   ];
 
   @override
   Widget build(BuildContext context) {
-    print("build navigations");
+    print("AppNavigations build()");
     var provider = Provider.of<NavigationProvider>(context);
 
     return SafeArea(
         child: Scaffold(
             body: Container(child: currentTab[provider.currentIndex]),
-            bottomNavigationBar: BottomNavigationBar(
-                unselectedItemColor: Colors.grey,
-                selectedItemColor: Colors.orange,
+            bottomNavigationBar: ConvexAppBar(
+                style: TabStyle.reactCircle,
                 items: [
-                  BottomNavigationBarItem(
-                      label: 'User', icon: Icon(Icons.message_sharp)),
-                  BottomNavigationBarItem(
-                      label: 'Main', icon: Icon(Icons.golf_course_sharp)),
-                  BottomNavigationBarItem(
-                      label: 'Settings', icon: Icon(Icons.calendar_today)),
+                  TabItem(icon: Icons.assessment),
+                  TabItem(icon: Icons.attach_money),
+                  TabItem(icon: Icons.settings),
                 ],
-                currentIndex: provider.currentIndex,
+                initialActiveIndex: provider.currentIndex,
                 onTap: (int i) => {provider.changeIndex(i)})));
   }
 }

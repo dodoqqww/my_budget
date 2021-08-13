@@ -6,10 +6,8 @@ import 'package:provider/provider.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'common/theme.dart';
 import 'generated/l10n.dart';
-import 'models/catalog.dart';
 import 'providers/bottom_nav_state.dart';
 import 'ui/bottom_nav.dart';
-import 'ui/screens/main_screen.dart';
 
 void main() {
   setupServiceLocator();
@@ -30,7 +28,7 @@ class MyApp extends StatelessWidget {
         // In this sample app, CatalogModel never changes, so a simple Provider
         // is sufficient.
         ChangeNotifierProvider<NavigationProvider>(
-            child: AppNavigations(),
+            child: BottomNavigation(),
             create: (BuildContext context) => NavigationProvider()),
         // CartModel is implemented as a ChangeNotifier, which calls for the use
         // of ChangeNotifierProvider. Moreover, CartModel depends
@@ -68,7 +66,7 @@ class MyApp extends StatelessWidget {
         //routes
         initialRoute: '/',
         routes: {
-          '/': (context) => AppNavigations(),
+          '/': (context) => BottomNavigation(),
           // '/catalog': (context) => MyCatalog(),
           // '/cart': (context) => MyCart(),
         },
