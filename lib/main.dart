@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:my_budget/services/service_locator.dart';
+
 import 'package:provider/provider.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'common/theme.dart';
@@ -64,12 +65,24 @@ class MyApp extends StatelessWidget {
         theme: appTheme,
 
         //routes
+
         initialRoute: '/',
         routes: {
           '/': (context) => BottomNavigation(),
+          // '/addTrx': (context) => AddTrxScreen(),
           // '/catalog': (context) => MyCatalog(),
           // '/cart': (context) => MyCart(),
         },
+        // onGenerateRoute: (settings) {
+        //   switch (settings.name) {
+        //     case '/addTrx':
+        //       return PageTransition(
+        //           child: AddTrxScreen(), type: PageTransitionType.bottomToTop);
+        //       break;
+        //     default:
+        //       return null;
+        //   }
+        // },
       ),
     );
   }

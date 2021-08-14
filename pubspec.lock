@@ -139,6 +139,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_date_picker_timeline:
+    dependency: "direct main"
+    description:
+      name: flutter_date_picker_timeline
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.3.2"
   flutter_localizations:
     dependency: "direct main"
     description: flutter
@@ -275,6 +282,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.4.4"
+  quiver:
+    dependency: "direct main"
+    description:
+      name: quiver
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.0.1"
   responsive_framework:
     dependency: "direct main"
     description:
@@ -289,6 +303,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.26.0"
+  scroll_to_index:
+    dependency: transitive
+    description:
+      name: scroll_to_index
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.0"
+  shamsi_date:
+    dependency: transitive
+    description:
+      name: shamsi_date
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.15.0"
   sky_engine:
     dependency: transitive
     description: flutter

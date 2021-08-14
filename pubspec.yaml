@@ -43,6 +43,11 @@ dependencies:
   expandable: ^5.0.1
   month_picker_dialog: ^0.4.0
   convex_bottom_bar: ^3.0.0
+  flutter_date_picker_timeline: ^0.3.2
+  quiver: ^3.0.1
+
+  #page_transition: ^2.0.2
+  
   flutter_localizations:
     sdk: flutter
 
