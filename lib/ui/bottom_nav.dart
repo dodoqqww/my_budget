@@ -25,9 +25,9 @@ class BottomNavigation extends StatelessWidget {
             bottomNavigationBar: ConvexAppBar(
                 style: TabStyle.reactCircle,
                 items: [
-                  TabItem(icon: Icons.assessment),
-                  TabItem(icon: Icons.attach_money),
-                  TabItem(icon: Icons.settings),
+                  TabItem(icon: Icons.assessment, title: "Graphs"),
+                  TabItem(icon: Icons.attach_money, title: "Budget"),
+                  TabItem(icon: Icons.settings, title: "Settings"),
                 ],
                 initialActiveIndex: provider.currentIndex,
                 onTap: (int i) => {provider.changeIndex(i)})));

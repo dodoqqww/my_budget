@@ -1,18 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_date_picker_timeline/flutter_date_picker_timeline.dart';
+import 'package:my_budget/models/transaction.dart';
 import 'package:quiver/time.dart';
 
-class AddTrxScreen extends StatelessWidget {
+class TrxInfoScreen extends StatelessWidget {
+  TrxInfoScreen({Key key, @required this.trx}) : super(key: key);
+
+  final Transaction trx;
+
   final DateTime time = DateTime.now();
 
-  final nameCtrl = TextEditingController();
-  final amountCtrl = TextEditingController();
-  final descCtrl = TextEditingController();
+  TextEditingController nameCtrl = TextEditingController();
+  TextEditingController amountCtrl = TextEditingController();
+  TextEditingController descCtrl = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    print("AddTrxScreen build()");
+    nameCtrl.text = trx.name;
+    amountCtrl.text = trx.amount.toString();
+    descCtrl.text = trx.desc;
+
+    print("TrxInfoScreen build()");
     return Material(
         type: MaterialType.transparency,
         // make sure that the overlay content is not cut off
@@ -29,17 +38,20 @@ class AddTrxScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-                        child: FlutterDatePickerTimeline(
-                          startDate: DateTime(time.year, time.month, 01),
-                          endDate: DateTime(time.year, time.month,
-                              daysInMonth(time.year, time.month)),
-                          initialSelectedDate: time,
-                          onSelectedDateChange: (DateTime dateTime) {
-                            print(dateTime);
-                          },
-                        ),
-                      ),
+                          padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                          child: IgnorePointer(
+                            // to ignore
+                            ignoring: true,
+                            child: FlutterDatePickerTimeline(
+                              startDate: DateTime(time.year, time.month, 01),
+                              endDate: DateTime(time.year, time.month,
+                                  daysInMonth(time.year, time.month)),
+                              initialSelectedDate: time,
+                              onSelectedDateChange: (DateTime dateTime) {
+                                print(dateTime);
+                              },
+                            ),
+                          )),
                       ListView(
                         shrinkWrap: true,
                         children: [
@@ -140,7 +152,19 @@ class AddTrxScreen extends StatelessWidget {
                                 },
                                 icon: Icon(Icons.arrow_back)),
                             FloatingActionButton(
-                                child: Icon(Icons.add),
+                                child: Icon(Icons.delete),
+                                backgroundColor: Colors.red,
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                }),
+                            FloatingActionButton(
+                                child: Icon(Icons.copy),
+                                backgroundColor: Colors.blue,
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                }),
+                            FloatingActionButton(
+                                child: Icon(Icons.edit),
                                 backgroundColor: Colors.green,
                                 onPressed: () {
                                   Navigator.pop(context);

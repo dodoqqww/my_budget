@@ -3,6 +3,7 @@ import 'package:expandable/expandable.dart';
 import 'package:month_picker_dialog/month_picker_dialog.dart';
 import 'package:my_budget/models/transaction.dart';
 import 'package:my_budget/ui/screens/add_trx_screen.dart';
+import 'package:my_budget/ui/screens/trx_info_screen.dart';
 
 class MainScreen extends StatelessWidget {
   @override
@@ -54,6 +55,7 @@ class IncomeWidget extends StatelessWidget {
     return ExpandableNotifier(
       // <-- Provides ExpandableController to its children
       child: Card(
+        elevation: 20,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(25.0),
         ),
@@ -93,7 +95,7 @@ class IncomeWidget extends StatelessWidget {
                                       1.0;
                               return Transform(
                                 transform: Matrix4.translationValues(
-                                    0.0, curvedValue * 200, 0.0),
+                                    0.0, curvedValue * 100, 0.0),
                                 child: Opacity(
                                   opacity: a1.value,
                                   child: AddTrxScreen(),
@@ -118,6 +120,7 @@ class IncomeWidget extends StatelessWidget {
                     width: double.infinity,
                     child: Text(
                       "Details",
+                      style: TextStyle(color: Colors.blue),
                     ),
                   ),
                 ),
@@ -186,9 +189,28 @@ class TrxListItem extends StatelessWidget {
               Text(trx.name),
               InkWell(
                   onTap: () {
-                    print(trx.id + " info");
+                    Navigator.of(context).push(PageRouteBuilder(
+                        barrierColor: Colors.black.withOpacity(0.5),
+                        transitionsBuilder: (context, a1, a2, widget) {
+                          final curvedValue =
+                              Curves.easeInOutBack.transform(a1.value) - 1.0;
+                          return Transform(
+                            transform: Matrix4.translationValues(
+                                0.0, curvedValue * 100, 0.0),
+                            child: Opacity(
+                              opacity: a1.value,
+                              child: TrxInfoScreen(trx: trx),
+                            ),
+                          );
+                        },
+                        opaque: false,
+                        // ignore: missing_return
+                        pageBuilder: (_1, _2, _3) {}));
                   },
-                  child: Text("info"))
+                  child: Text(
+                    "More",
+                    style: TextStyle(color: Colors.blue),
+                  ))
             ],
           ),
           Divider(color: Colors.black),
