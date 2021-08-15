@@ -1,6 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_picker/flutter_picker.dart';
+import 'package:my_budget/models/reminder.dart';
 import 'package:my_budget/models/wallet.dart';
 import 'package:my_budget/ui/common/animations.dart';
+import 'package:my_budget/utils/util_datas.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 
 class SettingsScreen extends StatelessWidget {
@@ -127,10 +132,9 @@ class WalletListWidget extends StatelessWidget {
 }
 
 class RemindersSettings extends StatelessWidget {
-  //final wallet1 = Wallet(
-  //    id: "1", name: "OTP Bank", amount: 123456.0, type: WalletType.card);
-  //final wallet2 = Wallet(
-  //    id: "2", name: "Home wallet", amount: 1234.0, type: WalletType.cash);
+  final rem1 =
+      Reminder(id: "1", name: "Add salary", frequency: "Every month, 12h");
+  final rem2 = Reminder(id: "2", name: "Add food", frequency: "Every day, 6h");
 
   @override
   Widget build(BuildContext context) {
@@ -166,8 +170,12 @@ class RemindersSettings extends StatelessWidget {
             physics: ClampingScrollPhysics(),
             shrinkWrap: true,
             children: [
-              ReminderListWidget(),
-              ReminderListWidget(),
+              ReminderListWidget(
+                reminder: rem1,
+              ),
+              ReminderListWidget(
+                reminder: rem2,
+              ),
             ],
           ),
         ],
@@ -177,9 +185,10 @@ class RemindersSettings extends StatelessWidget {
 }
 
 class ReminderListWidget extends StatelessWidget {
-  // final Wallet wallet;
-//
-  // const WalletsListWidget({Key key, @required this.wallet}) : super(key: key);
+  final Reminder reminder;
+
+  const ReminderListWidget({Key key, @required this.reminder})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -198,10 +207,14 @@ class ReminderListWidget extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text("Sallary add"),
+              Text(reminder.name),
               InkWell(
                   onTap: () {
-                    //openDialog()
+                    openDialog(
+                        context,
+                        AddEditReminderScreen(
+                          reminder: reminder,
+                        ));
                   },
                   child: Text(
                     "Settings",
@@ -212,7 +225,7 @@ class ReminderListWidget extends StatelessWidget {
           Divider(color: Colors.black),
           Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
             Text(
-              "Every month 10th.",
+              reminder.frequency,
             ),
             ToggleSwitch(
               minHeight: 30,
@@ -426,22 +439,24 @@ class AddEditWalletScreen extends StatelessWidget {
 }
 
 class AddEditReminderScreen extends StatelessWidget {
-  // final Wallet wallet;
+  final Reminder reminder;
 
   final nameCtrl = TextEditingController();
-  final amountCtrl = TextEditingController();
+
+  String freq = "Pick frequency...";
+
+  AddEditReminderScreen({Key key, this.reminder}) : super(key: key);
   // WalletType type;
 
   //AddEditReminderScreen({Key key, this.wallet}) : super(key: key);
+// ignore: non_constant_identifier_names
 
   @override
   Widget build(BuildContext context) {
-    //  if (wallet != null) {
-    //    print("asd");
-    //    nameCtrl.text = wallet.name;
-    //    amountCtrl.text = wallet.amount.toString();
-    //    type = wallet.type;
-    //  }
+    if (reminder != null) {
+      nameCtrl.text = reminder.name;
+      freq = reminder.frequency;
+    }
 
     print("AddEditReminderScreen build()");
     return Material(
@@ -474,9 +489,34 @@ class AddEditReminderScreen extends StatelessWidget {
                               autofocus: false,
                             ),
                           ),
-                          Text("Every"),
-                          Text("Day"),
-                          Text("Hour"),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(10, 0, 10, 8),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text("Frequency:"),
+                                IconButton(
+                                  onPressed: () {
+                                    Picker(
+                                        adapter: PickerDataAdapter<String>(
+                                            pickerdata: new JsonDecoder()
+                                                .convert(PickerData)),
+                                        hideHeader: true,
+                                        title: new Text("Select frequency"),
+                                        onConfirm: (Picker picker, List value) {
+                                          print(value.toString());
+                                          print(picker.getSelectedValues());
+                                        }).showDialog(context);
+                                  },
+                                  icon: Icon(Icons.date_range),
+                                )
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(10, 0, 10, 8),
+                            child: Text(freq),
+                          ),
                         ],
                       ),
                       Spacer(),
@@ -491,7 +531,9 @@ class AddEditReminderScreen extends StatelessWidget {
                                 },
                                 icon: Icon(Icons.arrow_back)),
                             FloatingActionButton(
-                                child: Icon(Icons.add),
+                                child: reminder != null
+                                    ? Icon(Icons.save)
+                                    : Icon(Icons.add),
                                 backgroundColor: Colors.green,
                                 onPressed: () {
                                   Navigator.pop(context);
