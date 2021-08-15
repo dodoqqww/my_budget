@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:expandable/expandable.dart';
 import 'package:month_picker_dialog/month_picker_dialog.dart';
 import 'package:my_budget/models/transaction.dart';
+import 'package:my_budget/ui/common/animations.dart';
 import 'package:my_budget/ui/screens/add_trx_screen.dart';
 import 'package:my_budget/ui/screens/trx_info_screen.dart';
 
@@ -19,26 +20,47 @@ class MainScreen extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("yyyy.MM"),
+                  Row(
+                    children: [
+                      IconButton(
+                          onPressed: () {
+                            showMonthPicker(
+                              context: context,
+                              // firstDate: DateTime(DateTime.now().year - 1, 5),
+                              // lastDate: DateTime(DateTime.now().year + 1, 9),
+                              initialDate: DateTime.now(),
+                              //locale: Locale("es"),
+                            ).then((date) {
+                              // if (date != null) {
+                              //   setState(() {
+                              //     selectedDate = date;
+                              //   });
+                              // }
+                            });
+                          },
+                          icon: Icon(
+                            Icons.date_range,
+                            color: Colors.blue,
+                          )),
+                      Text(
+                        "2021.August",
+                        style: TextStyle(fontSize: 24),
+                      ),
+                    ],
+                  ),
                   IconButton(
                       onPressed: () {
-                        showMonthPicker(
-                          context: context,
-                          // firstDate: DateTime(DateTime.now().year - 1, 5),
-                          // lastDate: DateTime(DateTime.now().year + 1, 9),
-                          initialDate: DateTime.now(),
-                          //locale: Locale("es"),
-                        ).then((date) {
-                          // if (date != null) {
-                          //   setState(() {
-                          //     selectedDate = date;
-                          //   });
-                          // }
-                        });
+                        print("export pdf || excel");
                       },
-                      icon: Icon(Icons.date_range_outlined))
+                      icon: Icon(
+                        Icons.download,
+                        color: Colors.blue,
+                      ))
                 ],
               ),
+            ),
+            Divider(
+              thickness: 2,
             ),
             IncomeWidget(),
           ],
@@ -85,26 +107,7 @@ class IncomeWidget extends StatelessWidget {
                       child: Icon(Icons.add),
                       backgroundColor: Colors.green,
                       onPressed: () {
-                        //Navigator.pushNamed(context, '/addTrx');
-
-                        Navigator.of(context).push(PageRouteBuilder(
-                            barrierColor: Colors.black.withOpacity(0.5),
-                            transitionsBuilder: (context, a1, a2, widget) {
-                              final curvedValue =
-                                  Curves.easeInOutBack.transform(a1.value) -
-                                      1.0;
-                              return Transform(
-                                transform: Matrix4.translationValues(
-                                    0.0, curvedValue * 100, 0.0),
-                                child: Opacity(
-                                  opacity: a1.value,
-                                  child: AddTrxScreen(),
-                                ),
-                              );
-                            },
-                            opaque: false,
-                            // ignore: missing_return
-                            pageBuilder: (_1, _2, _3) {}));
+                        openDialog(context, AddTrxScreen());
                       })
                 ],
               ),
@@ -136,9 +139,10 @@ class IncomeWidget extends StatelessWidget {
 }
 
 class TrxDetailsWidget extends StatelessWidget {
-  Transaction asd1 =
+  final Transaction asd1 =
       Transaction("id1", "name1", DateTime.now(), 120.4, "desc1");
-  Transaction asd2 = Transaction("id2", "name2", DateTime.now(), 12.4, "desc2");
+  final Transaction asd2 =
+      Transaction("id2", "name2", DateTime.now(), 12.4, "desc2");
 
   @override
   Widget build(BuildContext context) {
@@ -189,23 +193,7 @@ class TrxListItem extends StatelessWidget {
               Text(trx.name),
               InkWell(
                   onTap: () {
-                    Navigator.of(context).push(PageRouteBuilder(
-                        barrierColor: Colors.black.withOpacity(0.5),
-                        transitionsBuilder: (context, a1, a2, widget) {
-                          final curvedValue =
-                              Curves.easeInOutBack.transform(a1.value) - 1.0;
-                          return Transform(
-                            transform: Matrix4.translationValues(
-                                0.0, curvedValue * 100, 0.0),
-                            child: Opacity(
-                              opacity: a1.value,
-                              child: TrxInfoScreen(trx: trx),
-                            ),
-                          );
-                        },
-                        opaque: false,
-                        // ignore: missing_return
-                        pageBuilder: (_1, _2, _3) {}));
+                    openDialog(context, TrxInfoScreen(trx: trx));
                   },
                   child: Text(
                     "More",

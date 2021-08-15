@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:my_budget/services/service_locator.dart';
-
+import './services/service_locator.dart';
+import './ui/common/theme.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_framework/responsive_framework.dart';
-import 'common/theme.dart';
-import 'generated/l10n.dart';
-import 'providers/bottom_nav_state.dart';
-import 'ui/bottom_nav.dart';
+import './generated/l10n.dart';
+import './providers/bottom_nav_state.dart';
+import './ui/bottom_nav.dart';
 
 void main() {
   setupServiceLocator();

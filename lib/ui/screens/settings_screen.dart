@@ -11,7 +11,7 @@ class SettingsScreen extends StatelessWidget {
       padding: EdgeInsets.all(10),
       child: SingleChildScrollView(
         child: Column(
-          children: [WalletSettings(), RemindersSettings()],
+          children: [WalletSettings(), RemindersSettings(), OtherSettings()],
         ),
       ),
     ));
@@ -46,7 +46,9 @@ class WalletSettings extends StatelessWidget {
               FloatingActionButton(
                   child: Icon(Icons.add),
                   backgroundColor: Colors.green,
-                  onPressed: () {})
+                  onPressed: () {
+                    //openDialog()
+                  })
             ],
           ),
           Divider(
@@ -94,23 +96,7 @@ class WalletListWidget extends StatelessWidget {
               Text(wallet.name),
               InkWell(
                   onTap: () {
-                    //  Navigator.of(context).push(PageRouteBuilder(
-                    //      barrierColor: Colors.black.withOpacity(0.5),
-                    //      transitionsBuilder: (context, a1, a2, widget) {
-                    //        final curvedValue =
-                    //            Curves.easeInOutBack.transform(a1.value) - 1.0;
-                    //        return Transform(
-                    //          transform: Matrix4.translationValues(
-                    //              0.0, curvedValue * 100, 0.0),
-                    //          child: Opacity(
-                    //            opacity: a1.value,
-                    //            child: TrxInfoScreen(trx: trx),
-                    //          ),
-                    //        );
-                    //      },
-                    //      opaque: false,
-                    //      // ignore: missing_return
-                    //      pageBuilder: (_1, _2, _3) {}));
+                    //openDialog()
                   },
                   child: Text(
                     "More",
@@ -162,7 +148,9 @@ class RemindersSettings extends StatelessWidget {
               FloatingActionButton(
                   child: Icon(Icons.add),
                   backgroundColor: Colors.green,
-                  onPressed: () {})
+                  onPressed: () {
+                    //openDialog()
+                  })
             ],
           ),
           Divider(
@@ -207,23 +195,7 @@ class ReminderListWidget extends StatelessWidget {
               Text("Sallary add"),
               InkWell(
                   onTap: () {
-                    //  Navigator.of(context).push(PageRouteBuilder(
-                    //      barrierColor: Colors.black.withOpacity(0.5),
-                    //      transitionsBuilder: (context, a1, a2, widget) {
-                    //        final curvedValue =
-                    //            Curves.easeInOutBack.transform(a1.value) - 1.0;
-                    //        return Transform(
-                    //          transform: Matrix4.translationValues(
-                    //              0.0, curvedValue * 100, 0.0),
-                    //          child: Opacity(
-                    //            opacity: a1.value,
-                    //            child: TrxInfoScreen(trx: trx),
-                    //          ),
-                    //        );
-                    //      },
-                    //      opaque: false,
-                    //      // ignore: missing_return
-                    //      pageBuilder: (_1, _2, _3) {}));
+                    //openDialog()
                   },
                   child: Text(
                     "Settings",
@@ -258,6 +230,50 @@ class ReminderListWidget extends StatelessWidget {
               },
             ),
           ])
+        ],
+      ),
+    );
+  }
+}
+
+class OtherSettings extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(25.0),
+      ),
+      elevation: 20,
+      child: ListView(
+        physics: NeverScrollableScrollPhysics(),
+        padding: EdgeInsets.all(10),
+        shrinkWrap: true,
+        children: [
+          Text(
+            "Others:",
+            style: TextStyle(fontSize: 24),
+          ),
+          Divider(
+            thickness: 2,
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 15),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text("Backup"),
+                    IconButton(
+                        onPressed: () {
+                          print("backup google drive");
+                        },
+                        icon: Icon(Icons.backup))
+                  ],
+                )
+              ],
+            ),
+          ),
         ],
       ),
     );
