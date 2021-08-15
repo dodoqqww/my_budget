@@ -11,9 +11,9 @@ class TrxInfoScreen extends StatelessWidget {
 
   final DateTime time = DateTime.now();
 
-  TextEditingController nameCtrl = TextEditingController();
-  TextEditingController amountCtrl = TextEditingController();
-  TextEditingController descCtrl = TextEditingController();
+  final nameCtrl = TextEditingController();
+  final amountCtrl = TextEditingController();
+  final descCtrl = TextEditingController();
 
   @override
   Widget build(BuildContext context) {

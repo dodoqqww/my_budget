@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_budget/models/wallet.dart';
+import 'package:my_budget/ui/common/animations.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 
 class SettingsScreen extends StatelessWidget {
@@ -45,9 +46,10 @@ class WalletSettings extends StatelessWidget {
               ),
               FloatingActionButton(
                   child: Icon(Icons.add),
+                  heroTag: "addWalletBtn",
                   backgroundColor: Colors.green,
                   onPressed: () {
-                    //openDialog()
+                    openDialog(context, AddEditWalletScreen());
                   })
             ],
           ),
@@ -96,10 +98,14 @@ class WalletListWidget extends StatelessWidget {
               Text(wallet.name),
               InkWell(
                   onTap: () {
-                    //openDialog()
+                    openDialog(
+                        context,
+                        AddEditWalletScreen(
+                          wallet: wallet,
+                        ));
                   },
                   child: Text(
-                    "More",
+                    "Edit",
                     style: TextStyle(color: Colors.blue),
                   ))
             ],
@@ -149,7 +155,7 @@ class RemindersSettings extends StatelessWidget {
                   child: Icon(Icons.add),
                   backgroundColor: Colors.green,
                   onPressed: () {
-                    //openDialog()
+                    openDialog(context, AddEditReminderScreen());
                   })
             ],
           ),
@@ -277,5 +283,224 @@ class OtherSettings extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+class AddEditWalletScreen extends StatelessWidget {
+  final Wallet wallet;
+
+  final nameCtrl = TextEditingController();
+  final amountCtrl = TextEditingController();
+  WalletType type;
+
+  AddEditWalletScreen({Key key, this.wallet}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    if (wallet != null) {
+      print("asd");
+      nameCtrl.text = wallet.name;
+      amountCtrl.text = wallet.amount.toString();
+      type = wallet.type;
+    }
+
+    print("AddWalletScreen build()");
+    return Material(
+        type: MaterialType.transparency,
+        // make sure that the overlay content is not cut off
+        child: Container(
+            padding: EdgeInsets.fromLTRB(10, 35, 10, 75),
+            child: Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(25.0),
+              ),
+              child: Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.all(10),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      ListView(
+                        shrinkWrap: true,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(10, 0, 10, 8),
+                            child: TextField(
+                              controller: nameCtrl,
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(),
+                                labelText: 'Name',
+                                hintText: 'Name',
+                              ),
+                              autofocus: false,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(10, 0, 10, 8),
+                            child: TextField(
+                              controller: amountCtrl,
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(),
+                                labelText: 'Amount',
+                                hintText: 'Amount',
+                              ),
+                              autofocus: false,
+                            ),
+                          ),
+                          Container(
+                            alignment: Alignment.center,
+                            padding: const EdgeInsets.all(8.0),
+                            child: ToggleSwitch(
+                              minWidth: 150,
+                              initialLabelIndex:
+                                  type == WalletType.card ? 0 : 1,
+                              cornerRadius: 20.0,
+                              activeFgColor: Colors.white,
+                              inactiveBgColor: Colors.grey,
+                              inactiveFgColor: Colors.white,
+                              totalSwitches: 2,
+                              labels: [
+                                WalletType.card.name,
+                                WalletType.cash.name
+                              ],
+                              icons: [Icons.credit_card, Icons.paid],
+                              onToggle: (index) {
+                                print('switched to: $index');
+                              },
+                            ),
+                          ),
+
+                          // TODO implement this feature
+
+                          //  Padding(
+                          //    padding: const EdgeInsets.fromLTRB(10, 0, 10, 8),
+                          //    child: Row(
+                          //      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          //      children: [
+                          //        Text("Other options:"),
+                          //        IconButton(
+                          //            onPressed: () {}, icon: Icon(Icons.add))
+                          //      ],
+                          //    ),
+                          //  ),
+                          //  ListView(
+                          //    shrinkWrap: true,
+                          //    padding: EdgeInsets.only(left: 25),
+                          //    children: [
+                          //      Row(
+                          //        mainAxisAlignment:
+                          //            MainAxisAlignment.spaceBetween,
+                          //        children: [Text("Online fee"), Text("xxx Ft")],
+                          //      ),
+                          //      Text("Other fee")
+                          //    ],
+                          //  )
+                        ],
+                      ),
+                      Spacer(),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            IconButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                icon: Icon(Icons.arrow_back)),
+                            FloatingActionButton(
+                                child: wallet != null
+                                    ? Icon(Icons.save)
+                                    : Icon(Icons.add),
+                                backgroundColor: Colors.green,
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                }),
+                          ],
+                        ),
+                      )
+                    ],
+                  )),
+            )));
+  }
+}
+
+class AddEditReminderScreen extends StatelessWidget {
+  // final Wallet wallet;
+
+  final nameCtrl = TextEditingController();
+  final amountCtrl = TextEditingController();
+  // WalletType type;
+
+  //AddEditReminderScreen({Key key, this.wallet}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    //  if (wallet != null) {
+    //    print("asd");
+    //    nameCtrl.text = wallet.name;
+    //    amountCtrl.text = wallet.amount.toString();
+    //    type = wallet.type;
+    //  }
+
+    print("AddEditReminderScreen build()");
+    return Material(
+        type: MaterialType.transparency,
+        // make sure that the overlay content is not cut off
+        child: Container(
+            padding: EdgeInsets.fromLTRB(10, 35, 10, 75),
+            child: Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(25.0),
+              ),
+              child: Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.all(10),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      ListView(
+                        shrinkWrap: true,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(10, 0, 10, 8),
+                            child: TextField(
+                              controller: nameCtrl,
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(),
+                                labelText: 'Name',
+                                hintText: 'Name',
+                              ),
+                              autofocus: false,
+                            ),
+                          ),
+                          Text("Every"),
+                          Text("Day"),
+                          Text("Hour"),
+                        ],
+                      ),
+                      Spacer(),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            IconButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                icon: Icon(Icons.arrow_back)),
+                            FloatingActionButton(
+                                child: Icon(Icons.add),
+                                backgroundColor: Colors.green,
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                }),
+                          ],
+                        ),
+                      )
+                    ],
+                  )),
+            )));
   }
 }
