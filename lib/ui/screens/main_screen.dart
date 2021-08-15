@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:expandable/expandable.dart';
 import 'package:month_picker_dialog/month_picker_dialog.dart';
 import 'package:my_budget/models/transaction.dart';
+import 'package:my_budget/models/wallet.dart';
 import 'package:my_budget/ui/common/animations.dart';
 import 'package:my_budget/ui/screens/add_trx_screen.dart';
-import 'package:my_budget/ui/screens/trx_info_screen.dart';
 
 class MainScreen extends StatelessWidget {
   @override
@@ -107,7 +107,7 @@ class IncomeWidget extends StatelessWidget {
                       child: Icon(Icons.add),
                       backgroundColor: Colors.green,
                       onPressed: () {
-                        openDialog(context, AddTrxScreen());
+                        openDialog(context, AddEditTrxScreen());
                       })
                 ],
               ),
@@ -139,10 +139,23 @@ class IncomeWidget extends StatelessWidget {
 }
 
 class TrxDetailsWidget extends StatelessWidget {
-  final Transaction asd1 =
-      Transaction("id1", "name1", DateTime.now(), 120.4, "desc1");
-  final Transaction asd2 =
-      Transaction("id2", "name2", DateTime.now(), 12.4, "desc2");
+  final Transaction asd1 = Transaction(
+      id: "id1",
+      amount: 120.4,
+      date: DateTime.now(),
+      desc: "desc1",
+      name: "name1",
+      wallet: Wallet(
+          id: "1", name: "OTP Bank", amount: 123456.0, type: WalletType.card));
+
+  final Transaction asd2 = Transaction(
+      id: "id2",
+      amount: 1221.4,
+      date: DateTime.now(),
+      desc: "desc2",
+      name: "name2",
+      wallet: Wallet(
+          id: "2", name: "Home wallet", amount: 1234.0, type: WalletType.cash));
 
   @override
   Widget build(BuildContext context) {
@@ -193,21 +206,24 @@ class TrxListItem extends StatelessWidget {
               Text(trx.name),
               InkWell(
                   onTap: () {
-                    openDialog(context, TrxInfoScreen(trx: trx));
+                    openDialog(context, AddEditTrxScreen(trx: trx));
                   },
                   child: Text(
-                    "More",
+                    "Edit",
                     style: TextStyle(color: Colors.blue),
                   ))
             ],
           ),
           Divider(color: Colors.black),
-          Container(
-              alignment: Alignment.centerRight,
-              child: Text(
-                "+ ${trx.amount} Ft",
-                style: TextStyle(color: amountColor),
-              ))
+          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+            Row(
+              children: [trx.wallet.type.icon, Text(trx.wallet.name)],
+            ),
+            Text(
+              "+ ${trx.amount} Ft",
+              style: TextStyle(color: amountColor),
+            )
+          ])
         ],
       ),
     );

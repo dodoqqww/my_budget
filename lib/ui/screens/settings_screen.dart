@@ -132,9 +132,10 @@ class WalletListWidget extends StatelessWidget {
 }
 
 class RemindersSettings extends StatelessWidget {
-  final rem1 =
-      Reminder(id: "1", name: "Add salary", frequency: "Every month, 12h");
-  final rem2 = Reminder(id: "2", name: "Add food", frequency: "Every day, 6h");
+  final rem1 = Reminder(
+      id: "1", name: "Add salary", frequency: "Every month 10. at 12h");
+  final rem2 =
+      Reminder(id: "2", name: "Add food", frequency: "Every day at 6h");
 
   @override
   Widget build(BuildContext context) {
@@ -217,7 +218,7 @@ class ReminderListWidget extends StatelessWidget {
                         ));
                   },
                   child: Text(
-                    "Settings",
+                    "Edit",
                     style: TextStyle(color: Colors.blue),
                   ))
             ],
@@ -422,6 +423,12 @@ class AddEditWalletScreen extends StatelessWidget {
                                 },
                                 icon: Icon(Icons.arrow_back)),
                             FloatingActionButton(
+                                child: Icon(Icons.delete),
+                                backgroundColor: Colors.red,
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                }),
+                            FloatingActionButton(
                                 child: wallet != null
                                     ? Icon(Icons.save)
                                     : Icon(Icons.add),
@@ -530,6 +537,12 @@ class AddEditReminderScreen extends StatelessWidget {
                                   Navigator.pop(context);
                                 },
                                 icon: Icon(Icons.arrow_back)),
+                            FloatingActionButton(
+                                child: Icon(Icons.delete),
+                                backgroundColor: Colors.red,
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                }),
                             FloatingActionButton(
                                 child: reminder != null
                                     ? Icon(Icons.save)

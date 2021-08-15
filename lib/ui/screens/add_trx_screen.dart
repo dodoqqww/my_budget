@@ -1,18 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_date_picker_timeline/flutter_date_picker_timeline.dart';
+import 'package:my_budget/models/transaction.dart';
 import 'package:quiver/time.dart';
 
-class AddTrxScreen extends StatelessWidget {
+class AddEditTrxScreen extends StatelessWidget {
+  final Transaction trx;
+
   final DateTime time = DateTime.now();
 
   final nameCtrl = TextEditingController();
   final amountCtrl = TextEditingController();
   final descCtrl = TextEditingController();
 
+  AddEditTrxScreen({Key key, this.trx}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    print("AddTrxScreen build()");
+    print("AddEditTrxScreen build()");
+
+    bool hasTrx = false;
+    if (trx != null) {
+      hasTrx = true;
+      nameCtrl.text = trx.name;
+      amountCtrl.text = trx.amount.toString();
+      descCtrl.text = trx.desc;
+    }
+
     return Material(
         type: MaterialType.transparency,
         // make sure that the overlay content is not cut off
@@ -139,12 +153,46 @@ class AddTrxScreen extends StatelessWidget {
                                   Navigator.pop(context);
                                 },
                                 icon: Icon(Icons.arrow_back)),
-                            FloatingActionButton(
-                                child: Icon(Icons.add),
-                                backgroundColor: Colors.green,
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                }),
+                            Spacer(),
+                            Visibility(
+                              visible: !hasTrx,
+                              child: FloatingActionButton(
+                                  child: Icon(Icons.add),
+                                  backgroundColor: Colors.green,
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  }),
+                            ),
+                            Visibility(
+                                visible: hasTrx,
+                                child: Row(
+                                  children: [
+                                    FloatingActionButton(
+                                        child: Icon(Icons.delete),
+                                        backgroundColor: Colors.red,
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        }),
+                                    SizedBox(
+                                      width: 15,
+                                    ),
+                                    FloatingActionButton(
+                                        child: Icon(Icons.copy),
+                                        backgroundColor: Colors.blue,
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        }),
+                                    SizedBox(
+                                      width: 15,
+                                    ),
+                                    FloatingActionButton(
+                                        child: Icon(Icons.edit),
+                                        backgroundColor: Colors.green,
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        }),
+                                  ],
+                                ))
                           ],
                         ),
                       )
