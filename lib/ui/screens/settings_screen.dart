@@ -5,6 +5,7 @@ import 'package:flutter_picker/flutter_picker.dart';
 import 'package:my_budget/models/reminder.dart';
 import 'package:my_budget/models/wallet.dart';
 import 'package:my_budget/ui/common/animations.dart';
+import 'package:my_budget/ui/common/style.dart';
 import 'package:my_budget/utils/util_datas.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 
@@ -288,7 +289,7 @@ class OtherSettings extends StatelessWidget {
                         onPressed: () {
                           print("backup google drive");
                         },
-                        icon: Icon(Icons.backup))
+                        icon: Icon(Icons.backup, color: Colors.blue))
                   ],
                 )
               ],
@@ -311,8 +312,10 @@ class AddEditWalletScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool hasWallet = false;
     if (wallet != null) {
       print("asd");
+      hasWallet = true;
       nameCtrl.text = wallet.name;
       amountCtrl.text = wallet.amount.toString();
       type = wallet.type;
@@ -338,11 +341,17 @@ class AddEditWalletScreen extends StatelessWidget {
                         shrinkWrap: true,
                         children: [
                           Padding(
+                            padding: const EdgeInsets.fromLTRB(15, 0, 8, 20),
+                            child: Text(
+                              "Wallet:",
+                              style: TextStyle(fontSize: 24),
+                            ),
+                          ),
+                          Padding(
                             padding: const EdgeInsets.fromLTRB(10, 0, 10, 8),
                             child: TextField(
                               controller: nameCtrl,
-                              decoration: InputDecoration(
-                                border: OutlineInputBorder(),
+                              decoration: getTextFieldDecoration(
                                 labelText: 'Name',
                                 hintText: 'Name',
                               ),
@@ -353,8 +362,7 @@ class AddEditWalletScreen extends StatelessWidget {
                             padding: const EdgeInsets.fromLTRB(10, 0, 10, 8),
                             child: TextField(
                               controller: amountCtrl,
-                              decoration: InputDecoration(
-                                border: OutlineInputBorder(),
+                              decoration: getTextFieldDecoration(
                                 labelText: 'Amount',
                                 hintText: 'Amount',
                               ),
@@ -422,12 +430,15 @@ class AddEditWalletScreen extends StatelessWidget {
                                   Navigator.pop(context);
                                 },
                                 icon: Icon(Icons.arrow_back)),
-                            FloatingActionButton(
-                                child: Icon(Icons.delete),
-                                backgroundColor: Colors.red,
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                }),
+                            Visibility(
+                              visible: hasWallet,
+                              child: FloatingActionButton(
+                                  child: Icon(Icons.delete),
+                                  backgroundColor: Colors.red,
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  }),
+                            ),
                             FloatingActionButton(
                                 child: wallet != null
                                     ? Icon(Icons.save)
@@ -485,11 +496,17 @@ class AddEditReminderScreen extends StatelessWidget {
                         shrinkWrap: true,
                         children: [
                           Padding(
+                            padding: const EdgeInsets.fromLTRB(15, 0, 8, 20),
+                            child: Text(
+                              "Reminder:",
+                              style: TextStyle(fontSize: 24),
+                            ),
+                          ),
+                          Padding(
                             padding: const EdgeInsets.fromLTRB(10, 0, 10, 8),
                             child: TextField(
                               controller: nameCtrl,
-                              decoration: InputDecoration(
-                                border: OutlineInputBorder(),
+                              decoration: getTextFieldDecoration(
                                 labelText: 'Name',
                                 hintText: 'Name',
                               ),
@@ -515,7 +532,8 @@ class AddEditReminderScreen extends StatelessWidget {
                                           print(picker.getSelectedValues());
                                         }).showDialog(context);
                                   },
-                                  icon: Icon(Icons.date_range),
+                                  icon: Icon(Icons.date_range,
+                                      color: Colors.blue),
                                 )
                               ],
                             ),

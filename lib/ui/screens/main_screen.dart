@@ -173,7 +173,7 @@ class TrxDetailsWidget extends StatelessWidget {
         alignment: Alignment.centerRight,
         child: ExpandableButton(
           // <-- Collapses when tapped on
-          child: Icon(Icons.arrow_upward),
+          child: Icon(Icons.arrow_upward, color: Colors.blue),
         ),
       ),
     ]);

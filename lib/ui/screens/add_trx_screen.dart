@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_date_picker_timeline/flutter_date_picker_timeline.dart';
 import 'package:my_budget/models/transaction.dart';
+import 'package:my_budget/ui/common/style.dart';
 import 'package:quiver/time.dart';
 
 class AddEditTrxScreen extends StatelessWidget {
@@ -45,6 +46,7 @@ class AddEditTrxScreen extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
                         child: FlutterDatePickerTimeline(
+                          selectedItemBackgroundColor: Colors.blue,
                           startDate: DateTime(time.year, time.month, 01),
                           endDate: DateTime(time.year, time.month,
                               daysInMonth(time.year, time.month)),
@@ -58,26 +60,75 @@ class AddEditTrxScreen extends StatelessWidget {
                         shrinkWrap: true,
                         children: [
                           Padding(
-                            padding: const EdgeInsets.fromLTRB(10, 0, 10, 8),
-                            child: TextField(
-                              controller: nameCtrl,
-                              decoration: InputDecoration(
-                                border: OutlineInputBorder(),
-                                labelText: 'Name',
-                                hintText: 'Name',
-                              ),
-                              autofocus: false,
-                            ),
-                          ),
+                              padding: const EdgeInsets.fromLTRB(10, 0, 10, 8),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Container(
+                                    height: 50,
+                                    width: 275,
+                                    child: InputDecorator(
+                                      decoration: getTextFieldDecoration(
+                                          labelText: "Category",
+                                          hintText: "Category"),
+                                      child: DropdownButtonHideUnderline(
+                                        child: Container(
+                                          height: 25,
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(
+                                                right: 15),
+                                            child: DropdownButton(
+                                              value: 'First',
+                                              items: <String>[
+                                                'First',
+                                                'Second',
+                                                'Third',
+                                                'Fourth'
+                                              ].map<DropdownMenuItem<String>>(
+                                                  (String value) {
+                                                return DropdownMenuItem<String>(
+                                                  value: value,
+                                                  child: Text(value),
+                                                );
+                                              }).toList(),
+                                              onChanged: (String newValue) {
+                                                //S setState(() {
+                                                //S   dropdownValue = newValue;
+                                                //S });
+                                              },
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  InkWell(
+                                    onTap: () {},
+                                    child: Icon(
+                                      Icons.add_rounded,
+                                      color: Colors.blue,
+                                      size: 40,
+                                    ),
+                                  )
+                                ],
+                              )),
+                          // TODO implement select card and options
+                          //  InputDecorator(
+                          //    decoration: const InputDecoration(
+                          //        border: OutlineInputBorder()),
+                          //    child: DropdownButtonHideUnderline(
+                          //      child: DropdownButton(
+                          //          //...
+                          //          ),
+                          //    ),
+                          //  ),
                           Padding(
                             padding: const EdgeInsets.fromLTRB(10, 0, 10, 8),
                             child: TextField(
                               controller: amountCtrl,
-                              decoration: InputDecoration(
-                                border: OutlineInputBorder(),
-                                labelText: 'Amount',
-                                hintText: 'Amount',
-                              ),
+                              decoration: getTextFieldDecoration(
+                                  labelText: "Amount", hintText: "Amount"),
                               autofocus: false,
                             ),
                           ),
@@ -86,10 +137,9 @@ class AddEditTrxScreen extends StatelessWidget {
                             child: TextField(
                               controller: descCtrl,
                               maxLines: 6,
-                              decoration: InputDecoration(
-                                border: OutlineInputBorder(),
-                                labelText: 'Description',
-                                hintText: 'Description',
+                              decoration: getTextFieldDecoration(
+                                labelText: 'Details',
+                                hintText: 'Details',
                               ),
                               autofocus: false,
                             ),
@@ -103,13 +153,16 @@ class AddEditTrxScreen extends StatelessWidget {
                                     style: TextStyle(color: Color(0xFF000000))),
                                 Spacer(),
                                 IconButton(
-                                  icon: Icon(Icons.camera),
+                                  icon: Icon(
+                                    Icons.camera,
+                                    color: Colors.blue,
+                                  ),
                                   onPressed: () {
                                     //getImage(ImageSource.camera);
                                   },
                                 ),
                                 IconButton(
-                                  icon: Icon(Icons.image),
+                                  icon: Icon(Icons.image, color: Colors.blue),
                                   onPressed: () {
                                     //getImage(ImageSource.gallery);
                                   },
@@ -186,7 +239,7 @@ class AddEditTrxScreen extends StatelessWidget {
                                       width: 15,
                                     ),
                                     FloatingActionButton(
-                                        child: Icon(Icons.edit),
+                                        child: Icon(Icons.save),
                                         backgroundColor: Colors.green,
                                         onPressed: () {
                                           Navigator.pop(context);
