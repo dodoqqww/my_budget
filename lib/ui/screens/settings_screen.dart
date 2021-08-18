@@ -514,11 +514,16 @@ class AddEditReminderScreen extends StatelessWidget {
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.fromLTRB(10, 0, 10, 8),
+                            padding: const EdgeInsets.fromLTRB(5, 0, 10, 8),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text("Frequency:"),
+                                Container(
+                                    margin: EdgeInsets.fromLTRB(10, 0, 5, 5),
+                                    child: Text(
+                                      "Frequency:",
+                                      style: TextStyle(fontSize: 18),
+                                    )),
                                 IconButton(
                                   onPressed: () {
                                     Picker(
@@ -540,7 +545,17 @@ class AddEditReminderScreen extends StatelessWidget {
                           ),
                           Padding(
                             padding: const EdgeInsets.fromLTRB(10, 0, 10, 8),
-                            child: Text(freq),
+                            child: Container(
+                                margin: EdgeInsets.fromLTRB(25, 0, 5, 5),
+                                decoration: BoxDecoration(
+                                    border: Border(
+                                  left: BorderSide(
+                                    //color: Colors.green,
+                                    width: 1,
+                                  ),
+                                )),
+                                padding: EdgeInsets.all(5),
+                                child: Text(freq)),
                           ),
                         ],
                       ),

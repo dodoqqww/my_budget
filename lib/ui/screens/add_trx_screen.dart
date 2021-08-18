@@ -145,12 +145,14 @@ class AddEditTrxScreen extends StatelessWidget {
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.fromLTRB(10, 0, 10, 8),
+                            padding: const EdgeInsets.fromLTRB(15, 0, 10, 8),
                             child: Row(
                               children: <Widget>[
                                 Text("Images:",
                                     textAlign: TextAlign.center,
-                                    style: TextStyle(color: Color(0xFF000000))),
+                                    style: TextStyle(
+                                        color: Color(0xFF000000),
+                                        fontSize: 18)),
                                 Spacer(),
                                 IconButton(
                                   icon: Icon(
@@ -171,7 +173,7 @@ class AddEditTrxScreen extends StatelessWidget {
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.fromLTRB(10, 0, 10, 8),
+                            padding: const EdgeInsets.fromLTRB(15, 0, 10, 8),
                             child: GridView.builder(
                                 physics: NeverScrollableScrollPhysics(),
                                 shrinkWrap: true,

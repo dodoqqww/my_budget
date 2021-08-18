@@ -142,6 +142,8 @@ class TrxDetailsWidget extends StatelessWidget {
   final Transaction asd1 = Transaction(
       id: "id1",
       amount: 120.4,
+      isIncome: true,
+      category: TrxCategory(name: "Gift"),
       date: DateTime.now(),
       desc: "desc1",
       name: "name1",
@@ -151,6 +153,8 @@ class TrxDetailsWidget extends StatelessWidget {
   final Transaction asd2 = Transaction(
       id: "id2",
       amount: 1221.4,
+      isIncome: true,
+      category: TrxCategory(name: "Food"),
       date: DateTime.now(),
       desc: "desc2",
       name: "name2",
