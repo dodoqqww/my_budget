@@ -158,6 +158,7 @@ class RemindersSettings extends StatelessWidget {
                 style: TextStyle(fontSize: 24),
               ),
               FloatingActionButton(
+                  heroTag: "addReminderBtn",
                   child: Icon(Icons.add),
                   backgroundColor: Colors.green,
                   onPressed: () {
@@ -433,6 +434,7 @@ class AddEditWalletScreen extends StatelessWidget {
                             Visibility(
                               visible: hasWallet,
                               child: FloatingActionButton(
+                                  heroTag: "deleteRemBtn",
                                   child: Icon(Icons.delete),
                                   backgroundColor: Colors.red,
                                   onPressed: () {
@@ -440,6 +442,7 @@ class AddEditWalletScreen extends StatelessWidget {
                                   }),
                             ),
                             FloatingActionButton(
+                                heroTag: "saveAddRemBtn",
                                 child: wallet != null
                                     ? Icon(Icons.save)
                                     : Icon(Icons.add),
@@ -571,12 +574,14 @@ class AddEditReminderScreen extends StatelessWidget {
                                 },
                                 icon: Icon(Icons.arrow_back)),
                             FloatingActionButton(
+                                heroTag: "deleteFreBtn",
                                 child: Icon(Icons.delete),
                                 backgroundColor: Colors.red,
                                 onPressed: () {
                                   Navigator.pop(context);
                                 }),
                             FloatingActionButton(
+                                heroTag: "saveAddFreBtn",
                                 child: reminder != null
                                     ? Icon(Icons.save)
                                     : Icon(Icons.add),
