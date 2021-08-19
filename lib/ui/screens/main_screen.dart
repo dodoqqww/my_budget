@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter_date_picker_timeline/flutter_date_picker_timeline.dart';
 import 'package:month_picker_dialog/month_picker_dialog.dart';
-import 'package:my_budget/models/transaction.dart';
-import 'package:my_budget/models/wallet.dart';
-import 'package:my_budget/ui/common/animations.dart';
-import 'package:my_budget/ui/common/style.dart';
+import './/models/transaction.dart';
+import './/models/wallet.dart';
+import './/ui/common/animations.dart';
+import './/ui/common/style.dart';
 import 'package:quiver/time.dart';
 
 class MainScreen extends StatelessWidget {
@@ -152,11 +152,7 @@ class FinancialSummaryWidget extends StatelessWidget {
 
     return ExpandableNotifier(
       // <-- Provides ExpandableController to its children
-      child: Card(
-        elevation: 20,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(25.0),
-        ),
+      child: getAppCardStyle(
         child: Column(
           children: [
             Container(
@@ -344,10 +340,7 @@ class AddEditTrxScreen extends StatelessWidget {
         // make sure that the overlay content is not cut off
         child: Container(
             padding: EdgeInsets.fromLTRB(10, 35, 10, 75),
-            child: Card(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(25.0),
-              ),
+            child: getAppCardStyle(
               child: Container(
                   width: double.infinity,
                   padding: EdgeInsets.all(10),
@@ -380,7 +373,7 @@ class AddEditTrxScreen extends StatelessWidget {
                                     height: 50,
                                     width: 275,
                                     child: InputDecorator(
-                                      decoration: getTextFieldDecoration(
+                                      decoration: getAppTextFieldDecoration(
                                           labelText: "Category",
                                           hintText: "Category"),
                                       child: DropdownButtonHideUnderline(
@@ -438,7 +431,7 @@ class AddEditTrxScreen extends StatelessWidget {
                             padding: const EdgeInsets.fromLTRB(10, 0, 10, 8),
                             child: TextField(
                               controller: amountCtrl,
-                              decoration: getTextFieldDecoration(
+                              decoration: getAppTextFieldDecoration(
                                   labelText: "Amount", hintText: "Amount"),
                               autofocus: false,
                             ),
@@ -448,7 +441,7 @@ class AddEditTrxScreen extends StatelessWidget {
                             child: TextField(
                               controller: descCtrl,
                               maxLines: 6,
-                              decoration: getTextFieldDecoration(
+                              decoration: getAppTextFieldDecoration(
                                 labelText: 'Details',
                                 hintText: 'Details',
                               ),

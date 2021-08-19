@@ -1,12 +1,11 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_picker/flutter_picker.dart';
-import 'package:my_budget/models/reminder.dart';
-import 'package:my_budget/models/wallet.dart';
-import 'package:my_budget/ui/common/animations.dart';
-import 'package:my_budget/ui/common/style.dart';
-import 'package:my_budget/utils/util_datas.dart';
+import './/models/reminder.dart';
+import './/models/wallet.dart';
+import './/ui/common/animations.dart';
+import './/ui/common/style.dart';
+import './/utils/util_datas.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 
 class SettingsScreen extends StatelessWidget {
@@ -33,11 +32,7 @@ class WalletSettings extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(25.0),
-      ),
-      elevation: 20,
+    return getAppCardStyle(
       child: ListView(
         physics: NeverScrollableScrollPhysics(),
         padding: EdgeInsets.all(10),
@@ -140,11 +135,7 @@ class RemindersSettings extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(25.0),
-      ),
-      elevation: 20,
+    return getAppCardStyle(
       child: ListView(
         physics: NeverScrollableScrollPhysics(),
         padding: EdgeInsets.all(10),
@@ -261,11 +252,7 @@ class ReminderListWidget extends StatelessWidget {
 class OtherSettings extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(25.0),
-      ),
-      elevation: 20,
+    return getAppCardStyle(
       child: ListView(
         physics: NeverScrollableScrollPhysics(),
         padding: EdgeInsets.all(10),
@@ -328,10 +315,7 @@ class AddEditWalletScreen extends StatelessWidget {
         // make sure that the overlay content is not cut off
         child: Container(
             padding: EdgeInsets.fromLTRB(10, 35, 10, 75),
-            child: Card(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(25.0),
-              ),
+            child: getAppCardStyle(
               child: Container(
                   width: double.infinity,
                   padding: EdgeInsets.all(10),
@@ -352,7 +336,7 @@ class AddEditWalletScreen extends StatelessWidget {
                             padding: const EdgeInsets.fromLTRB(10, 0, 10, 8),
                             child: TextField(
                               controller: nameCtrl,
-                              decoration: getTextFieldDecoration(
+                              decoration: getAppTextFieldDecoration(
                                 labelText: 'Name',
                                 hintText: 'Name',
                               ),
@@ -363,7 +347,7 @@ class AddEditWalletScreen extends StatelessWidget {
                             padding: const EdgeInsets.fromLTRB(10, 0, 10, 8),
                             child: TextField(
                               controller: amountCtrl,
-                              decoration: getTextFieldDecoration(
+                              decoration: getAppTextFieldDecoration(
                                 labelText: 'Amount',
                                 hintText: 'Amount',
                               ),
@@ -485,10 +469,7 @@ class AddEditReminderScreen extends StatelessWidget {
         // make sure that the overlay content is not cut off
         child: Container(
             padding: EdgeInsets.fromLTRB(10, 35, 10, 75),
-            child: Card(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(25.0),
-              ),
+            child: getAppCardStyle(
               child: Container(
                   width: double.infinity,
                   padding: EdgeInsets.all(10),
@@ -509,7 +490,7 @@ class AddEditReminderScreen extends StatelessWidget {
                             padding: const EdgeInsets.fromLTRB(10, 0, 10, 8),
                             child: TextField(
                               controller: nameCtrl,
-                              decoration: getTextFieldDecoration(
+                              decoration: getAppTextFieldDecoration(
                                 labelText: 'Name',
                                 hintText: 'Name',
                               ),
