@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_picker/flutter_picker.dart';
+
 import './/models/reminder.dart';
 import './/models/wallet.dart';
 import './/ui/common/animations.dart';
@@ -448,19 +449,21 @@ class AddEditReminderScreen extends StatelessWidget {
 
   final nameCtrl = TextEditingController();
 
-  String freq = "Pick frequency...";
-
   AddEditReminderScreen({Key key, this.reminder}) : super(key: key);
-  // WalletType type;
 
-  //AddEditReminderScreen({Key key, this.wallet}) : super(key: key);
-// ignore: non_constant_identifier_names
+  final PickerDataAdapter<String> pickAdapter = PickerDataAdapter<String>(
+      pickerdata: new JsonDecoder().convert(PickerData));
 
   @override
   Widget build(BuildContext context) {
+    final picker = Picker(
+      hideHeader: true,
+      adapter: pickAdapter,
+    );
+
     if (reminder != null) {
       nameCtrl.text = reminder.name;
-      freq = reminder.frequency;
+      picker.selecteds = [1, 1, 1];
     }
 
     print("AddEditReminderScreen build()");
@@ -497,50 +500,7 @@ class AddEditReminderScreen extends StatelessWidget {
                               autofocus: false,
                             ),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(5, 0, 10, 8),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Container(
-                                    margin: EdgeInsets.fromLTRB(10, 0, 5, 5),
-                                    child: Text(
-                                      "Frequency:",
-                                      style: TextStyle(fontSize: 18),
-                                    )),
-                                IconButton(
-                                  onPressed: () {
-                                    Picker(
-                                        adapter: PickerDataAdapter<String>(
-                                            pickerdata: new JsonDecoder()
-                                                .convert(PickerData)),
-                                        hideHeader: true,
-                                        title: new Text("Select frequency"),
-                                        onConfirm: (Picker picker, List value) {
-                                          print(value.toString());
-                                          print(picker.getSelectedValues());
-                                        }).showDialog(context);
-                                  },
-                                  icon: Icon(Icons.date_range,
-                                      color: Colors.blue),
-                                )
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(10, 0, 10, 8),
-                            child: Container(
-                                margin: EdgeInsets.fromLTRB(25, 0, 5, 5),
-                                decoration: BoxDecoration(
-                                    border: Border(
-                                  left: BorderSide(
-                                    //color: Colors.green,
-                                    width: 1,
-                                  ),
-                                )),
-                                padding: EdgeInsets.all(5),
-                                child: Text(freq)),
-                          ),
+                          picker.makePicker(),
                         ],
                       ),
                       Spacer(),
@@ -568,6 +528,8 @@ class AddEditReminderScreen extends StatelessWidget {
                                     : Icon(Icons.add),
                                 backgroundColor: Colors.green,
                                 onPressed: () {
+                                  print(pickAdapter.getSelectedValues());
+                                  print(picker.selecteds);
                                   Navigator.pop(context);
                                 }),
                           ],
