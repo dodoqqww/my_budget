@@ -428,6 +428,41 @@ class AddEditTrxScreen extends StatelessWidget {
                               )),
                           Padding(
                             padding: const EdgeInsets.fromLTRB(10, 0, 10, 8),
+                            child: Container(
+                              height: 50,
+                              width: 275,
+                              child: InputDecorator(
+                                decoration: getAppTextFieldDecoration(
+                                    labelText: "Wallet", hintText: "Wallet"),
+                                child: DropdownButtonHideUnderline(
+                                  child: Container(
+                                    height: 25,
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(right: 15),
+                                      child: DropdownButton<String>(
+                                        value: "Otp card",
+                                        items: [
+                                          DropdownMenuItem(
+                                              value: "Otp card",
+                                              child: Text('Otp card')),
+                                          DropdownMenuItem(
+                                              value: 'Home cash',
+                                              child: Text('Home cash')),
+                                        ],
+                                        onChanged: (String newValue) {
+                                          //S setState(() {
+                                          //S   dropdownValue = newValue;
+                                          //S });
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(10, 0, 10, 8),
                             child: TextField(
                               controller: amountCtrl,
                               decoration: getAppTextFieldDecoration(
