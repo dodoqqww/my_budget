@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter_date_picker_timeline/flutter_date_picker_timeline.dart';
 import 'package:month_picker_dialog/month_picker_dialog.dart';
+
 import './/models/transaction.dart';
 import './/models/wallet.dart';
 import './/ui/common/animations.dart';
@@ -84,6 +85,7 @@ class MainScreen extends StatelessWidget {
                       IconButton(
                           onPressed: () {
                             showMonthPicker(
+                              okText: "Confirm",
                               context: context,
                               // firstDate: DateTime(DateTime.now().year - 1, 5),
                               // lastDate: DateTime(DateTime.now().year + 1, 9),
