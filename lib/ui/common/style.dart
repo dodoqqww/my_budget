@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 // textfield decoration
 InputDecoration getAppTextFieldDecoration(
-    {labelText: String, hintText: String}) {
+    {String labelText, String hintText = ""}) {
   return InputDecoration(
     enabledBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(25),

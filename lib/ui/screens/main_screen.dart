@@ -1,4 +1,7 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart'
+    hide DropdownButton, DropdownMenuItem, DropdownButtonHideUnderline;
+import 'package:my_budget/ui/widgets/dropdown_widget.dart';
+
 import 'package:expandable/expandable.dart';
 import 'package:flutter_date_picker_timeline/flutter_date_picker_timeline.dart';
 import 'package:month_picker_dialog/month_picker_dialog.dart';
@@ -384,20 +387,22 @@ class AddEditTrxScreen extends StatelessWidget {
                                           child: Padding(
                                             padding: const EdgeInsets.only(
                                                 right: 15),
-                                            child: DropdownButton(
-                                              value: 'First',
-                                              items: <String>[
-                                                'First',
-                                                'Second',
-                                                'Third',
-                                                'Fourth'
-                                              ].map<DropdownMenuItem<String>>(
-                                                  (String value) {
-                                                return DropdownMenuItem<String>(
-                                                  value: value,
-                                                  child: Text(value),
-                                                );
-                                              }).toList(),
+                                            child: DropdownButton<String>(
+                                              value: "Apple",
+                                              items: [
+                                                DropdownMenuItem(
+                                                    value: "Apple",
+                                                    child: Text('Apple')),
+                                                DropdownMenuItem(
+                                                    value: 'Google',
+                                                    child: Text('Google')),
+                                                DropdownMenuItem(
+                                                    value: 'Samsung',
+                                                    child: Text('Samsung')),
+                                                DropdownMenuItem(
+                                                    value: 'Sony',
+                                                    child: Text('Sony')),
+                                              ],
                                               onChanged: (String newValue) {
                                                 //S setState(() {
                                                 //S   dropdownValue = newValue;
@@ -410,7 +415,9 @@ class AddEditTrxScreen extends StatelessWidget {
                                     ),
                                   ),
                                   InkWell(
-                                    onTap: () {},
+                                    onTap: () {
+                                      _addCategoryDialog(context);
+                                    },
                                     child: Icon(
                                       Icons.add_rounded,
                                       color: Colors.blue,
@@ -419,16 +426,6 @@ class AddEditTrxScreen extends StatelessWidget {
                                   )
                                 ],
                               )),
-                          // TODO implement select card and options
-                          //  InputDecorator(
-                          //    decoration: const InputDecoration(
-                          //        border: OutlineInputBorder()),
-                          //    child: DropdownButtonHideUnderline(
-                          //      child: DropdownButton(
-                          //          //...
-                          //          ),
-                          //    ),
-                          //  ),
                           Padding(
                             padding: const EdgeInsets.fromLTRB(10, 0, 10, 8),
                             child: TextField(
@@ -565,5 +562,53 @@ class AddEditTrxScreen extends StatelessWidget {
                     ],
                   )),
             )));
+  }
+
+  Future<void> _addCategoryDialog(BuildContext context) async {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(25.0),
+              ),
+              title: Text('Add category'),
+              content: Column(mainAxisSize: MainAxisSize.min, children: [
+                TextField(
+                  onChanged: (value) {
+                    // setState(() {
+                    //   valueText = value;
+                    // });
+                  },
+                  //controller: _textFieldController,
+                  decoration: getAppTextFieldDecoration(labelText: "Category"),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      IconButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          icon: Icon(Icons.arrow_back)),
+                      FloatingActionButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: Icon(Icons.save),
+                      )
+                    ],
+                  ),
+                ),
+              ]
+                  // actions: <Widget>[
+//
+                  //   // ignore: deprecated_member_use
+                  //   FloatingActionButton(onPressed: (){},child: Icon(Icons.save),),
+                  // ],
+                  ));
+        });
   }
 }

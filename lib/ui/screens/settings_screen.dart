@@ -295,13 +295,13 @@ class AddEditWalletScreen extends StatelessWidget {
 
   final nameCtrl = TextEditingController();
   final amountCtrl = TextEditingController();
-  WalletType type;
 
   AddEditWalletScreen({Key key, this.wallet}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     bool hasWallet = false;
+    WalletType type;
     if (wallet != null) {
       print("asd");
       hasWallet = true;
@@ -378,7 +378,7 @@ class AddEditWalletScreen extends StatelessWidget {
                             ),
                           ),
 
-                          // TODO implement this feature
+                          // TODO implement oprional fee feature
 
                           //  Padding(
                           //    padding: const EdgeInsets.fromLTRB(10, 0, 10, 8),
