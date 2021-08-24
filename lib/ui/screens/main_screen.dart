@@ -447,7 +447,7 @@ class AddEditTrxScreen extends StatelessWidget {
                                               child: Text('Otp card')),
                                           DropdownMenuItem(
                                               value: 'Home cash',
-                                              child: Text('Home cash')),
+                                              child: Text('Home wallet')),
                                         ],
                                         onChanged: (String newValue) {
                                           //S setState(() {

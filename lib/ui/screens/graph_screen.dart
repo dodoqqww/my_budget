@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:my_budget/ui/widgets/chart.dart';
 import './/ui/common/style.dart';
 
 class GraphScreen extends StatelessWidget {
@@ -21,11 +22,11 @@ class GraphScreen extends StatelessWidget {
             ChartTwo(),
           ],
           staggeredTiles: [
-            StaggeredTile.extent(4, 250.0),
-            StaggeredTile.extent(2, 250.0),
-            StaggeredTile.extent(2, 125.0),
-            StaggeredTile.extent(2, 125.0),
-            StaggeredTile.extent(4, 250.0),
+            StaggeredTile.extent(4, 240.0),
+            StaggeredTile.extent(3, 235.0),
+            //StaggeredTile.extent(2, 200.0),
+            StaggeredTile.extent(1, 235.0),
+            StaggeredTile.extent(4, 200.0),
           ],
         ),
       ),
@@ -41,7 +42,7 @@ class ChartTwo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 10, right: 10, bottom: 75),
+      padding: const EdgeInsets.only(right: 10),
       child: getAppCardStyle(
         child: Center(child: Text("5")),
       ),
@@ -57,9 +58,11 @@ class ExpenseChart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(right: 10),
+      padding: const EdgeInsets.only(left: 10, right: 10),
       child: getAppCardStyle(
-        child: Center(child: Text("4")),
+        child: Padding(
+            padding: EdgeInsets.all(5),
+            child: DateTimeComboLinePointChart.withSampleData()),
       ),
     );
   }
@@ -75,7 +78,7 @@ class IncomeChart extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(right: 10),
       child: getAppCardStyle(
-        child: Center(child: Text("3")),
+        child: Center(child: Text("3Details")),
       ),
     );
   }
@@ -91,7 +94,7 @@ class PieChart extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(left: 10),
       child: getAppCardStyle(
-        child: Center(child: Text("2")),
+        child: Center(child: DatumLegendOptions.withSampleData()),
       ),
     );
   }
@@ -107,7 +110,9 @@ class ChartOne extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
       child: getAppCardStyle(
-        child: Center(child: Text("1")),
+        child: Padding(
+            padding: EdgeInsets.all(5),
+            child: OrdinalComboBarLineChart.withSampleData()),
       ),
     );
   }

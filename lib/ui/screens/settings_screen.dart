@@ -27,7 +27,7 @@ class SettingsScreen extends StatelessWidget {
 
 class WalletSettings extends StatelessWidget {
   final wallet1 = Wallet(
-      id: "1", name: "OTP Bank", amount: 123456.0, type: WalletType.card);
+      id: "1", name: "OTP card", amount: 123456.0, type: WalletType.card);
   final wallet2 = Wallet(
       id: "2", name: "Home wallet", amount: 1234.0, type: WalletType.cash);
 
