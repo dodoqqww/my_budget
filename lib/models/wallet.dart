@@ -35,6 +35,7 @@ class Wallet {
   String name;
   double amount;
   WalletType type;
+  //TODO transactions
   //plus options
 
   Wallet(

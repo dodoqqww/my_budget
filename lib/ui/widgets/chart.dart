@@ -19,29 +19,47 @@ class OrdinalComboBarLineChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new charts.OrdinalComboChart(seriesList,
-        animate: animate,
-        primaryMeasureAxis: new charts.NumericAxisSpec(
-            tickProviderSpec: new charts.BasicNumericTickProviderSpec(
-          // Make sure we don't have values less than 1 as ticks
-          // (ie: counts).
+    return new charts.OrdinalComboChart(
+      seriesList,
+      animate: animate,
+      primaryMeasureAxis: new charts.NumericAxisSpec(
+          tickProviderSpec: new charts.BasicNumericTickProviderSpec(
+        // Make sure we don't have values less than 1 as ticks
+        // (ie: counts).
 
-          desiredMinTickCount: 4,
-          dataIsInWholeNumbers: true,
-          // Fixed tick count to highlight the integer only behavior
-          // generating ticks [0, 1, 2, 3, 4].
-        )),
-        // Configure the default renderer as a bar renderer.
-        defaultRenderer: new charts.BarRendererConfig(
-            groupingType: charts.BarGroupingType.grouped),
-        // Custom renderer configuration for the line series. This will be used for
-        // any series that does not define a rendererIdKey.
-        customSeriesRenderers: [
-          new charts.LineRendererConfig(
-              strokeWidthPx: 2,
-              // ID used to link series to this renderer.
-              customRendererId: 'customLine')
-        ]);
+        desiredMinTickCount: 4,
+        dataIsInWholeNumbers: true,
+        // Fixed tick count to highlight the integer only behavior
+        // generating ticks [0, 1, 2, 3, 4].
+      )),
+      // Configure the default renderer as a bar renderer.
+      defaultRenderer: new charts.BarRendererConfig(
+          groupingType: charts.BarGroupingType.grouped),
+      // Custom renderer configuration for the line series. This will be used for
+      // any series that does not define a rendererIdKey.
+      customSeriesRenderers: [
+        new charts.LineRendererConfig(
+            strokeWidthPx: 2,
+            // ID used to link series to this renderer.
+            customRendererId: 'customLine')
+      ],
+      behaviors: [
+        // new charts.SlidingViewport(),
+        new charts.LinePointHighlighter(
+            showHorizontalFollowLine:
+                charts.LinePointHighlighterFollowLineType.none,
+            showVerticalFollowLine:
+                charts.LinePointHighlighterFollowLineType.nearest),
+        new charts.SelectNearest(
+            eventTrigger: (charts.SelectionTrigger.tapAndDrag)),
+
+        new charts.SlidingViewport(),
+        // A pan and zoom behavior helps demonstrate the sliding viewport
+        // behavior by allowing the data visible in the viewport to be adjusted
+        // dynamically.
+        new charts.PanAndZoomBehavior(),
+      ],
+    );
   }
 
   /// Create series list with multiple series
@@ -195,15 +213,15 @@ class LinearSales {
   LinearSales(this.year, this.sales);
 }
 
-class DateTimeComboLinePointChart extends StatelessWidget {
+class SimpleTimeSeriesChart extends StatelessWidget {
   final List<charts.Series> seriesList;
   final bool animate;
 
-  DateTimeComboLinePointChart(this.seriesList, {this.animate});
+  SimpleTimeSeriesChart(this.seriesList, {this.animate});
 
   /// Creates a [TimeSeriesChart] with sample data and no transition.
-  factory DateTimeComboLinePointChart.withSampleData() {
-    return new DateTimeComboLinePointChart(
+  factory SimpleTimeSeriesChart.withSampleData() {
+    return new SimpleTimeSeriesChart(
       _createSampleData(),
       // Disable animations for image tests.
       animate: false,
@@ -215,17 +233,32 @@ class DateTimeComboLinePointChart extends StatelessWidget {
     return new charts.TimeSeriesChart(
       seriesList,
       animate: animate,
-      // Configure the default renderer as a line renderer. This will be used
-      // for any series that does not define a rendererIdKey.
-      //
-      // This is the default configuration, but is shown here for  illustration.
-      defaultRenderer: new charts.LineRendererConfig(),
-      // Custom renderer configuration for the point series.
-      customSeriesRenderers: [
-        new charts.PointRendererConfig(
-            // ID used to link series to this renderer.
-            customRendererId: 'customPoint')
-      ],
+      primaryMeasureAxis: new charts.NumericAxisSpec(
+          tickProviderSpec: new charts.BasicNumericTickProviderSpec(
+        // Make sure we don't have values less than 1 as ticks
+        // (ie: counts).
+
+        desiredMinTickCount: 4,
+        dataIsInWholeNumbers: true,
+        // Fixed tick count to highlight the integer only behavior
+        // generating ticks [0, 1, 2, 3, 4].
+      )),
+      //behaviors: [
+      //  // new charts.SlidingViewport(),
+      //  new charts.LinePointHighlighter(
+      //      showHorizontalFollowLine:
+      //          charts.LinePointHighlighterFollowLineType.none,
+      //      showVerticalFollowLine:
+      //          charts.LinePointHighlighterFollowLineType.nearest),
+      //  new charts.SelectNearest(
+      //      eventTrigger: (charts.SelectionTrigger.tapAndDrag)),
+//
+      //  new charts.SlidingViewport(),
+      //  // A pan and zoom behavior helps demonstrate the sliding viewport
+      //  // behavior by allowing the data visible in the viewport to be adjusted
+      //  // dynamically.
+      //  new charts.PanAndZoomBehavior(),
+      //],
       // Optionally pass in a [DateTimeFactory] used by the chart. The factory
       // should create the same type of [DateTime] as the data provided. If none
       // specified, the default creates local date time.
@@ -235,50 +268,37 @@ class DateTimeComboLinePointChart extends StatelessWidget {
 
   /// Create one series with sample hard coded data.
   static List<charts.Series<TimeSeriesSales, DateTime>> _createSampleData() {
-    final desktopSalesData = [
-      new TimeSeriesSales(new DateTime(2017, 9, 19), 5),
-      new TimeSeriesSales(new DateTime(2017, 9, 26), 25),
-      new TimeSeriesSales(new DateTime(2017, 10, 3), 100),
-      new TimeSeriesSales(new DateTime(2017, 10, 10), 75),
+    final data = [
+      new TimeSeriesSales(new DateTime(2017, 9, 1), 240000),
+      new TimeSeriesSales(new DateTime(2017, 9, 3), 200000),
+      new TimeSeriesSales(new DateTime(2017, 9, 5), 100000),
+      new TimeSeriesSales(new DateTime(2017, 9, 10), 75000),
+      new TimeSeriesSales(new DateTime(2017, 9, 15), 65000),
+      new TimeSeriesSales(new DateTime(2017, 9, 23), 51000),
+      new TimeSeriesSales(new DateTime(2017, 9, 24), 50000),
+      new TimeSeriesSales(new DateTime(2017, 9, 25), 7500),
+      new TimeSeriesSales(new DateTime(2017, 9, 26), 1000),
+      new TimeSeriesSales(new DateTime(2017, 9, 27), 750),
+      new TimeSeriesSales(new DateTime(2017, 9, 28), 75),
     ];
 
-    final tableSalesData = [
-      new TimeSeriesSales(new DateTime(2017, 9, 19), 10),
-      new TimeSeriesSales(new DateTime(2017, 9, 26), 50),
-      new TimeSeriesSales(new DateTime(2017, 10, 3), 200),
-      new TimeSeriesSales(new DateTime(2017, 10, 10), 150),
-    ];
-
-    final mobileSalesData = [
-      new TimeSeriesSales(new DateTime(2017, 9, 19), 10),
-      new TimeSeriesSales(new DateTime(2017, 9, 26), 50),
-      new TimeSeriesSales(new DateTime(2017, 10, 3), 200),
-      new TimeSeriesSales(new DateTime(2017, 10, 10), 150),
-    ];
+// Generate 2 shades of each color so that we can style the line segments.
+    final blue = charts.MaterialPalette.blue.shadeDefault;
+    final red = charts.MaterialPalette.red.shadeDefault;
+    final green = charts.MaterialPalette.green.shadeDefault;
 
     return [
       new charts.Series<TimeSeriesSales, DateTime>(
-        id: 'Desktop',
-        colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
+        id: 'Sales',
+        seriesColor: green,
+        colorFn: (TimeSeriesSales asd, __) =>
+            asd.sales % 10000 == 0 ? green : red,
         domainFn: (TimeSeriesSales sales, _) => sales.time,
         measureFn: (TimeSeriesSales sales, _) => sales.sales,
-        data: desktopSalesData,
-      ),
-      new charts.Series<TimeSeriesSales, DateTime>(
-        id: 'Tablet',
-        colorFn: (_, __) => charts.MaterialPalette.red.shadeDefault,
-        domainFn: (TimeSeriesSales sales, _) => sales.time,
-        measureFn: (TimeSeriesSales sales, _) => sales.sales,
-        data: tableSalesData,
-      ),
-      new charts.Series<TimeSeriesSales, DateTime>(
-          id: 'Mobile',
-          colorFn: (_, __) => charts.MaterialPalette.green.shadeDefault,
-          domainFn: (TimeSeriesSales sales, _) => sales.time,
-          measureFn: (TimeSeriesSales sales, _) => sales.sales,
-          data: mobileSalesData)
-        // Configure our custom point renderer for this series.
-        ..setAttribute(charts.rendererIdKey, 'customPoint'),
+        areaColorFn: (TimeSeriesSales asd, __) =>
+            asd.sales % 10000 == 0 ? green : red,
+        data: data,
+      )
     ];
   }
 }

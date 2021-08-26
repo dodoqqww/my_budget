@@ -58,13 +58,11 @@ class ExpenseChart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 10, right: 10),
-      child: getAppCardStyle(
-        child: Padding(
-            padding: EdgeInsets.all(5),
-            child: DateTimeComboLinePointChart.withSampleData()),
-      ),
-    );
+        padding: const EdgeInsets.only(left: 10, right: 10),
+        child: getAppCardStyle(
+            child: Padding(
+                padding: EdgeInsets.all(5),
+                child: SimpleTimeSeriesChart.withSampleData())));
   }
 }
 
@@ -78,8 +76,16 @@ class IncomeChart extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(right: 10),
       child: getAppCardStyle(
-        child: Center(child: Text("3Details")),
-      ),
+          child: Stack(
+        alignment: AlignmentDirectional.center,
+        children: [
+          //TODO picker mint frequencynél
+          Text("2021.Aug"),
+          //SizedBox(
+          //  width: 20,
+          //),
+        ],
+      )),
     );
   }
 }
