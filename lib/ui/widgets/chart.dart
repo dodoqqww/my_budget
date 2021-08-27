@@ -1,5 +1,6 @@
 /// Example of an ordinal combo chart with two series rendered as bars, and a
 /// third rendered as a line.
+import 'package:charts_flutter/flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 
@@ -23,15 +24,16 @@ class OrdinalComboBarLineChart extends StatelessWidget {
       seriesList,
       animate: animate,
       primaryMeasureAxis: new charts.NumericAxisSpec(
+          showAxisLine: true,
           tickProviderSpec: new charts.BasicNumericTickProviderSpec(
-        // Make sure we don't have values less than 1 as ticks
-        // (ie: counts).
+            // Make sure we don't have values less than 1 as ticks
+            // (ie: counts).
 
-        desiredMinTickCount: 4,
-        dataIsInWholeNumbers: true,
-        // Fixed tick count to highlight the integer only behavior
-        // generating ticks [0, 1, 2, 3, 4].
-      )),
+            desiredMinTickCount: 4,
+            dataIsInWholeNumbers: true,
+            // Fixed tick count to highlight the integer only behavior
+            // generating ticks [0, 1, 2, 3, 4].
+          )),
       // Configure the default renderer as a bar renderer.
       defaultRenderer: new charts.BarRendererConfig(
           groupingType: charts.BarGroupingType.grouped),
@@ -44,6 +46,14 @@ class OrdinalComboBarLineChart extends StatelessWidget {
             customRendererId: 'customLine')
       ],
       behaviors: [
+        new charts.ChartTitle('Last 4 months',
+            behaviorPosition: charts.BehaviorPosition.top,
+            titleOutsideJustification: charts.OutsideJustification.middle,
+            // Set a larger inner padding than the default (10) to avoid
+            // rendering the text too close to the top measure axis tick label.
+            // The top tick label may extend upwards into the top margin region
+            // if it is located at the top of the draw area.
+            innerPadding: 5),
         // new charts.SlidingViewport(),
         new charts.LinePointHighlighter(
             showHorizontalFollowLine:
@@ -81,9 +91,9 @@ class OrdinalComboBarLineChart extends StatelessWidget {
     //TODO megtakarítás
     final mobileSalesData = [
       new OrdinalSales('2014.Jan', 10000),
-      new OrdinalSales('2015.Jan', 50000),
-      new OrdinalSales('2016.Jan', 20000),
-      new OrdinalSales('2017.Jan', 150000),
+      new OrdinalSales('2015.Jan', 150000),
+      new OrdinalSales('2016.Jan', 200000),
+      new OrdinalSales('2017.Jan', 1500000),
     ];
 
     return [
@@ -139,18 +149,23 @@ class DatumLegendOptions extends StatelessWidget {
       seriesList,
       animate: animate,
 
+      defaultRenderer: new charts.ArcRendererConfig(arcRendererDecorators: [
+        new charts.ArcLabelDecorator(
+            labelPosition: charts.ArcLabelPosition.auto)
+      ]),
+
       // Add the legend behavior to the chart to turn on legends.
       // This example shows how to change the position and justification of
       // the legend, in addition to altering the max rows and padding.
       behaviors: [
-        new charts.ChartTitle('2021.August',
-            behaviorPosition: charts.BehaviorPosition.top,
-            titleOutsideJustification: charts.OutsideJustification.middle,
-            // Set a larger inner padding than the default (10) to avoid
-            // rendering the text too close to the top measure axis tick label.
-            // The top tick label may extend upwards into the top margin region
-            // if it is located at the top of the draw area.
-            innerPadding: 5),
+        //new charts.ChartTitle('2021.August',
+        //    behaviorPosition: charts.BehaviorPosition.top,
+        //    titleOutsideJustification: charts.OutsideJustification.middle,
+        //    // Set a larger inner padding than the default (10) to avoid
+        //    // rendering the text too close to the top measure axis tick label.
+        //    // The top tick label may extend upwards into the top margin region
+        //    // if it is located at the top of the draw area.
+        //    innerPadding: 5),
         new charts.DatumLegend(
           // Positions for "start" and "end" will be left and right respectively
           // for widgets with a build context that has directionality ltr.
@@ -173,9 +188,9 @@ class DatumLegendOptions extends StatelessWidget {
           cellPadding: new EdgeInsets.only(right: 4.0, bottom: 4.0),
           // Render the legend entry text with custom styles.
           entryTextStyle: charts.TextStyleSpec(
-              color: charts.MaterialPalette.purple.shadeDefault,
-              fontFamily: 'Georgia',
-              fontSize: 11),
+              // color: charts.MaterialPalette.gray.shadeDefault,
+              // fontFamily: 'Georgia',
+              fontSize: 12),
         )
       ],
     );
@@ -184,21 +199,28 @@ class DatumLegendOptions extends StatelessWidget {
   /// Create series list with one series
   static List<charts.Series<LinearSales, String>> _createSampleData() {
     final data = [
-      new LinearSales("Food", 100),
-      new LinearSales("Investment", 75),
-      new LinearSales("Invoices", 25),
-      new LinearSales("3", 5),
-      new LinearSales("4", 100),
-      new LinearSales("5", 75),
-      new LinearSales("6", 25),
-      new LinearSales("7", 5),
+      new LinearSales("Food", 100, charts.MaterialPalette.red.makeShades(5)[4]),
+      new LinearSales("Investment", 75, MaterialPalette.blue.shadeDefault),
+      new LinearSales("Invoices", 25, MaterialPalette.cyan.shadeDefault),
+      new LinearSales("3", 5, MaterialPalette.green.shadeDefault),
+      new LinearSales("4", 100, MaterialPalette.pink.shadeDefault),
+      // new LinearSales("5", 75),
+      // new LinearSales("6", 25),
+      // new LinearSales("7", 5),
     ];
 
     return [
       new charts.Series<LinearSales, String>(
         id: 'Sales',
-        domainFn: (LinearSales sales, _) => sales.year,
-        measureFn: (LinearSales sales, _) => sales.sales,
+        domainFn: (LinearSales data, _) => data.category,
+        measureFn: (LinearSales data, _) => data.sales,
+        colorFn: (LinearSales data, __) => data.color,
+        outsideLabelStyleAccessorFn: (LinearSales data, _) =>
+            new charts.TextStyleSpec(color: MaterialPalette.black),
+        insideLabelStyleAccessorFn: (LinearSales data, _) =>
+            new charts.TextStyleSpec(color: MaterialPalette.black),
+        labelAccessorFn: (LinearSales data, _) =>
+            data.sales > 35 ? "${data.sales}%" : "",
         data: data,
       )
     ];
@@ -207,10 +229,11 @@ class DatumLegendOptions extends StatelessWidget {
 
 /// Sample linear data type.
 class LinearSales {
-  final String year;
+  final String category;
   final int sales;
+  final Color color;
 
-  LinearSales(this.year, this.sales);
+  LinearSales(this.category, this.sales, this.color);
 }
 
 class SimpleTimeSeriesChart extends StatelessWidget {
@@ -228,37 +251,72 @@ class SimpleTimeSeriesChart extends StatelessWidget {
     );
   }
 
+  //_onSelectionChanged(charts.SelectionModel model) {
+  //  final selectedDatum = model.selectedDatum;
+//
+  //  DateTime time;
+  //  final measures = <String, num>{};
+//
+  //  // We get the model that updated with a list of [SeriesDatum] which is
+  //  // simply a pair of series & datum.
+  //  //
+  //  // Walk the selection updating the measures map, storing off the sales and
+  //  // series name for each selection point.
+  //  if (selectedDatum.isNotEmpty) {
+  //    time = selectedDatum.first.datum.time;
+  //    selectedDatum.forEach((charts.SeriesDatum datumPair) {
+  //      measures[datumPair.series.displayName] = datumPair.datum.sales;
+  //    });
+  //  }
+//
+  //  // Request a build.
+  //  print("asd");
+  //}
+
   @override
   Widget build(BuildContext context) {
     return new charts.TimeSeriesChart(
       seriesList,
       animate: animate,
-      primaryMeasureAxis: new charts.NumericAxisSpec(
-          tickProviderSpec: new charts.BasicNumericTickProviderSpec(
-        // Make sure we don't have values less than 1 as ticks
-        // (ie: counts).
 
-        desiredMinTickCount: 4,
-        dataIsInWholeNumbers: true,
-        // Fixed tick count to highlight the integer only behavior
-        // generating ticks [0, 1, 2, 3, 4].
-      )),
-      //behaviors: [
-      //  // new charts.SlidingViewport(),
-      //  new charts.LinePointHighlighter(
-      //      showHorizontalFollowLine:
-      //          charts.LinePointHighlighterFollowLineType.none,
-      //      showVerticalFollowLine:
-      //          charts.LinePointHighlighterFollowLineType.nearest),
-      //  new charts.SelectNearest(
-      //      eventTrigger: (charts.SelectionTrigger.tapAndDrag)),
+      primaryMeasureAxis: new charts.NumericAxisSpec(
+          showAxisLine: true,
+          tickProviderSpec: new charts.BasicNumericTickProviderSpec(
+            // Make sure we don't have values less than 1 as ticks
+            // (ie: counts).
+            zeroBound: false,
+            desiredMinTickCount: 4,
+            dataIsInWholeNumbers: true,
+
+            // // Fixed tick count to highlight the integer only behavior
+            // generating ticks [0, 1, 2, 3, 4].
+          )),
+      defaultRenderer: new charts.LineRendererConfig(),
+
+      //  selectionModels: [
+      //        new charts.SelectionModelConfig(
+      //
+      //          updatedListener: _onSelectionChanged,
+      //          type: charts.SelectionModelType.info,
+      //
+      //        )
+      //      ],
+
+      behaviors: [
+        new charts.LinePointHighlighter(
+            showHorizontalFollowLine:
+                charts.LinePointHighlighterFollowLineType.nearest,
+            showVerticalFollowLine:
+                charts.LinePointHighlighterFollowLineType.none),
+        new charts.SelectNearest(
+            eventTrigger: (charts.SelectionTrigger.tapAndDrag)),
 //
-      //  new charts.SlidingViewport(),
-      //  // A pan and zoom behavior helps demonstrate the sliding viewport
-      //  // behavior by allowing the data visible in the viewport to be adjusted
-      //  // dynamically.
-      //  new charts.PanAndZoomBehavior(),
-      //],
+        //  new charts.SlidingViewport(),
+        //  // A pan and zoom behavior helps demonstrate the sliding viewport
+        //  // behavior by allowing the data visible in the viewport to be adjusted
+        //  // dynamically.
+        //  new charts.PanAndZoomBehavior(),
+      ],
       // Optionally pass in a [DateTimeFactory] used by the chart. The factory
       // should create the same type of [DateTime] as the data provided. If none
       // specified, the default creates local date time.
@@ -272,14 +330,14 @@ class SimpleTimeSeriesChart extends StatelessWidget {
       new TimeSeriesSales(new DateTime(2017, 9, 1), 240000),
       new TimeSeriesSales(new DateTime(2017, 9, 3), 200000),
       new TimeSeriesSales(new DateTime(2017, 9, 5), 100000),
-      new TimeSeriesSales(new DateTime(2017, 9, 10), 75000),
+      new TimeSeriesSales(new DateTime(2017, 9, 10), -75000),
       new TimeSeriesSales(new DateTime(2017, 9, 15), 65000),
       new TimeSeriesSales(new DateTime(2017, 9, 23), 51000),
       new TimeSeriesSales(new DateTime(2017, 9, 24), 50000),
-      new TimeSeriesSales(new DateTime(2017, 9, 25), 7500),
+      new TimeSeriesSales(new DateTime(2017, 9, 25), -7500),
       new TimeSeriesSales(new DateTime(2017, 9, 26), 1000),
       new TimeSeriesSales(new DateTime(2017, 9, 27), 750),
-      new TimeSeriesSales(new DateTime(2017, 9, 28), 75),
+      new TimeSeriesSales(new DateTime(2017, 9, 28), 75000),
     ];
 
 // Generate 2 shades of each color so that we can style the line segments.

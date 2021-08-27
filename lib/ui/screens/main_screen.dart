@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart'
     hide DropdownButton, DropdownMenuItem, DropdownButtonHideUnderline;
-import 'package:my_budget/ui/widgets/dropdown_widget.dart';
+import './/models/transaction_category.dart';
+import './/ui/widgets/dropdown_widget.dart';
 
 import 'package:expandable/expandable.dart';
 import 'package:flutter_date_picker_timeline/flutter_date_picker_timeline.dart';

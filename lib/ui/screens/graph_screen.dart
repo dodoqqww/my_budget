@@ -19,7 +19,7 @@ class GraphScreen extends StatelessWidget {
             PieChart(),
             IncomeChart(),
             ExpenseChart(),
-            ChartTwo(),
+            // ChartTwo(),
           ],
           staggeredTiles: [
             StaggeredTile.extent(4, 240.0),

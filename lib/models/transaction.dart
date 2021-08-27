@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
-import 'package:my_budget/models/wallet.dart';
+import '../models/transaction_category.dart';
+import '../models/wallet.dart';
 
 class Transaction {
   String id;
@@ -9,6 +10,7 @@ class Transaction {
   DateTime date;
   double amount;
   String desc;
+  //TODO foreign key
   Wallet wallet;
   // photos
 
@@ -21,10 +23,4 @@ class Transaction {
       @required this.amount,
       @required this.desc,
       @required this.wallet});
-}
-
-class TrxCategory {
-  String name;
-
-  TrxCategory({@required this.name});
 }
