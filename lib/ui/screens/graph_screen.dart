@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:month_picker_dialog/month_picker_dialog.dart';
 import 'package:my_budget/ui/widgets/chart.dart';
 import './/ui/common/style.dart';
 
@@ -12,20 +13,20 @@ class GraphScreen extends StatelessWidget {
         //padding: EdgeInsets.all(10),
         child: StaggeredGridView.count(
           crossAxisCount: 4,
-          //mainAxisSpacing: 4,
+          //mainAxisSpacing: 1,
           //mainAxisSpacing: 4,
           children: <Widget>[
-            ChartOne(),
+            LastFourMonthChartWidget(),
             PieChart(),
-            IncomeChart(),
-            ExpenseChart(),
-            // ChartTwo(),
+            MonthSelectorWidget(),
+            CategoryListWidget(),
+            MonthChartWidget(),
           ],
           staggeredTiles: [
             StaggeredTile.extent(4, 240.0),
-            StaggeredTile.extent(3, 235.0),
-            //StaggeredTile.extent(2, 200.0),
-            StaggeredTile.extent(1, 235.0),
+            StaggeredTile.extent(2, 235.0),
+            StaggeredTile.extent(2, 75.0),
+            StaggeredTile.extent(2, 160.0),
             StaggeredTile.extent(4, 200.0),
           ],
         ),
@@ -34,8 +35,8 @@ class GraphScreen extends StatelessWidget {
   }
 }
 
-class ChartTwo extends StatelessWidget {
-  const ChartTwo({
+class CategoryListWidget extends StatelessWidget {
+  const CategoryListWidget({
     Key key,
   }) : super(key: key);
 
@@ -44,14 +45,50 @@ class ChartTwo extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(right: 10),
       child: getAppCardStyle(
-        child: Center(child: Text("5")),
+        child: Container(
+          margin: EdgeInsets.all(20),
+          child: ListView(
+            shrinkWrap: true,
+            physics: ClampingScrollPhysics(),
+            children: [
+              legendWidget("Investment", Colors.amber),
+              legendWidget("Food", Colors.red),
+              legendWidget("Car", Colors.green),
+              legendWidget("legendtest", Colors.amber),
+              legendWidget("legendtest", Colors.amber),
+              legendWidget("legendtest", Colors.amber),
+              legendWidget("legendtest", Colors.amber),
+              legendWidget("legendtest", Colors.amber),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget legendWidget(String text, Color color) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 5),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Icon(
+            Icons.circle,
+            color: color,
+            size: 20,
+          ),
+          Text(
+            text,
+            style: TextStyle(fontSize: 16),
+          )
+        ],
       ),
     );
   }
 }
 
-class ExpenseChart extends StatelessWidget {
-  const ExpenseChart({
+class MonthChartWidget extends StatelessWidget {
+  const MonthChartWidget({
     Key key,
   }) : super(key: key);
 
@@ -66,8 +103,8 @@ class ExpenseChart extends StatelessWidget {
   }
 }
 
-class IncomeChart extends StatelessWidget {
-  const IncomeChart({
+class MonthSelectorWidget extends StatelessWidget {
+  const MonthSelectorWidget({
     Key key,
   }) : super(key: key);
 
@@ -76,16 +113,47 @@ class IncomeChart extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(right: 10),
       child: getAppCardStyle(
-          child: Stack(
-        alignment: AlignmentDirectional.center,
-        children: [
-          //TODO picker mint frequencynél
-          Text("2021.Aug"),
-          //SizedBox(
-          //  width: 20,
-          //),
-        ],
-      )),
+        child: Padding(
+          padding: const EdgeInsets.only(left: 20, right: 15),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              //TODO picker mint frequencynél
+              Text(
+                "2021.Aug",
+                style: TextStyle(
+                  fontSize: 18,
+                  decoration: TextDecoration.underline,
+                ),
+              ),
+              IconButton(
+                  onPressed: () {
+                    showMonthPicker(
+                      okText: "Confirm",
+                      context: context,
+                      // firstDate: DateTime(DateTime.now().year - 1, 5),
+                      // lastDate: DateTime(DateTime.now().year + 1, 9),
+                      initialDate: DateTime.now(),
+                      //locale: Locale("es"),
+                    ).then((date) {
+                      // if (date != null) {
+                      //   setState(() {
+                      //     selectedDate = date;
+                      //   });
+                      // }
+                    });
+                  },
+                  icon: Icon(
+                    Icons.date_range,
+                    color: Colors.blue,
+                  ))
+              //SizedBox(
+              //  width: 20,
+              //),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
@@ -106,8 +174,8 @@ class PieChart extends StatelessWidget {
   }
 }
 
-class ChartOne extends StatelessWidget {
-  const ChartOne({
+class LastFourMonthChartWidget extends StatelessWidget {
+  const LastFourMonthChartWidget({
     Key key,
   }) : super(key: key);
 
