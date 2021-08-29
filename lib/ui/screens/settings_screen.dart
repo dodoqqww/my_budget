@@ -17,6 +17,7 @@ class SettingsScreen extends StatelessWidget {
         body: Container(
       padding: EdgeInsets.all(10),
       child: SingleChildScrollView(
+        clipBehavior: Clip.none,
         child: Column(
           children: [WalletSettings(), RemindersSettings(), OtherSettings()],
         ),
@@ -270,6 +271,21 @@ class OtherSettings extends StatelessWidget {
             padding: const EdgeInsets.only(left: 15),
             child: Column(
               children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text("Category management"),
+                    IconButton(
+                        onPressed: () {
+                          print("Category management");
+                        },
+                        icon: Icon(Icons.category, color: Colors.blue))
+                  ],
+                ),
+                Divider(
+                  color: Colors.grey,
+                  thickness: 1,
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart'
     hide DropdownButton, DropdownMenuItem, DropdownButtonHideUnderline;
+import 'package:flutter_material_color_picker/flutter_material_color_picker.dart';
 import './/models/transaction_category.dart';
 import './/ui/widgets/dropdown_widget.dart';
 
@@ -12,6 +13,8 @@ import './/models/wallet.dart';
 import './/ui/common/animations.dart';
 import './/ui/common/style.dart';
 import 'package:quiver/time.dart';
+
+import 'package:charts_flutter/flutter.dart' as charts;
 
 class MainScreen extends StatelessWidget {
   final List<Transaction> list1 = [
@@ -77,65 +80,68 @@ class MainScreen extends StatelessWidget {
     return Scaffold(
       body: Container(
         padding: EdgeInsets.all(10),
-        child: Column(
-          children: [
-            Container(
-              padding: EdgeInsets.all(10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      IconButton(
-                          onPressed: () {
-                            showMonthPicker(
-                              okText: "Confirm",
-                              context: context,
-                              // firstDate: DateTime(DateTime.now().year - 1, 5),
-                              // lastDate: DateTime(DateTime.now().year + 1, 9),
-                              initialDate: DateTime.now(),
-                              //locale: Locale("es"),
-                            ).then((date) {
-                              // if (date != null) {
-                              //   setState(() {
-                              //     selectedDate = date;
-                              //   });
-                              // }
-                            });
-                          },
-                          icon: Icon(
-                            Icons.date_range,
-                            color: Colors.blue,
-                          )),
-                      Text(
-                        "2021.August",
-                        style: TextStyle(fontSize: 24),
-                      ),
-                    ],
-                  ),
-                  IconButton(
-                      onPressed: () {
-                        print("export pdf || excel");
-                      },
-                      icon: Icon(
-                        Icons.download,
-                        color: Colors.blue,
-                      ))
-                ],
+        child: SingleChildScrollView(
+          clipBehavior: Clip.none,
+          child: Column(
+            children: [
+              Container(
+                padding: EdgeInsets.all(10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        IconButton(
+                            onPressed: () {
+                              showMonthPicker(
+                                okText: "Confirm",
+                                context: context,
+                                // firstDate: DateTime(DateTime.now().year - 1, 5),
+                                // lastDate: DateTime(DateTime.now().year + 1, 9),
+                                initialDate: DateTime.now(),
+                                //locale: Locale("es"),
+                              ).then((date) {
+                                // if (date != null) {
+                                //   setState(() {
+                                //     selectedDate = date;
+                                //   });
+                                // }
+                              });
+                            },
+                            icon: Icon(
+                              Icons.date_range,
+                              color: Colors.blue,
+                            )),
+                        Text(
+                          "2021.August",
+                          style: TextStyle(fontSize: 24),
+                        ),
+                      ],
+                    ),
+                    IconButton(
+                        onPressed: () {
+                          print("export pdf || excel");
+                        },
+                        icon: Icon(
+                          Icons.download,
+                          color: Colors.blue,
+                        ))
+                  ],
+                ),
               ),
-            ),
-            Divider(
-              thickness: 2,
-            ),
-            FinancialSummaryWidget(
-              list: list1,
-              isIncome: true,
-            ),
-            FinancialSummaryWidget(
-              list: list2,
-              isIncome: false,
-            ),
-          ],
+              Divider(
+                thickness: 2,
+              ),
+              FinancialSummaryWidget(
+                list: list1,
+                isIncome: true,
+              ),
+              FinancialSummaryWidget(
+                list: list2,
+                isIncome: false,
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -172,10 +178,8 @@ class FinancialSummaryWidget extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.only(bottom: 5),
                         child: isIncome
-                            ? Text("Income:"
-                                //,style: TextStyle(fontWeight: FontWeight.bold)
-                                )
-                            : Text("Expense:"),
+                            ? Text("Income:", style: TextStyle(fontSize: 18))
+                            : Text("Expense:", style: TextStyle(fontSize: 18)),
                       ),
                       Text(
                         "$prefix 000000000000 Ft",
@@ -199,6 +203,12 @@ class FinancialSummaryWidget extends StatelessWidget {
                 ],
               ),
             ),
+            Padding(
+              padding: const EdgeInsets.only(left: 10.0, right: 10),
+              child: Divider(
+                thickness: 1,
+              ),
+            ),
             Container(
               margin: EdgeInsets.only(left: 10),
               child: Expandable(
@@ -206,11 +216,12 @@ class FinancialSummaryWidget extends StatelessWidget {
                 collapsed: ExpandableButton(
                   // <-- Expands when tapped on the cover photo
                   child: Container(
+                    padding: EdgeInsets.only(bottom: 5),
                     alignment: Alignment.center,
                     width: double.infinity,
                     child: Text(
                       "Details",
-                      style: TextStyle(color: Colors.blue),
+                      style: TextStyle(color: Colors.blue, fontSize: 16),
                     ),
                   ),
                 ),
@@ -256,7 +267,7 @@ class TrxDetailsWidget extends StatelessWidget {
       //TrxListItem(trx:asd2, Colors.green),
       Container(
         padding: EdgeInsets.all(5),
-        alignment: Alignment.centerRight,
+        alignment: Alignment.center,
         child: ExpandableButton(
           // <-- Collapses when tapped on
           child: Icon(Icons.arrow_upward, color: Colors.blue),
@@ -610,14 +621,34 @@ class AddEditTrxScreen extends StatelessWidget {
               ),
               title: Text('Add category'),
               content: Column(mainAxisSize: MainAxisSize.min, children: [
-                TextField(
-                  onChanged: (value) {
-                    // setState(() {
-                    //   valueText = value;
-                    // });
-                  },
-                  //controller: _textFieldController,
-                  decoration: getAppTextFieldDecoration(labelText: "Category"),
+                Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(right: 10),
+                      child: InkWell(
+                        child: Icon(
+                          Icons.circle,
+                          size: 32,
+                        ),
+                        onTap: () {
+                          _openColorPicker(context);
+                        },
+                      ),
+                    ),
+                    Container(
+                      width: 200,
+                      child: TextField(
+                        onChanged: (value) {
+                          // setState(() {
+                          //   valueText = value;
+                          // });
+                        },
+                        //controller: _textFieldController,
+                        decoration:
+                            getAppTextFieldDecoration(labelText: "Category"),
+                      ),
+                    ),
+                  ],
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 8.0),
@@ -645,6 +676,43 @@ class AddEditTrxScreen extends StatelessWidget {
                   //   FloatingActionButton(onPressed: (){},child: Icon(Icons.save),),
                   // ],
                   ));
+        });
+  }
+
+  void _openColorPicker(BuildContext context) async {
+    showDialog(
+        context: context,
+        builder: (_) {
+          return AlertDialog(
+            contentPadding: const EdgeInsets.all(6.0),
+            //title: Text(title),
+            content: MaterialColorPicker(
+              onColorChange: (Color color) {
+                // Handle color changes
+              },
+              selectedColor: Colors.red,
+              colors: [
+                Colors.red,
+                Colors.deepOrange,
+                Colors.yellow,
+                Colors.lightGreen
+              ],
+            ),
+            actions: [
+              TextButton(
+                child: Text('CANCEL'),
+                onPressed: Navigator.of(context).pop,
+              ),
+              TextButton(
+                child: Text('SUBMIT'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  //   setState(() => _mainColor = _tempMainColor);
+                  //   setState(() => _shadeColor = _tempShadeColor);
+                },
+              ),
+            ],
+          );
         });
   }
 }

@@ -148,51 +148,10 @@ class DatumLegendOptions extends StatelessWidget {
     return new charts.PieChart(
       seriesList,
       animate: animate,
-
       defaultRenderer: new charts.ArcRendererConfig(arcRendererDecorators: [
         new charts.ArcLabelDecorator(
             labelPosition: charts.ArcLabelPosition.auto)
       ]),
-
-      // Add the legend behavior to the chart to turn on legends.
-      // This example shows how to change the position and justification of
-      // the legend, in addition to altering the max rows and padding.
-      behaviors: [
-        //new charts.ChartTitle('2021.August',
-        //    behaviorPosition: charts.BehaviorPosition.top,
-        //    titleOutsideJustification: charts.OutsideJustification.middle,
-        //    // Set a larger inner padding than the default (10) to avoid
-        //    // rendering the text too close to the top measure axis tick label.
-        //    // The top tick label may extend upwards into the top margin region
-        //    // if it is located at the top of the draw area.
-        //    innerPadding: 5),
-        // new charts.DatumLegend(
-        //   // Positions for "start" and "end" will be left and right respectively
-        //   // for widgets with a build context that has directionality ltr.
-        //   // For rtl, "start" and "end" will be right and left respectively.
-        //   // Since this example has directionality of ltr, the legend is
-        //   // positioned on the right side of the chart.
-        //   position: charts.BehaviorPosition.end,
-        //   // For a legend that is positioned on the left or right of the chart,
-        //   // setting the justification for [endDrawArea] is aligned to the
-        //   // bottom of the chart draw area.
-        //   outsideJustification: charts.OutsideJustification.endDrawArea,
-        //   // By default, if the position of the chart is on the left or right of
-        //   // the chart, [horizontalFirst] is set to false. This means that the
-        //   // legend entries will grow as new rows first instead of a new column.
-        //   horizontalFirst: false,
-        //   // By setting this value to 2, the legend entries will grow up to two
-        //   // rows before adding a new column.
-        //   desiredMaxRows: 10,
-        //   // This defines the padding around each legend entry.
-        //   cellPadding: new EdgeInsets.only(right: 4.0, bottom: 4.0),
-        //   // Render the legend entry text with custom styles.
-        //   entryTextStyle: charts.TextStyleSpec(
-        //       // color: charts.MaterialPalette.gray.shadeDefault,
-        //       // fontFamily: 'Georgia',
-        //       fontSize: 12),
-        // )
-      ],
     );
   }
 

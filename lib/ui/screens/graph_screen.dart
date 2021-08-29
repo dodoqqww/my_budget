@@ -24,10 +24,10 @@ class GraphScreen extends StatelessWidget {
           ],
           staggeredTiles: [
             StaggeredTile.extent(4, 240.0),
-            StaggeredTile.extent(2, 235.0),
+            StaggeredTile.extent(2, 215.0),
             StaggeredTile.extent(2, 75.0),
-            StaggeredTile.extent(2, 160.0),
-            StaggeredTile.extent(4, 200.0),
+            StaggeredTile.extent(2, 140.0),
+            StaggeredTile.extent(4, 215.0),
           ],
         ),
       ),
