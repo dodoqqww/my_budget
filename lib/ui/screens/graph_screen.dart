@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:month_picker_dialog/month_picker_dialog.dart';
 import 'package:my_budget/ui/widgets/chart.dart';
+import 'package:my_budget/ui/widgets/legend_widget.dart';
 import './/ui/common/style.dart';
 
 class GraphScreen extends StatelessWidget {
@@ -19,7 +20,7 @@ class GraphScreen extends StatelessWidget {
             LastFourMonthChartWidget(),
             PieChart(),
             MonthSelectorWidget(),
-            CategoryListWidget(),
+            LegendWidget(),
             MonthChartWidget(),
           ],
           staggeredTiles: [
@@ -35,8 +36,8 @@ class GraphScreen extends StatelessWidget {
   }
 }
 
-class CategoryListWidget extends StatelessWidget {
-  const CategoryListWidget({
+class LegendWidget extends StatelessWidget {
+  const LegendWidget({
     Key key,
   }) : super(key: key);
 
@@ -51,37 +52,17 @@ class CategoryListWidget extends StatelessWidget {
             shrinkWrap: true,
             physics: ClampingScrollPhysics(),
             children: [
-              legendWidget("Investment", Colors.amber),
-              legendWidget("Food", Colors.red),
-              legendWidget("Car", Colors.green),
-              legendWidget("legendtest", Colors.amber),
-              legendWidget("legendtest", Colors.amber),
-              legendWidget("legendtest", Colors.amber),
-              legendWidget("legendtest", Colors.amber),
-              legendWidget("legendtest", Colors.amber),
+              MyLegendWidget(text: "Investment", color: Colors.amber),
+              MyLegendWidget(text: "Food", color: Colors.red),
+              MyLegendWidget(text: "Car", color: Colors.green),
+              MyLegendWidget(text: "legendtest", color: Colors.amber),
+              MyLegendWidget(text: "legendtest", color: Colors.amber),
+              MyLegendWidget(text: "legendtest", color: Colors.amber),
+              MyLegendWidget(text: "legendtest", color: Colors.amber),
+              MyLegendWidget(text: "legendtest", color: Colors.amber),
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  Widget legendWidget(String text, Color color) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 5),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Icon(
-            Icons.circle,
-            color: color,
-            size: 20,
-          ),
-          Text(
-            text,
-            style: TextStyle(fontSize: 16),
-          )
-        ],
       ),
     );
   }

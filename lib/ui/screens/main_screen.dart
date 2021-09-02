@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart'
     hide DropdownButton, DropdownMenuItem, DropdownButtonHideUnderline;
 import 'package:flutter_material_color_picker/flutter_material_color_picker.dart';
+import 'package:my_budget/ui/widgets/add_category_dialog.dart';
 import './/models/transaction_category.dart';
 import './/ui/widgets/dropdown_widget.dart';
 
@@ -22,7 +23,7 @@ class MainScreen extends StatelessWidget {
         id: "id1",
         amount: 120.4,
         isIncome: true,
-        category: TrxCategory(name: "Gift"),
+        category: TrxCategory(id: "1", name: "Gift"),
         date: DateTime.now(),
         desc: "desc1",
         name: "name1",
@@ -35,7 +36,7 @@ class MainScreen extends StatelessWidget {
         id: "id2",
         amount: 1221.4,
         isIncome: true,
-        category: TrxCategory(name: "Food"),
+        category: TrxCategory(id: "2", name: "Food"),
         date: DateTime.now(),
         desc: "desc2",
         name: "name2",
@@ -50,7 +51,20 @@ class MainScreen extends StatelessWidget {
         id: "id1",
         amount: 120.4,
         isIncome: false,
-        category: TrxCategory(name: "Gift"),
+        category: TrxCategory(id: "1", name: "Gift"),
+        date: DateTime.now(),
+        desc: "desc1",
+        name: "name1",
+        wallet: Wallet(
+            id: "1",
+            name: "OTP Bank",
+            amount: 123456.0,
+            type: WalletType.card)),
+    Transaction(
+        id: "id1",
+        amount: 120.4,
+        isIncome: false,
+        category: TrxCategory(id: "1", name: "Gift"),
         date: DateTime.now(),
         desc: "desc1",
         name: "name1",
@@ -63,7 +77,7 @@ class MainScreen extends StatelessWidget {
         id: "id2",
         amount: 1221.4,
         isIncome: false,
-        category: TrxCategory(name: "Food"),
+        category: TrxCategory(id: "2", name: "Food"),
         date: DateTime.now(),
         desc: "desc2",
         name: "name2",
@@ -257,6 +271,7 @@ class TrxDetailsWidget extends StatelessWidget {
               ))),
       ListView.builder(
           scrollDirection: Axis.vertical,
+          physics: NeverScrollableScrollPhysics(),
           shrinkWrap: true,
           itemCount: list.length,
           itemBuilder: (BuildContext context, int index) {
@@ -266,8 +281,8 @@ class TrxDetailsWidget extends StatelessWidget {
           }),
       //TrxListItem(trx:asd2, Colors.green),
       Container(
-        padding: EdgeInsets.all(5),
-        alignment: Alignment.center,
+        padding: EdgeInsets.fromLTRB(5, 5, 15, 5),
+        alignment: Alignment.centerRight,
         child: ExpandableButton(
           // <-- Collapses when tapped on
           child: Icon(Icons.arrow_upward, color: Colors.blue),
@@ -428,7 +443,7 @@ class AddEditTrxScreen extends StatelessWidget {
                                   ),
                                   InkWell(
                                     onTap: () {
-                                      _addCategoryDialog(context);
+                                      addCategoryDialog(context);
                                     },
                                     child: Icon(
                                       Icons.add_rounded,
@@ -609,110 +624,5 @@ class AddEditTrxScreen extends StatelessWidget {
                     ],
                   )),
             )));
-  }
-
-  Future<void> _addCategoryDialog(BuildContext context) async {
-    return showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(25.0),
-              ),
-              title: Text('Add category'),
-              content: Column(mainAxisSize: MainAxisSize.min, children: [
-                Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(right: 10),
-                      child: InkWell(
-                        child: Icon(
-                          Icons.circle,
-                          size: 32,
-                        ),
-                        onTap: () {
-                          _openColorPicker(context);
-                        },
-                      ),
-                    ),
-                    Container(
-                      width: 200,
-                      child: TextField(
-                        onChanged: (value) {
-                          // setState(() {
-                          //   valueText = value;
-                          // });
-                        },
-                        //controller: _textFieldController,
-                        decoration:
-                            getAppTextFieldDecoration(labelText: "Category"),
-                      ),
-                    ),
-                  ],
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      IconButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          icon: Icon(Icons.arrow_back)),
-                      FloatingActionButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        child: Icon(Icons.save),
-                      )
-                    ],
-                  ),
-                ),
-              ]
-                  // actions: <Widget>[
-//
-                  //   // ignore: deprecated_member_use
-                  //   FloatingActionButton(onPressed: (){},child: Icon(Icons.save),),
-                  // ],
-                  ));
-        });
-  }
-
-  void _openColorPicker(BuildContext context) async {
-    showDialog(
-        context: context,
-        builder: (_) {
-          return AlertDialog(
-            contentPadding: const EdgeInsets.all(6.0),
-            //title: Text(title),
-            content: MaterialColorPicker(
-              onColorChange: (Color color) {
-                // Handle color changes
-              },
-              selectedColor: Colors.red,
-              colors: [
-                Colors.red,
-                Colors.deepOrange,
-                Colors.yellow,
-                Colors.lightGreen
-              ],
-            ),
-            actions: [
-              TextButton(
-                child: Text('CANCEL'),
-                onPressed: Navigator.of(context).pop,
-              ),
-              TextButton(
-                child: Text('SUBMIT'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  //   setState(() => _mainColor = _tempMainColor);
-                  //   setState(() => _shadeColor = _tempShadeColor);
-                },
-              ),
-            ],
-          );
-        });
   }
 }

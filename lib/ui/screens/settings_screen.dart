@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_picker/flutter_picker.dart';
+import 'package:my_budget/ui/widgets/add_category_dialog.dart';
+import 'package:my_budget/ui/widgets/legend_widget.dart';
 
 import './/models/reminder.dart';
 import './/models/wallet.dart';
@@ -277,7 +279,7 @@ class OtherSettings extends StatelessWidget {
                     Text("Category management"),
                     IconButton(
                         onPressed: () {
-                          print("Category management");
+                          openDialog(context, AddEditCategoryScreen());
                         },
                         icon: Icon(Icons.category, color: Colors.blue))
                   ],
@@ -554,5 +556,174 @@ class AddEditReminderScreen extends StatelessWidget {
                     ],
                   )),
             )));
+  }
+}
+
+class AddEditCategoryScreen extends StatelessWidget {
+  final nameCtrl = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    print("AddEditCategoryScreen build()");
+    return Material(
+        type: MaterialType.transparency,
+        // make sure that the overlay content is not cut off
+        child: Container(
+            padding: EdgeInsets.fromLTRB(10, 35, 10, 75),
+            child: getAppCardStyle(
+              child: Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.all(10),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      ListView(
+                        physics: NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(15, 0, 8, 20),
+                            child: Text(
+                              "Categorys:",
+                              style: TextStyle(fontSize: 24),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(10, 0, 10, 8),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(10.0),
+                                      child: Icon(
+                                        Icons.circle,
+                                        size: 32,
+                                        color: Colors.amber,
+                                      ),
+                                    ),
+                                    Container(
+                                      height: 50,
+                                      width: 225,
+                                      child: TextField(
+                                        decoration: getAppTextFieldDecoration(
+                                            labelText: "Name", hintText: ""),
+                                        controller: nameCtrl,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                InkWell(
+                                  onTap: () {
+                                    addCategoryDialog(context);
+                                  },
+                                  child: Icon(
+                                    Icons.add_rounded,
+                                    color: Colors.blue,
+                                    size: 40,
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                          Container(
+                            padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
+                            height: 350,
+                            child: ListView(
+                              shrinkWrap: true,
+                              children: [
+                                _settingsMyLegendWidget(
+                                  text: "Investment",
+                                  color: Colors.amber,
+                                ),
+                                _settingsMyLegendWidget(
+                                  text: "Food",
+                                  color: Colors.red,
+                                ),
+                                _settingsMyLegendWidget(
+                                  text: "Car",
+                                  color: Colors.green,
+                                ),
+                                _settingsMyLegendWidget(
+                                  text: "legendtest",
+                                  color: Colors.amber,
+                                ),
+                                _settingsMyLegendWidget(
+                                  text: "legendtest",
+                                  color: Colors.amber,
+                                ),
+                                _settingsMyLegendWidget(
+                                  text: "legendtest",
+                                  color: Colors.amber,
+                                ),
+                                _settingsMyLegendWidget(
+                                  text: "legendtest",
+                                  color: Colors.amber,
+                                ),
+                                _settingsMyLegendWidget(
+                                  text: "legendtest",
+                                  color: Colors.amber,
+                                ),
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                      Spacer(),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            IconButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                icon: Icon(Icons.arrow_back)),
+                            FloatingActionButton(
+                                heroTag: "deleteCatBtn",
+                                child: Icon(Icons.delete),
+                                backgroundColor: Colors.red,
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                }),
+                            FloatingActionButton(
+                                heroTag: "saveCatBtn",
+                                child: Icon(Icons.save),
+                                backgroundColor: Colors.green,
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                }),
+                          ],
+                        ),
+                      )
+                    ],
+                  )),
+            )));
+  }
+
+  Widget _settingsMyLegendWidget({String text, Color color}) {
+    return GestureDetector(
+      onTap: () {
+        print("ouch: $text");
+        nameCtrl.text = text;
+      },
+      child: Column(
+        children: [
+          MyLegendWidget(
+            text: text,
+            color: color,
+            space: 5.0,
+          ),
+          Divider(
+            thickness: 1,
+            color: Colors.grey,
+          )
+        ],
+      ),
+    );
   }
 }
