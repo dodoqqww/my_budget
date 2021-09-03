@@ -23,7 +23,7 @@ class MyLegendWidget extends StatelessWidget {
           ),
           Text(
             text,
-            style: TextStyle(fontSize: 16),
+            style: TextStyle(fontSize: 14),
           )
         ],
       ),

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart'
     hide DropdownButton, DropdownMenuItem, DropdownButtonHideUnderline;
 import 'package:flutter_material_color_picker/flutter_material_color_picker.dart';
+import 'package:flutter_money_formatter/flutter_money_formatter.dart';
 import 'package:my_budget/ui/widgets/add_category_dialog.dart';
+import 'package:my_budget/ui/widgets/fitted_text.dart';
 import './/models/transaction_category.dart';
 import './/ui/widgets/dropdown_widget.dart';
 
@@ -15,13 +17,11 @@ import './/ui/common/animations.dart';
 import './/ui/common/style.dart';
 import 'package:quiver/time.dart';
 
-import 'package:charts_flutter/flutter.dart' as charts;
-
 class MainScreen extends StatelessWidget {
   final List<Transaction> list1 = [
     Transaction(
         id: "id1",
-        amount: 120.4,
+        amount: 1200000000.4,
         isIncome: true,
         category: TrxCategory(id: "1", name: "Gift"),
         date: DateTime.now(),
@@ -128,7 +128,7 @@ class MainScreen extends StatelessWidget {
                             )),
                         Text(
                           "2021.August",
-                          style: TextStyle(fontSize: 24),
+                          style: TextStyle(fontSize: 28),
                         ),
                       ],
                     ),
@@ -176,31 +176,35 @@ class FinancialSummaryWidget extends StatelessWidget {
 
     String prefix = isIncome ? "+" : "-";
 
+    //FlutterMoneyFormatter fmf = FlutterMoneyFormatter(amount: 12345678.9012345);
+
+    //MoneyFormatterOutput fo = fmf.output;
+
     return ExpandableNotifier(
       // <-- Provides ExpandableController to its children
       child: getAppCardStyle(
         child: Column(
           children: [
             Container(
-              padding: EdgeInsets.all(10),
+              padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 5),
-                        child: isIncome
-                            ? Text("Income:", style: TextStyle(fontSize: 18))
-                            : Text("Expense:", style: TextStyle(fontSize: 18)),
-                      ),
-                      Text(
-                        "$prefix 000000000000 Ft",
-                        style: TextStyle(
-                            fontSize: 24,
-                            color: isIncome ? Colors.green : Colors.red),
-                      ),
+                      //Padding(
+                      //  padding: const EdgeInsets.only(bottom: 5),
+                      //  child: isIncome
+                      //      ? Text("Income:", style: TextStyle(fontSize: 18))
+                      //      : Text("Expense:", style: TextStyle(fontSize: 18)),
+                      //),
+                      FittedText(
+                        size: 32,
+                        color: isIncome ? Colors.green : Colors.red,
+                        text: "$prefix 12,234.00 Ft",
+                        fitSize: 250,
+                      )
                     ],
                   ),
                   FloatingActionButton(
@@ -235,7 +239,7 @@ class FinancialSummaryWidget extends StatelessWidget {
                     width: double.infinity,
                     child: Text(
                       "Details",
-                      style: TextStyle(color: Colors.blue, fontSize: 16),
+                      style: TextStyle(color: Colors.blue, fontSize: 18),
                     ),
                   ),
                 ),
@@ -267,6 +271,7 @@ class TrxDetailsWidget extends StatelessWidget {
           width: double.infinity,
           child: Text("Transactions:",
               style: TextStyle(
+                fontSize: 18,
                 decoration: TextDecoration.underline,
               ))),
       ListView.builder(
@@ -316,26 +321,42 @@ class TrxListItem extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(trx.name),
+              FittedText(
+                text: trx.name,
+                color: Colors.black,
+                size: 18,
+                fitSize: 185,
+              ),
               InkWell(
                   onTap: () {
                     openDialog(context, AddEditTrxScreen(trx: trx));
                   },
                   child: Text(
                     "Edit",
-                    style: TextStyle(color: Colors.blue),
+                    style: TextStyle(fontSize: 18, color: Colors.blue),
                   ))
             ],
           ),
           Divider(color: Colors.black),
           Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
             Row(
-              children: [trx.wallet.type.icon, Text(trx.wallet.name)],
+              children: [
+                trx.wallet.type.icon,
+                FittedText(
+                  text: trx.wallet.name,
+                  color: Colors.black,
+                  size: 18,
+                  fitSize: 125,
+                ),
+              ],
             ),
-            Text(
-              "$prefix ${trx.amount} Ft",
-              style: TextStyle(color: amountColor),
-            )
+            FittedText(
+              text: "$prefix ${trx.amount}Ft",
+              color: amountColor,
+              size: 18,
+              fitSize: 150,
+              align: AlignmentDirectional.centerEnd,
+            ),
           ])
         ],
       ),

@@ -559,6 +559,7 @@ class AddEditReminderScreen extends StatelessWidget {
   }
 }
 
+//TODO make better UI
 class AddEditCategoryScreen extends StatelessWidget {
   final nameCtrl = TextEditingController();
 
@@ -599,10 +600,15 @@ class AddEditCategoryScreen extends StatelessWidget {
                                   children: [
                                     Padding(
                                       padding: const EdgeInsets.all(10.0),
-                                      child: Icon(
-                                        Icons.circle,
-                                        size: 32,
-                                        color: Colors.amber,
+                                      child: InkWell(
+                                        onTap: () {
+                                          openColorPicker(context);
+                                        },
+                                        child: Icon(
+                                          Icons.circle,
+                                          size: 32,
+                                          color: Colors.amber,
+                                        ),
                                       ),
                                     ),
                                     Container(

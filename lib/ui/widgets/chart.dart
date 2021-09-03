@@ -47,6 +47,7 @@ class OrdinalComboBarLineChart extends StatelessWidget {
       ],
       behaviors: [
         new charts.ChartTitle('Last 4 months',
+            titleStyleSpec: TextStyleSpec(fontSize: 26),
             behaviorPosition: charts.BehaviorPosition.top,
             titleOutsideJustification: charts.OutsideJustification.middle,
             // Set a larger inner padding than the default (10) to avoid
@@ -264,7 +265,7 @@ class SimpleTimeSeriesChart extends StatelessWidget {
       behaviors: [
         new charts.LinePointHighlighter(
             showHorizontalFollowLine:
-                charts.LinePointHighlighterFollowLineType.nearest,
+                charts.LinePointHighlighterFollowLineType.none,
             showVerticalFollowLine:
                 charts.LinePointHighlighterFollowLineType.none),
         new charts.SelectNearest(

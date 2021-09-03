@@ -103,7 +103,7 @@ class MonthSelectorWidget extends StatelessWidget {
               Text(
                 "2021.Aug",
                 style: TextStyle(
-                  fontSize: 18,
+                  fontSize: 22,
                   decoration: TextDecoration.underline,
                 ),
               ),
