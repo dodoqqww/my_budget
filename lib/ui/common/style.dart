@@ -1,5 +1,21 @@
 import 'package:flutter/material.dart';
 
+// app divider
+class AppListItemDivider extends StatelessWidget {
+  final Color color;
+
+  const AppListItemDivider({Key key, this.color = Colors.black})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Divider(
+      height: 5,
+      color: color,
+    );
+  }
+}
+
 // textfield decoration
 InputDecoration getAppTextFieldDecoration(
     {String labelText, String hintText = ""}) {

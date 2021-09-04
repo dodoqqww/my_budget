@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_picker/flutter_picker.dart';
 import 'package:my_budget/ui/widgets/add_category_dialog.dart';
+import 'package:my_budget/ui/widgets/fitted_text.dart';
 import 'package:my_budget/ui/widgets/legend_widget.dart';
 
 import './/models/reminder.dart';
@@ -17,6 +18,7 @@ class SettingsScreen extends StatelessWidget {
     print("SettingsScreen build()");
     return Scaffold(
         body: Container(
+      margin: EdgeInsets.only(bottom: 20),
       padding: EdgeInsets.all(10),
       child: SingleChildScrollView(
         clipBehavior: Clip.none,
@@ -47,7 +49,7 @@ class WalletSettings extends StatelessWidget {
             children: [
               Text(
                 "Wallets:",
-                style: TextStyle(fontSize: 24),
+                style: TextStyle(fontSize: 28),
               ),
               FloatingActionButton(
                   child: Icon(Icons.add),
@@ -100,7 +102,13 @@ class WalletListWidget extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(wallet.name),
+              FittedText(
+                text: wallet.name,
+                color: Colors.black,
+                size: 18,
+                fitSize: 180,
+                //align: AlignmentDirectional.centerEnd,
+              ),
               InkWell(
                   onTap: () {
                     openDialog(
@@ -111,18 +119,29 @@ class WalletListWidget extends StatelessWidget {
                   },
                   child: Text(
                     "Edit",
-                    style: TextStyle(color: Colors.blue),
+                    style: TextStyle(fontSize: 18, color: Colors.blue),
                   ))
             ],
           ),
-          Divider(color: Colors.black),
+          AppListItemDivider(),
           Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
             Row(
-              children: [wallet.type.icon, Text(wallet.type.name)],
+              children: [
+                wallet.type.icon,
+                FittedText(
+                  text: wallet.name,
+                  color: Colors.black,
+                  size: 18,
+                  fitSize: 125,
+                ),
+              ],
             ),
-            Text(
-              "+ ${wallet.amount} Ft",
-              style: TextStyle(color: Colors.green),
+            FittedText(
+              text: "+ ${wallet.amount} Ft",
+              color: Colors.green,
+              size: 18,
+              fitSize: 150,
+              align: AlignmentDirectional.centerEnd,
             )
           ])
         ],
@@ -150,7 +169,7 @@ class RemindersSettings extends StatelessWidget {
             children: [
               Text(
                 "Reminders:",
-                style: TextStyle(fontSize: 24),
+                style: TextStyle(fontSize: 28),
               ),
               FloatingActionButton(
                   heroTag: "addReminderBtn",
@@ -205,7 +224,12 @@ class ReminderListWidget extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(reminder.name),
+              FittedText(
+                text: reminder.name,
+                color: Colors.black,
+                size: 18,
+                fitSize: 185,
+              ),
               InkWell(
                   onTap: () {
                     openDialog(
@@ -216,14 +240,17 @@ class ReminderListWidget extends StatelessWidget {
                   },
                   child: Text(
                     "Edit",
-                    style: TextStyle(color: Colors.blue),
+                    style: TextStyle(fontSize: 18, color: Colors.blue),
                   ))
             ],
           ),
           Divider(color: Colors.black),
           Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-            Text(
-              reminder.frequency,
+            FittedText(
+              text: reminder.frequency,
+              color: Colors.black,
+              size: 18,
+              fitSize: 215,
             ),
             ToggleSwitch(
               minHeight: 30,
@@ -264,7 +291,7 @@ class OtherSettings extends StatelessWidget {
         children: [
           Text(
             "Others:",
-            style: TextStyle(fontSize: 24),
+            style: TextStyle(fontSize: 28),
           ),
           Divider(
             thickness: 2,
@@ -276,7 +303,10 @@ class OtherSettings extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text("Category management"),
+                    Text("Category management",
+                        style: TextStyle(
+                          fontSize: 18,
+                        )),
                     IconButton(
                         onPressed: () {
                           openDialog(context, AddEditCategoryScreen());
@@ -291,7 +321,28 @@ class OtherSettings extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text("Backup"),
+                    Text("Currency setting",
+                        style: TextStyle(
+                          fontSize: 18,
+                        )),
+                    IconButton(
+                        onPressed: () {
+                          print("currency settings");
+                        },
+                        icon: Icon(Icons.paid, color: Colors.blue))
+                  ],
+                ),
+                Divider(
+                  color: Colors.grey,
+                  thickness: 1,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text("Backup",
+                        style: TextStyle(
+                          fontSize: 18,
+                        )),
                     IconButton(
                         onPressed: () {
                           print("backup google drive");

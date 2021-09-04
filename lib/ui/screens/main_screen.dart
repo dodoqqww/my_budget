@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart'
     hide DropdownButton, DropdownMenuItem, DropdownButtonHideUnderline;
-import 'package:flutter_material_color_picker/flutter_material_color_picker.dart';
-import 'package:flutter_money_formatter/flutter_money_formatter.dart';
+import 'package:intl/intl.dart';
 import 'package:my_budget/ui/widgets/add_category_dialog.dart';
 import 'package:my_budget/ui/widgets/fitted_text.dart';
 import './/models/transaction_category.dart';
@@ -305,62 +304,93 @@ class TrxListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(_getFormatedMMddDate(trx.date));
+
     String prefix = trx.isIncome ? "+" : "-";
-    return Container(
-      margin: EdgeInsets.fromLTRB(15, 5, 5, 5),
-      decoration: BoxDecoration(
-          border: Border(
-        left: BorderSide(
-          //color: Colors.green,
-          width: 1,
-        ),
-      )),
-      padding: EdgeInsets.all(5),
-      child: Column(
-        children: [
-          Row(
+    return Row(
+      children: [
+        RotatedBox(
+            quarterTurns: 3,
+            child: Text(
+              _getFormatedMMddDate(trx.date),
+              style: TextStyle(fontSize: 16),
+            )),
+        Container(
+          width: 320,
+          //height: 100,
+          margin: EdgeInsets.fromLTRB(5, 5, 5, 5),
+          decoration: BoxDecoration(
+              border: Border(
+            left: BorderSide(
+              //color: Colors.green,
+              width: 1,
+            ),
+          )),
+          //padding: EdgeInsets.all(5),
+          child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              FittedText(
-                text: trx.name,
-                color: Colors.black,
-                size: 18,
-                fitSize: 185,
+              Padding(
+                padding: const EdgeInsets.only(left: 5),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    FittedText(
+                      text: trx.category.name,
+                      color: Colors.black,
+                      size: 18,
+                      fitSize: 185,
+                    ),
+                    InkWell(
+                        onTap: () {
+                          openDialog(context, AddEditTrxScreen(trx: trx));
+                        },
+                        child: Text(
+                          "Edit",
+                          style: TextStyle(fontSize: 18, color: Colors.blue),
+                        ))
+                  ],
+                ),
               ),
-              InkWell(
-                  onTap: () {
-                    openDialog(context, AddEditTrxScreen(trx: trx));
-                  },
-                  child: Text(
-                    "Edit",
-                    style: TextStyle(fontSize: 18, color: Colors.blue),
-                  ))
+              Padding(
+                padding: const EdgeInsets.only(left: 5),
+                child: AppListItemDivider(),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 5),
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          trx.wallet.type.icon,
+                          FittedText(
+                            text: trx.wallet.name,
+                            color: Colors.black,
+                            size: 18,
+                            fitSize: 125,
+                          ),
+                        ],
+                      ),
+                      FittedText(
+                        text: "$prefix ${trx.amount}Ft",
+                        color: amountColor,
+                        size: 18,
+                        fitSize: 150,
+                        align: AlignmentDirectional.centerEnd,
+                      ),
+                    ]),
+              )
             ],
           ),
-          Divider(color: Colors.black),
-          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-            Row(
-              children: [
-                trx.wallet.type.icon,
-                FittedText(
-                  text: trx.wallet.name,
-                  color: Colors.black,
-                  size: 18,
-                  fitSize: 125,
-                ),
-              ],
-            ),
-            FittedText(
-              text: "$prefix ${trx.amount}Ft",
-              color: amountColor,
-              size: 18,
-              fitSize: 150,
-              align: AlignmentDirectional.centerEnd,
-            ),
-          ])
-        ],
-      ),
+        ),
+      ],
     );
+  }
+
+  String _getFormatedMMddDate(DateTime date) {
+    final DateFormat formatter = DateFormat('MM.dd.');
+    return formatter.format(date);
   }
 }
 

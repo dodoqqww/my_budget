@@ -13,6 +13,7 @@ class GraphScreen extends StatelessWidget {
       body: Container(
         //padding: EdgeInsets.all(10),
         child: StaggeredGridView.count(
+          physics: NeverScrollableScrollPhysics(),
           crossAxisCount: 4,
           //mainAxisSpacing: 1,
           //mainAxisSpacing: 4,

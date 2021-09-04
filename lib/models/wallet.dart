@@ -12,7 +12,7 @@ extension WalletTypeExtension on WalletType {
       case WalletType.card:
         return Icon(Icons.credit_card);
       case WalletType.cash:
-        return Icon(Icons.paid);
+        return Icon(Icons.paid_outlined);
       default:
         return null;
     }

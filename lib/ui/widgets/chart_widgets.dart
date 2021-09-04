@@ -25,13 +25,31 @@ class ComboChart extends StatelessWidget {
     return new charts.OrdinalComboChart(
       seriesList,
       animate: animate,
+
+      domainAxis: new charts.OrdinalAxisSpec(
+          renderSpec: new charts.SmallTickRendererSpec(
+
+              // Tick and Label styling here.
+              labelStyle: new charts.TextStyleSpec(
+                  fontSize: 14, // size in Pts.
+                  color: charts.MaterialPalette.black),
+
+              // Change the line colors to match text color.
+              lineStyle: new charts.LineStyleSpec(
+                  color: charts.MaterialPalette.black))),
       primaryMeasureAxis: new charts.NumericAxisSpec(
+          renderSpec: new charts.GridlineRendererSpec(
+            // Tick and Label styling here.
+            labelStyle: new charts.TextStyleSpec(
+                fontSize: 14, // size in Pts.
+                color: charts.MaterialPalette.black),
+          ),
           showAxisLine: true,
           tickProviderSpec: new charts.BasicNumericTickProviderSpec(
             // Make sure we don't have values less than 1 as ticks
             // (ie: counts).
 
-            desiredMinTickCount: 4,
+            desiredMinTickCount: 5,
             dataIsInWholeNumbers: true,
             // Fixed tick count to highlight the integer only behavior
             // generating ticks [0, 1, 2, 3, 4].
@@ -48,7 +66,7 @@ class ComboChart extends StatelessWidget {
             customRendererId: 'customLine')
       ],
       behaviors: [
-        new charts.ChartTitle('Last 4 months',
+        new charts.ChartTitle('Last 3 months before current',
             titleStyleSpec: TextStyleSpec(fontSize: 26),
             behaviorPosition: charts.BehaviorPosition.top,
             titleOutsideJustification: charts.OutsideJustification.middle,
@@ -56,21 +74,21 @@ class ComboChart extends StatelessWidget {
             // rendering the text too close to the top measure axis tick label.
             // The top tick label may extend upwards into the top margin region
             // if it is located at the top of the draw area.
-            innerPadding: 5),
+            innerPadding: 10),
         // new charts.SlidingViewport(),
         new charts.LinePointHighlighter(
             showHorizontalFollowLine:
                 charts.LinePointHighlighterFollowLineType.none,
             showVerticalFollowLine:
-                charts.LinePointHighlighterFollowLineType.nearest),
+                charts.LinePointHighlighterFollowLineType.none),
         new charts.SelectNearest(
             eventTrigger: (charts.SelectionTrigger.tapAndDrag)),
 
-        new charts.SlidingViewport(),
+        //new charts.SlidingViewport(),
         // A pan and zoom behavior helps demonstrate the sliding viewport
         // behavior by allowing the data visible in the viewport to be adjusted
         // dynamically.
-        new charts.PanAndZoomBehavior(),
+        //new charts.PanAndZoomBehavior(),
       ],
     );
   }
@@ -81,14 +99,14 @@ class ComboChart extends StatelessWidget {
       new OrdinalSales('2014.Jan', 200000),
       new OrdinalSales('2015.Jan', 250000),
       new OrdinalSales('2016.Jan', 100000),
-      new OrdinalSales('2017.Jan', 175000),
+      //  new OrdinalSales('2017.Jan', 175000),
     ];
 
     final tableSalesData = [
       new OrdinalSales('2014.Jan', -150000),
       new OrdinalSales('2015.Jan', -100000),
       new OrdinalSales('2016.Jan', -100000),
-      new OrdinalSales('2017.Jan', -81500),
+      // new OrdinalSales('2017.Jan', -81500),
     ];
 
     //TODO megtakarítás
@@ -96,7 +114,7 @@ class ComboChart extends StatelessWidget {
       new OrdinalSales('2014.Jan', 10000),
       new OrdinalSales('2015.Jan', 150000),
       new OrdinalSales('2016.Jan', 200000),
-      new OrdinalSales('2017.Jan', 1500000),
+      //  new OrdinalSales('2017.Jan', 1500000),
     ];
 
     return [
@@ -211,47 +229,48 @@ class MonthLineChart extends StatelessWidget {
     );
   }
 
-  //_onSelectionChanged(charts.SelectionModel model) {
-  //  final selectedDatum = model.selectedDatum;
-//
-  //  DateTime time;
-  //  final measures = <String, num>{};
-//
-  //  // We get the model that updated with a list of [SeriesDatum] which is
-  //  // simply a pair of series & datum.
-  //  //
-  //  // Walk the selection updating the measures map, storing off the sales and
-  //  // series name for each selection point.
-  //  if (selectedDatum.isNotEmpty) {
-  //    time = selectedDatum.first.datum.time;
-  //    selectedDatum.forEach((charts.SeriesDatum datumPair) {
-  //      measures[datumPair.series.displayName] = datumPair.datum.sales;
-  //    });
-  //  }
-//
-  //  // Request a build.
-  //  print("asd");
-  //}
-
   @override
   Widget build(BuildContext context) {
     return new charts.TimeSeriesChart(
       seriesList,
       animate: animate,
 
+      domainAxis: new DateTimeAxisSpec(
+        showAxisLine: true,
+        renderSpec: new charts.SmallTickRendererSpec(
+          // Tick and Label styling here.
+
+          labelStyle: new charts.TextStyleSpec(
+              fontSize: 14, // size in Pts.
+              color: charts.MaterialPalette.black),
+        ),
+        //TODO a honap legalabb elso utolso középső datum látható legyen
+        //tickProviderSpec:
+        //    new StaticDateTimeTickProviderSpec([TickSpec(DateTime.now())])
+
+        //axisLineStyle:
+        //    new charts.LineStyleSpec(color: charts.MaterialPalette.black)),
+      ),
+
       primaryMeasureAxis: new charts.NumericAxisSpec(
           showAxisLine: true,
+          renderSpec: new charts.GridlineRendererSpec(
+            // Tick and Label styling here.
+            labelStyle: new charts.TextStyleSpec(
+                fontSize: 14, // size in Pts.
+                color: charts.MaterialPalette.black),
+          ),
           tickProviderSpec: new charts.BasicNumericTickProviderSpec(
             // Make sure we don't have values less than 1 as ticks
             // (ie: counts).
             zeroBound: false,
-            desiredMinTickCount: 4,
+            desiredMinTickCount: 5,
             dataIsInWholeNumbers: true,
 
             // // Fixed tick count to highlight the integer only behavior
             // generating ticks [0, 1, 2, 3, 4].
           )),
-      defaultRenderer: new charts.LineRendererConfig(),
+      // defaultRenderer: new charts.LineRendererConfig(),
 
       //  selectionModels: [
       //        new charts.SelectionModelConfig(
