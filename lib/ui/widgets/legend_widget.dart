@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class MyLegendWidget extends StatelessWidget {
   final String text;
-  final Color color;
+  final MaterialColor color;
   final double space;
 
   const MyLegendWidget(

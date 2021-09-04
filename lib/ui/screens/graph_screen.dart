@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:month_picker_dialog/month_picker_dialog.dart';
-import 'package:my_budget/ui/widgets/chart.dart';
+import 'package:my_budget/ui/widgets/chart_widgets.dart';
 import 'package:my_budget/ui/widgets/legend_widget.dart';
 import './/ui/common/style.dart';
 
@@ -80,7 +80,7 @@ class MonthChartWidget extends StatelessWidget {
         child: getAppCardStyle(
             child: Padding(
                 padding: EdgeInsets.all(5),
-                child: SimpleTimeSeriesChart.withSampleData())));
+                child: MonthLineChart.withSampleData())));
   }
 }
 
@@ -149,7 +149,7 @@ class PieChart extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(left: 10),
       child: getAppCardStyle(
-        child: Center(child: DatumLegendOptions.withSampleData()),
+        child: Center(child: PieCHart.withSampleData()),
       ),
     );
   }
@@ -166,8 +166,7 @@ class LastFourMonthChartWidget extends StatelessWidget {
       padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
       child: getAppCardStyle(
         child: Padding(
-            padding: EdgeInsets.all(5),
-            child: OrdinalComboBarLineChart.withSampleData()),
+            padding: EdgeInsets.all(5), child: ComboChart.withSampleData()),
       ),
     );
   }

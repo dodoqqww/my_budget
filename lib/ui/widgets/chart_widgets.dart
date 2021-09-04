@@ -3,15 +3,17 @@
 import 'package:charts_flutter/flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:charts_common/common.dart' as color;
 
-class OrdinalComboBarLineChart extends StatelessWidget {
+//top chart
+class ComboChart extends StatelessWidget {
   final List<charts.Series> seriesList;
   final bool animate;
 
-  OrdinalComboBarLineChart(this.seriesList, {this.animate});
+  ComboChart(this.seriesList, {this.animate});
 
-  factory OrdinalComboBarLineChart.withSampleData() {
-    return new OrdinalComboBarLineChart(
+  factory ComboChart.withSampleData() {
+    return new ComboChart(
       _createSampleData(),
       // Disable animations for image tests.
       animate: false,
@@ -122,7 +124,6 @@ class OrdinalComboBarLineChart extends StatelessWidget {
   }
 }
 
-/// Sample ordinal data type.
 class OrdinalSales {
   final String year;
   final int sales;
@@ -130,14 +131,15 @@ class OrdinalSales {
   OrdinalSales(this.year, this.sales);
 }
 
-class DatumLegendOptions extends StatelessWidget {
+//pie chart
+class PieCHart extends StatelessWidget {
   final List<charts.Series> seriesList;
   final bool animate;
 
-  DatumLegendOptions(this.seriesList, {this.animate});
+  PieCHart(this.seriesList, {this.animate});
 
-  factory DatumLegendOptions.withSampleData() {
-    return new DatumLegendOptions(
+  factory PieCHart.withSampleData() {
+    return new PieCHart(
       _createSampleData(),
       // Disable animations for image tests.
       animate: false,
@@ -159,14 +161,11 @@ class DatumLegendOptions extends StatelessWidget {
   /// Create series list with one series
   static List<charts.Series<LinearSales, String>> _createSampleData() {
     final data = [
-      new LinearSales("Food", 100, charts.MaterialPalette.red.makeShades(5)[4]),
-      new LinearSales("Investment", 75, MaterialPalette.blue.shadeDefault),
-      new LinearSales("Invoices", 25, MaterialPalette.cyan.shadeDefault),
-      new LinearSales("3", 5, MaterialPalette.green.shadeDefault),
-      new LinearSales("4", 100, MaterialPalette.pink.shadeDefault),
-      // new LinearSales("5", 75),
-      // new LinearSales("6", 25),
-      // new LinearSales("7", 5),
+      new LinearSales("Food", 100, Colors.amber),
+      new LinearSales("Investment", 75, Colors.green),
+      new LinearSales("Invoices", 25, Colors.cyan),
+      new LinearSales("3", 5, Colors.pink),
+      new LinearSales("4", 100, Colors.blue),
     ];
 
     return [
@@ -174,7 +173,8 @@ class DatumLegendOptions extends StatelessWidget {
         id: 'Sales',
         domainFn: (LinearSales data, _) => data.category,
         measureFn: (LinearSales data, _) => data.sales,
-        colorFn: (LinearSales data, __) => data.color,
+        colorFn: (LinearSales data, __) =>
+            charts.ColorUtil.fromDartColor(data.color),
         outsideLabelStyleAccessorFn: (LinearSales data, _) =>
             new charts.TextStyleSpec(color: MaterialPalette.black),
         insideLabelStyleAccessorFn: (LinearSales data, _) =>
@@ -187,24 +187,24 @@ class DatumLegendOptions extends StatelessWidget {
   }
 }
 
-/// Sample linear data type.
 class LinearSales {
   final String category;
   final int sales;
-  final Color color;
+  final MaterialColor color;
 
   LinearSales(this.category, this.sales, this.color);
 }
 
-class SimpleTimeSeriesChart extends StatelessWidget {
+//mont line chart
+class MonthLineChart extends StatelessWidget {
   final List<charts.Series> seriesList;
   final bool animate;
 
-  SimpleTimeSeriesChart(this.seriesList, {this.animate});
+  MonthLineChart(this.seriesList, {this.animate});
 
   /// Creates a [TimeSeriesChart] with sample data and no transition.
-  factory SimpleTimeSeriesChart.withSampleData() {
-    return new SimpleTimeSeriesChart(
+  factory MonthLineChart.withSampleData() {
+    return new MonthLineChart(
       _createSampleData(),
       // Disable animations for image tests.
       animate: false,
@@ -321,7 +321,6 @@ class SimpleTimeSeriesChart extends StatelessWidget {
   }
 }
 
-/// Sample time series data type.
 class TimeSeriesSales {
   final DateTime time;
   final int sales;
