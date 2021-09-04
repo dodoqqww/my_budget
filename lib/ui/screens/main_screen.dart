@@ -127,7 +127,7 @@ class MainScreen extends StatelessWidget {
                             )),
                         Text(
                           "2021.August",
-                          style: TextStyle(fontSize: 28),
+                          style: Theme.of(context).textTheme.headline2,
                         ),
                       ],
                     ),
@@ -199,7 +199,7 @@ class FinancialSummaryWidget extends StatelessWidget {
                       //      : Text("Expense:", style: TextStyle(fontSize: 18)),
                       //),
                       FittedText(
-                        size: 32,
+                        size: Theme.of(context).textTheme.headline1.fontSize,
                         color: isIncome ? Colors.green : Colors.red,
                         text: "$prefix 12,234.00 Ft",
                         fitSize: 250,
@@ -238,7 +238,10 @@ class FinancialSummaryWidget extends StatelessWidget {
                     width: double.infinity,
                     child: Text(
                       "Details",
-                      style: TextStyle(color: Colors.blue, fontSize: 18),
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyText1
+                          .copyWith(color: Colors.blue),
                     ),
                   ),
                 ),
@@ -270,7 +273,7 @@ class TrxDetailsWidget extends StatelessWidget {
           width: double.infinity,
           child: Text("Transactions:",
               style: TextStyle(
-                fontSize: 18,
+                fontSize: Theme.of(context).textTheme.bodyText1.fontSize,
                 decoration: TextDecoration.underline,
               ))),
       ListView.builder(
@@ -338,7 +341,7 @@ class TrxListItem extends StatelessWidget {
                     FittedText(
                       text: trx.category.name,
                       color: Colors.black,
-                      size: 18,
+                      size: Theme.of(context).textTheme.bodyText1.fontSize,
                       fitSize: 185,
                     ),
                     InkWell(
@@ -347,7 +350,10 @@ class TrxListItem extends StatelessWidget {
                         },
                         child: Text(
                           "Edit",
-                          style: TextStyle(fontSize: 18, color: Colors.blue),
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyText1
+                              .copyWith(color: Colors.blue),
                         ))
                   ],
                 ),
@@ -367,7 +373,8 @@ class TrxListItem extends StatelessWidget {
                           FittedText(
                             text: trx.wallet.name,
                             color: Colors.black,
-                            size: 18,
+                            size:
+                                Theme.of(context).textTheme.bodyText1.fontSize,
                             fitSize: 125,
                           ),
                         ],
@@ -375,7 +382,7 @@ class TrxListItem extends StatelessWidget {
                       FittedText(
                         text: "$prefix ${trx.amount}Ft",
                         color: amountColor,
-                        size: 18,
+                        size: Theme.of(context).textTheme.bodyText1.fontSize,
                         fitSize: 150,
                         align: AlignmentDirectional.centerEnd,
                       ),

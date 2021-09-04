@@ -31,7 +31,11 @@ class ComboChart extends StatelessWidget {
 
               // Tick and Label styling here.
               labelStyle: new charts.TextStyleSpec(
-                  fontSize: 14, // size in Pts.
+                  fontSize: Theme.of(context)
+                      .textTheme
+                      .bodyText2
+                      .fontSize
+                      .toInt(), // size in Pts.
                   color: charts.MaterialPalette.black),
 
               // Change the line colors to match text color.
@@ -41,7 +45,11 @@ class ComboChart extends StatelessWidget {
           renderSpec: new charts.GridlineRendererSpec(
             // Tick and Label styling here.
             labelStyle: new charts.TextStyleSpec(
-                fontSize: 14, // size in Pts.
+                fontSize: Theme.of(context)
+                    .textTheme
+                    .bodyText2
+                    .fontSize
+                    .toInt(), // size in Pts.
                 color: charts.MaterialPalette.black),
           ),
           showAxisLine: true,
@@ -66,10 +74,12 @@ class ComboChart extends StatelessWidget {
             customRendererId: 'customLine')
       ],
       behaviors: [
-        new charts.ChartTitle('Last 3 months before current',
-            titleStyleSpec: TextStyleSpec(fontSize: 26),
+        new charts.ChartTitle('Previous three months',
+            titleStyleSpec: TextStyleSpec(
+                fontSize:
+                    Theme.of(context).textTheme.headline2.fontSize.toInt()),
             behaviorPosition: charts.BehaviorPosition.top,
-            titleOutsideJustification: charts.OutsideJustification.middle,
+            titleOutsideJustification: charts.OutsideJustification.end,
             // Set a larger inner padding than the default (10) to avoid
             // rendering the text too close to the top measure axis tick label.
             // The top tick label may extend upwards into the top margin region
@@ -156,9 +166,9 @@ class PieCHart extends StatelessWidget {
 
   PieCHart(this.seriesList, {this.animate});
 
-  factory PieCHart.withSampleData() {
+  factory PieCHart.withSampleData(BuildContext context) {
     return new PieCHart(
-      _createSampleData(),
+      _createSampleData(context),
       // Disable animations for image tests.
       animate: false,
     );
@@ -177,7 +187,8 @@ class PieCHart extends StatelessWidget {
   }
 
   /// Create series list with one series
-  static List<charts.Series<LinearSales, String>> _createSampleData() {
+  static List<charts.Series<LinearSales, String>> _createSampleData(
+      BuildContext context) {
     final data = [
       new LinearSales("Food", 100, Colors.amber),
       new LinearSales("Investment", 75, Colors.green),
@@ -193,10 +204,16 @@ class PieCHart extends StatelessWidget {
         measureFn: (LinearSales data, _) => data.sales,
         colorFn: (LinearSales data, __) =>
             charts.ColorUtil.fromDartColor(data.color),
-        outsideLabelStyleAccessorFn: (LinearSales data, _) =>
-            new charts.TextStyleSpec(color: MaterialPalette.black),
+        //outsideLabelStyleAccessorFn: (LinearSales data, _) =>
+        //    new charts.TextStyleSpec(
+        //        color: MaterialPalette.black,
+        //        fontSize:
+        //            Theme.of(context).textTheme.bodyText2.fontSize.toInt()),
         insideLabelStyleAccessorFn: (LinearSales data, _) =>
-            new charts.TextStyleSpec(color: MaterialPalette.black),
+            new charts.TextStyleSpec(
+                color: MaterialPalette.black,
+                fontSize:
+                    Theme.of(context).textTheme.bodyText2.fontSize.toInt()),
         labelAccessorFn: (LinearSales data, _) =>
             data.sales > 35 ? "${data.sales}%" : "",
         data: data,
@@ -241,7 +258,11 @@ class MonthLineChart extends StatelessWidget {
           // Tick and Label styling here.
 
           labelStyle: new charts.TextStyleSpec(
-              fontSize: 14, // size in Pts.
+              fontSize: Theme.of(context)
+                  .textTheme
+                  .bodyText2
+                  .fontSize
+                  .toInt(), // size in Pts.
               color: charts.MaterialPalette.black),
         ),
         //TODO a honap legalabb elso utolso középső datum látható legyen
@@ -257,7 +278,11 @@ class MonthLineChart extends StatelessWidget {
           renderSpec: new charts.GridlineRendererSpec(
             // Tick and Label styling here.
             labelStyle: new charts.TextStyleSpec(
-                fontSize: 14, // size in Pts.
+                fontSize: Theme.of(context)
+                    .textTheme
+                    .bodyText2
+                    .fontSize
+                    .toInt(), // size in Pts.
                 color: charts.MaterialPalette.black),
           ),
           tickProviderSpec: new charts.BasicNumericTickProviderSpec(
@@ -320,7 +345,6 @@ class MonthLineChart extends StatelessWidget {
     ];
 
 // Generate 2 shades of each color so that we can style the line segments.
-    final blue = charts.MaterialPalette.blue.shadeDefault;
     final red = charts.MaterialPalette.red.shadeDefault;
     final green = charts.MaterialPalette.green.shadeDefault;
 

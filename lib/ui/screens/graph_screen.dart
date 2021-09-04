@@ -104,7 +104,7 @@ class MonthSelectorWidget extends StatelessWidget {
               Text(
                 "2021.Aug",
                 style: TextStyle(
-                  fontSize: 22,
+                  fontSize: Theme.of(context).textTheme.headline3.fontSize,
                   decoration: TextDecoration.underline,
                 ),
               ),
@@ -150,7 +150,7 @@ class PieChart extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(left: 10),
       child: getAppCardStyle(
-        child: Center(child: PieCHart.withSampleData()),
+        child: Center(child: PieCHart.withSampleData(context)),
       ),
     );
   }

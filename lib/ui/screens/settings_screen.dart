@@ -49,7 +49,7 @@ class WalletSettings extends StatelessWidget {
             children: [
               Text(
                 "Wallets:",
-                style: TextStyle(fontSize: 28),
+                style: Theme.of(context).textTheme.headline2,
               ),
               FloatingActionButton(
                   child: Icon(Icons.add),
@@ -105,7 +105,7 @@ class WalletListWidget extends StatelessWidget {
               FittedText(
                 text: wallet.name,
                 color: Colors.black,
-                size: 18,
+                size: Theme.of(context).textTheme.bodyText1.fontSize,
                 fitSize: 180,
                 //align: AlignmentDirectional.centerEnd,
               ),
@@ -119,7 +119,10 @@ class WalletListWidget extends StatelessWidget {
                   },
                   child: Text(
                     "Edit",
-                    style: TextStyle(fontSize: 18, color: Colors.blue),
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyText1
+                        .copyWith(color: Colors.blue),
                   ))
             ],
           ),
@@ -131,7 +134,7 @@ class WalletListWidget extends StatelessWidget {
                 FittedText(
                   text: wallet.name,
                   color: Colors.black,
-                  size: 18,
+                  size: Theme.of(context).textTheme.bodyText1.fontSize,
                   fitSize: 125,
                 ),
               ],
@@ -139,7 +142,7 @@ class WalletListWidget extends StatelessWidget {
             FittedText(
               text: "+ ${wallet.amount} Ft",
               color: Colors.green,
-              size: 18,
+              size: Theme.of(context).textTheme.bodyText1.fontSize,
               fitSize: 150,
               align: AlignmentDirectional.centerEnd,
             )
@@ -169,7 +172,7 @@ class RemindersSettings extends StatelessWidget {
             children: [
               Text(
                 "Reminders:",
-                style: TextStyle(fontSize: 28),
+                style: Theme.of(context).textTheme.headline2,
               ),
               FloatingActionButton(
                   heroTag: "addReminderBtn",
@@ -227,7 +230,7 @@ class ReminderListWidget extends StatelessWidget {
               FittedText(
                 text: reminder.name,
                 color: Colors.black,
-                size: 18,
+                size: Theme.of(context).textTheme.bodyText1.fontSize,
                 fitSize: 185,
               ),
               InkWell(
@@ -240,7 +243,10 @@ class ReminderListWidget extends StatelessWidget {
                   },
                   child: Text(
                     "Edit",
-                    style: TextStyle(fontSize: 18, color: Colors.blue),
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyText1
+                        .copyWith(color: Colors.blue),
                   ))
             ],
           ),
@@ -249,7 +255,7 @@ class ReminderListWidget extends StatelessWidget {
             FittedText(
               text: reminder.frequency,
               color: Colors.black,
-              size: 18,
+              size: Theme.of(context).textTheme.bodyText1.fontSize,
               fitSize: 215,
             ),
             ToggleSwitch(
@@ -291,7 +297,7 @@ class OtherSettings extends StatelessWidget {
         children: [
           Text(
             "Others:",
-            style: TextStyle(fontSize: 28),
+            style: Theme.of(context).textTheme.headline2,
           ),
           Divider(
             thickness: 2,
@@ -305,7 +311,8 @@ class OtherSettings extends StatelessWidget {
                   children: [
                     Text("Category management",
                         style: TextStyle(
-                          fontSize: 18,
+                          fontSize:
+                              Theme.of(context).textTheme.bodyText1.fontSize,
                         )),
                     IconButton(
                         onPressed: () {
@@ -323,7 +330,8 @@ class OtherSettings extends StatelessWidget {
                   children: [
                     Text("Currency setting",
                         style: TextStyle(
-                          fontSize: 18,
+                          fontSize:
+                              Theme.of(context).textTheme.bodyText1.fontSize,
                         )),
                     IconButton(
                         onPressed: () {
@@ -341,7 +349,8 @@ class OtherSettings extends StatelessWidget {
                   children: [
                     Text("Backup",
                         style: TextStyle(
-                          fontSize: 18,
+                          fontSize:
+                              Theme.of(context).textTheme.bodyText1.fontSize,
                         )),
                     IconButton(
                         onPressed: () {
