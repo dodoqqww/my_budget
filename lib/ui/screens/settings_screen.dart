@@ -4,6 +4,7 @@ import 'package:flutter_picker/flutter_picker.dart';
 import 'package:my_budget/ui/widgets/add_category_dialog.dart';
 import 'package:my_budget/ui/widgets/fitted_text.dart';
 import 'package:my_budget/ui/widgets/legend_widget.dart';
+import 'package:my_budget/utils/util_methods.dart';
 
 import './/models/reminder.dart';
 import './/models/wallet.dart';
@@ -139,12 +140,13 @@ class WalletListWidget extends StatelessWidget {
               ],
             ),
             FittedText(
-              text: "+ ${wallet.amount} Ft",
+              text:
+                  "+ ${getFormattedCurrency(context: context, value: wallet.amount)}",
               style: Theme.of(context)
                   .textTheme
                   .bodyText1
                   .copyWith(color: Colors.green),
-              fitSize: 150,
+              fitSize: 165,
               align: AlignmentDirectional.centerEnd,
             )
           ])

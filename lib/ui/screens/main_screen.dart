@@ -1,8 +1,13 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart'
     hide DropdownButton, DropdownMenuItem, DropdownButtonHideUnderline;
+import 'package:flutter/services.dart';
+import 'package:flutter_money_formatter/flutter_money_formatter.dart';
 import 'package:intl/intl.dart';
 import 'package:my_budget/ui/widgets/add_category_dialog.dart';
 import 'package:my_budget/ui/widgets/fitted_text.dart';
+import 'package:my_budget/utils/util_methods.dart';
 import './/models/transaction_category.dart';
 import './/ui/widgets/dropdown_widget.dart';
 
@@ -177,9 +182,7 @@ class FinancialSummaryWidget extends StatelessWidget {
 
     String prefix = isIncome ? "+" : "-";
 
-    //FlutterMoneyFormatter fmf = FlutterMoneyFormatter(amount: 12345678.9012345);
-
-    //MoneyFormatterOutput fo = fmf.output;
+    //_getFormattedCurrency(context);
 
     return ExpandableNotifier(
       // <-- Provides ExpandableController to its children
@@ -197,7 +200,8 @@ class FinancialSummaryWidget extends StatelessWidget {
                       FittedText(
                         style: Theme.of(context).textTheme.headline1.copyWith(
                             color: isIncome ? Colors.green : Colors.red),
-                        text: "$prefix 12,234.00 Ft",
+                        text:
+                            "$prefix ${getFormattedCurrency(context: context, value: 1234512)}",
                         fitSize: 250,
                       )
                     ],
@@ -373,7 +377,8 @@ class TrxListItem extends StatelessWidget {
                         ],
                       ),
                       FittedText(
-                        text: "$prefix ${trx.amount}Ft",
+                        text:
+                            "$prefix ${getFormattedCurrency(context: context, value: trx.amount)}",
                         style: Theme.of(context)
                             .textTheme
                             .bodyText1
@@ -560,6 +565,10 @@ class AddEditTrxScreen extends StatelessWidget {
                             child: TextField(
                               style: Theme.of(context).textTheme.bodyText1,
                               controller: amountCtrl,
+                              keyboardType: TextInputType.number,
+                              inputFormatters: <TextInputFormatter>[
+                                FilteringTextInputFormatter.digitsOnly
+                              ],
                               decoration: getAppTextFieldDecoration(
                                   labelText: "Amount", context: context),
                               autofocus: false,
