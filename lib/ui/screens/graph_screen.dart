@@ -25,7 +25,7 @@ class GraphScreen extends StatelessWidget {
             MonthChartWidget(),
           ],
           staggeredTiles: [
-            StaggeredTile.extent(4, 240.0),
+            StaggeredTile.extent(4, 235.0),
             StaggeredTile.extent(2, 215.0),
             StaggeredTile.extent(2, 75.0),
             StaggeredTile.extent(2, 140.0),
@@ -103,10 +103,10 @@ class MonthSelectorWidget extends StatelessWidget {
               //TODO picker mint frequencynél
               Text(
                 "2021.Aug",
-                style: TextStyle(
-                  fontSize: Theme.of(context).textTheme.headline3.fontSize,
-                  decoration: TextDecoration.underline,
-                ),
+                style: Theme.of(context)
+                    .textTheme
+                    .headline3
+                    .copyWith(decoration: TextDecoration.underline),
               ),
               IconButton(
                   onPressed: () {

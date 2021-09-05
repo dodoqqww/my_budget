@@ -57,7 +57,7 @@ class ComboChart extends StatelessWidget {
             // Make sure we don't have values less than 1 as ticks
             // (ie: counts).
 
-            desiredMinTickCount: 5,
+            desiredMinTickCount: 4,
             dataIsInWholeNumbers: true,
             // Fixed tick count to highlight the integer only behavior
             // generating ticks [0, 1, 2, 3, 4].
@@ -74,17 +74,22 @@ class ComboChart extends StatelessWidget {
             customRendererId: 'customLine')
       ],
       behaviors: [
-        new charts.ChartTitle('Previous three months',
-            titleStyleSpec: TextStyleSpec(
-                fontSize:
-                    Theme.of(context).textTheme.headline2.fontSize.toInt()),
-            behaviorPosition: charts.BehaviorPosition.top,
-            titleOutsideJustification: charts.OutsideJustification.end,
-            // Set a larger inner padding than the default (10) to avoid
-            // rendering the text too close to the top measure axis tick label.
-            // The top tick label may extend upwards into the top margin region
-            // if it is located at the top of the draw area.
-            innerPadding: 10),
+        // new charts.ChartTitle('Previous three months',
+        //     titleStyleSpec: TextStyleSpec(
+        //         fontSize:
+        //             Theme.of(context).textTheme.headline2.fontSize.toInt(),
+        //         fontWeight: Theme.of(context)
+        //             .textTheme
+        //             .headline2
+        //             .fontWeight
+        //             .toString()),
+        //     behaviorPosition: charts.BehaviorPosition.top,
+        //     titleOutsideJustification: charts.OutsideJustification.end,
+        //     // Set a larger inner padding than the default (10) to avoid
+        //     // rendering the text too close to the top measure axis tick label.
+        //     // The top tick label may extend upwards into the top margin region
+        //     // if it is located at the top of the draw area.
+        //     innerPadding: 10),
         // new charts.SlidingViewport(),
         new charts.LinePointHighlighter(
             showHorizontalFollowLine:

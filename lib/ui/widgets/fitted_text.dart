@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 
 class FittedText extends StatelessWidget {
-  final Color color;
+  //final Color color;
   final String text;
-  final double size;
+  final TextStyle style;
   final double fitSize;
   final AlignmentGeometry align;
 
   const FittedText(
       {Key key,
-      @required this.color,
+      //@required this.color,
       @required this.text,
-      @required this.size,
+      @required this.style,
       @required this.fitSize,
       this.align = AlignmentDirectional.centerStart})
       : super(key: key);
@@ -25,7 +25,7 @@ class FittedText extends StatelessWidget {
         fit: BoxFit.contain,
         child: Text(
           text,
-          style: TextStyle(fontSize: size, color: color),
+          style: style,
         ),
       ),
     );

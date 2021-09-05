@@ -104,8 +104,8 @@ class WalletListWidget extends StatelessWidget {
             children: [
               FittedText(
                 text: wallet.name,
-                color: Colors.black,
-                size: Theme.of(context).textTheme.bodyText1.fontSize,
+
+                style: Theme.of(context).textTheme.bodyText1,
                 fitSize: 180,
                 //align: AlignmentDirectional.centerEnd,
               ),
@@ -133,16 +133,17 @@ class WalletListWidget extends StatelessWidget {
                 wallet.type.icon,
                 FittedText(
                   text: wallet.name,
-                  color: Colors.black,
-                  size: Theme.of(context).textTheme.bodyText1.fontSize,
+                  style: Theme.of(context).textTheme.bodyText1,
                   fitSize: 125,
                 ),
               ],
             ),
             FittedText(
               text: "+ ${wallet.amount} Ft",
-              color: Colors.green,
-              size: Theme.of(context).textTheme.bodyText1.fontSize,
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyText1
+                  .copyWith(color: Colors.green),
               fitSize: 150,
               align: AlignmentDirectional.centerEnd,
             )
@@ -229,8 +230,7 @@ class ReminderListWidget extends StatelessWidget {
             children: [
               FittedText(
                 text: reminder.name,
-                color: Colors.black,
-                size: Theme.of(context).textTheme.bodyText1.fontSize,
+                style: Theme.of(context).textTheme.bodyText1,
                 fitSize: 185,
               ),
               InkWell(
@@ -254,8 +254,7 @@ class ReminderListWidget extends StatelessWidget {
           Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
             FittedText(
               text: reminder.frequency,
-              color: Colors.black,
-              size: Theme.of(context).textTheme.bodyText1.fontSize,
+              style: Theme.of(context).textTheme.bodyText1,
               fitSize: 215,
             ),
             ToggleSwitch(
@@ -309,11 +308,10 @@ class OtherSettings extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text("Category management",
-                        style: TextStyle(
-                          fontSize:
-                              Theme.of(context).textTheme.bodyText1.fontSize,
-                        )),
+                    Text(
+                      "Category management",
+                      style: Theme.of(context).textTheme.bodyText1,
+                    ),
                     IconButton(
                         onPressed: () {
                           openDialog(context, AddEditCategoryScreen());
@@ -328,11 +326,10 @@ class OtherSettings extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text("Currency setting",
-                        style: TextStyle(
-                          fontSize:
-                              Theme.of(context).textTheme.bodyText1.fontSize,
-                        )),
+                    Text(
+                      "Currency setting",
+                      style: Theme.of(context).textTheme.bodyText1,
+                    ),
                     IconButton(
                         onPressed: () {
                           print("currency settings");
@@ -347,11 +344,10 @@ class OtherSettings extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text("Backup",
-                        style: TextStyle(
-                          fontSize:
-                              Theme.of(context).textTheme.bodyText1.fontSize,
-                        )),
+                    Text(
+                      "Backup",
+                      style: Theme.of(context).textTheme.bodyText1,
+                    ),
                     IconButton(
                         onPressed: () {
                           print("backup google drive");
@@ -408,28 +404,26 @@ class AddEditWalletScreen extends StatelessWidget {
                             padding: const EdgeInsets.fromLTRB(15, 0, 8, 20),
                             child: Text(
                               "Wallet:",
-                              style: TextStyle(fontSize: 24),
+                              style: Theme.of(context).textTheme.headline2,
                             ),
                           ),
                           Padding(
                             padding: const EdgeInsets.fromLTRB(10, 0, 10, 8),
                             child: TextField(
+                              style: Theme.of(context).textTheme.bodyText1,
                               controller: nameCtrl,
                               decoration: getAppTextFieldDecoration(
-                                labelText: 'Name',
-                                hintText: 'Name',
-                              ),
+                                  labelText: 'Name', context: context),
                               autofocus: false,
                             ),
                           ),
                           Padding(
                             padding: const EdgeInsets.fromLTRB(10, 0, 10, 8),
                             child: TextField(
+                              style: Theme.of(context).textTheme.bodyText1,
                               controller: amountCtrl,
                               decoration: getAppTextFieldDecoration(
-                                labelText: 'Amount',
-                                hintText: 'Amount',
-                              ),
+                                  labelText: 'Amount', context: context),
                               autofocus: false,
                             ),
                           ),
@@ -437,6 +431,11 @@ class AddEditWalletScreen extends StatelessWidget {
                             alignment: Alignment.center,
                             padding: const EdgeInsets.all(8.0),
                             child: ToggleSwitch(
+                              iconSize: 24,
+                              fontSize: Theme.of(context)
+                                  .textTheme
+                                  .bodyText1
+                                  .fontSize,
                               minWidth: 150,
                               initialLabelIndex:
                                   type == WalletType.card ? 0 : 1,
@@ -535,6 +534,7 @@ class AddEditReminderScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final picker = Picker(
+      textStyle: Theme.of(context).textTheme.bodyText1,
       hideHeader: true,
       adapter: pickAdapter,
     );
@@ -564,17 +564,16 @@ class AddEditReminderScreen extends StatelessWidget {
                             padding: const EdgeInsets.fromLTRB(15, 0, 8, 20),
                             child: Text(
                               "Reminder:",
-                              style: TextStyle(fontSize: 24),
+                              style: Theme.of(context).textTheme.headline2,
                             ),
                           ),
                           Padding(
                             padding: const EdgeInsets.fromLTRB(10, 0, 10, 8),
                             child: TextField(
+                              style: Theme.of(context).textTheme.bodyText1,
                               controller: nameCtrl,
                               decoration: getAppTextFieldDecoration(
-                                labelText: 'Name',
-                                hintText: 'Name',
-                              ),
+                                  labelText: 'Name', context: context),
                               autofocus: false,
                             ),
                           ),
@@ -646,7 +645,7 @@ class AddEditCategoryScreen extends StatelessWidget {
                             padding: const EdgeInsets.fromLTRB(15, 0, 8, 20),
                             child: Text(
                               "Categorys:",
-                              style: TextStyle(fontSize: 24),
+                              style: Theme.of(context).textTheme.headline2,
                             ),
                           ),
                           Padding(
@@ -675,8 +674,12 @@ class AddEditCategoryScreen extends StatelessWidget {
                                       height: 50,
                                       width: 225,
                                       child: TextField(
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1,
                                         decoration: getAppTextFieldDecoration(
-                                            labelText: "Name", hintText: ""),
+                                            labelText: "Name",
+                                            context: context),
                                         controller: nameCtrl,
                                       ),
                                     ),
@@ -695,6 +698,9 @@ class AddEditCategoryScreen extends StatelessWidget {
                               ],
                             ),
                           ),
+                          Divider(
+                            thickness: 2,
+                          ),
                           Container(
                             padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
                             height: 350,
@@ -702,37 +708,37 @@ class AddEditCategoryScreen extends StatelessWidget {
                               shrinkWrap: true,
                               children: [
                                 _settingsMyLegendWidget(
-                                  text: "Investment",
-                                  color: Colors.amber,
-                                ),
+                                    text: "Investment",
+                                    color: Colors.amber,
+                                    context: context),
                                 _settingsMyLegendWidget(
-                                  text: "Food",
-                                  color: Colors.red,
-                                ),
+                                    text: "Food",
+                                    color: Colors.red,
+                                    context: context),
                                 _settingsMyLegendWidget(
-                                  text: "Car",
-                                  color: Colors.green,
-                                ),
+                                    text: "Car",
+                                    color: Colors.green,
+                                    context: context),
                                 _settingsMyLegendWidget(
-                                  text: "legendtest",
-                                  color: Colors.amber,
-                                ),
+                                    text: "legendtest",
+                                    color: Colors.amber,
+                                    context: context),
                                 _settingsMyLegendWidget(
-                                  text: "legendtest",
-                                  color: Colors.amber,
-                                ),
+                                    text: "legendtest",
+                                    color: Colors.amber,
+                                    context: context),
                                 _settingsMyLegendWidget(
-                                  text: "legendtest",
-                                  color: Colors.amber,
-                                ),
+                                    text: "legendtest",
+                                    color: Colors.amber,
+                                    context: context),
                                 _settingsMyLegendWidget(
-                                  text: "legendtest",
-                                  color: Colors.amber,
-                                ),
+                                    text: "legendtest",
+                                    color: Colors.amber,
+                                    context: context),
                                 _settingsMyLegendWidget(
-                                  text: "legendtest",
-                                  color: Colors.amber,
-                                ),
+                                    text: "legendtest",
+                                    color: Colors.amber,
+                                    context: context),
                               ],
                             ),
                           )
@@ -771,7 +777,10 @@ class AddEditCategoryScreen extends StatelessWidget {
             )));
   }
 
-  Widget _settingsMyLegendWidget({String text, Color color}) {
+  Widget _settingsMyLegendWidget(
+      {@required String text,
+      @required Color color,
+      @required BuildContext context}) {
     return GestureDetector(
       onTap: () {
         print("ouch: $text");
@@ -780,6 +789,7 @@ class AddEditCategoryScreen extends StatelessWidget {
       child: Column(
         children: [
           MyLegendWidget(
+            style: Theme.of(context).textTheme.bodyText1,
             text: text,
             color: color,
             space: 5.0,

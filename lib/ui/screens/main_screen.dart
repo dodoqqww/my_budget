@@ -89,6 +89,8 @@ class MainScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    List asd = <String>[];
+
     print("MainScreen build()");
     return Scaffold(
       body: Container(
@@ -192,15 +194,9 @@ class FinancialSummaryWidget extends StatelessWidget {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      //Padding(
-                      //  padding: const EdgeInsets.only(bottom: 5),
-                      //  child: isIncome
-                      //      ? Text("Income:", style: TextStyle(fontSize: 18))
-                      //      : Text("Expense:", style: TextStyle(fontSize: 18)),
-                      //),
                       FittedText(
-                        size: Theme.of(context).textTheme.headline1.fontSize,
-                        color: isIncome ? Colors.green : Colors.red,
+                        style: Theme.of(context).textTheme.headline1.copyWith(
+                            color: isIncome ? Colors.green : Colors.red),
                         text: "$prefix 12,234.00 Ft",
                         fitSize: 250,
                       )
@@ -316,7 +312,7 @@ class TrxListItem extends StatelessWidget {
             quarterTurns: 3,
             child: Text(
               _getFormatedMMddDate(trx.date),
-              style: TextStyle(fontSize: 16),
+              style: Theme.of(context).textTheme.bodyText2,
             )),
         Container(
           width: 320,
@@ -340,8 +336,7 @@ class TrxListItem extends StatelessWidget {
                   children: [
                     FittedText(
                       text: trx.category.name,
-                      color: Colors.black,
-                      size: Theme.of(context).textTheme.bodyText1.fontSize,
+                      style: Theme.of(context).textTheme.bodyText1,
                       fitSize: 185,
                     ),
                     InkWell(
@@ -372,17 +367,17 @@ class TrxListItem extends StatelessWidget {
                           trx.wallet.type.icon,
                           FittedText(
                             text: trx.wallet.name,
-                            color: Colors.black,
-                            size:
-                                Theme.of(context).textTheme.bodyText1.fontSize,
+                            style: Theme.of(context).textTheme.bodyText1,
                             fitSize: 125,
                           ),
                         ],
                       ),
                       FittedText(
                         text: "$prefix ${trx.amount}Ft",
-                        color: amountColor,
-                        size: Theme.of(context).textTheme.bodyText1.fontSize,
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyText1
+                            .copyWith(color: amountColor),
                         fitSize: 150,
                         align: AlignmentDirectional.centerEnd,
                       ),
@@ -440,6 +435,14 @@ class AddEditTrxScreen extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
                         child: FlutterDatePickerTimeline(
+                          unselectedItemTextStyle: Theme.of(context)
+                              .textTheme
+                              .bodyText1
+                              .copyWith(color: Colors.blue),
+                          selectedItemTextStyle: Theme.of(context)
+                              .textTheme
+                              .bodyText1
+                              .copyWith(color: Colors.white),
                           selectedItemBackgroundColor: Colors.blue,
                           startDate: DateTime(time.year, time.month, 01),
                           endDate: DateTime(time.year, time.month,
@@ -465,7 +468,7 @@ class AddEditTrxScreen extends StatelessWidget {
                                     child: InputDecorator(
                                       decoration: getAppTextFieldDecoration(
                                           labelText: "Category",
-                                          hintText: "Category"),
+                                          context: context),
                                       child: DropdownButtonHideUnderline(
                                         child: Container(
                                           height: 25,
@@ -473,6 +476,9 @@ class AddEditTrxScreen extends StatelessWidget {
                                             padding: const EdgeInsets.only(
                                                 right: 15),
                                             child: DropdownButton<String>(
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyText1,
                                               value: "Apple",
                                               items: [
                                                 DropdownMenuItem(
@@ -518,13 +524,16 @@ class AddEditTrxScreen extends StatelessWidget {
                               width: 275,
                               child: InputDecorator(
                                 decoration: getAppTextFieldDecoration(
-                                    labelText: "Wallet", hintText: "Wallet"),
+                                    labelText: "Wallet", context: context),
                                 child: DropdownButtonHideUnderline(
                                   child: Container(
                                     height: 25,
                                     child: Padding(
                                       padding: const EdgeInsets.only(right: 15),
                                       child: DropdownButton<String>(
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1,
                                         value: "Otp card",
                                         items: [
                                           DropdownMenuItem(
@@ -549,21 +558,21 @@ class AddEditTrxScreen extends StatelessWidget {
                           Padding(
                             padding: const EdgeInsets.fromLTRB(10, 0, 10, 8),
                             child: TextField(
+                              style: Theme.of(context).textTheme.bodyText1,
                               controller: amountCtrl,
                               decoration: getAppTextFieldDecoration(
-                                  labelText: "Amount", hintText: "Amount"),
+                                  labelText: "Amount", context: context),
                               autofocus: false,
                             ),
                           ),
                           Padding(
                             padding: const EdgeInsets.fromLTRB(10, 0, 10, 8),
                             child: TextField(
+                              style: Theme.of(context).textTheme.bodyText1,
                               controller: descCtrl,
                               maxLines: 6,
                               decoration: getAppTextFieldDecoration(
-                                labelText: 'Details',
-                                hintText: 'Details',
-                              ),
+                                  labelText: 'Details', context: context),
                               autofocus: false,
                             ),
                           ),
@@ -571,11 +580,11 @@ class AddEditTrxScreen extends StatelessWidget {
                             padding: const EdgeInsets.fromLTRB(15, 0, 10, 8),
                             child: Row(
                               children: <Widget>[
-                                Text("Images:",
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                        color: Color(0xFF000000),
-                                        fontSize: 18)),
+                                Text(
+                                  "Images:",
+                                  textAlign: TextAlign.center,
+                                  style: Theme.of(context).textTheme.bodyText1,
+                                ),
                                 Spacer(),
                                 IconButton(
                                   icon: Icon(
@@ -595,7 +604,8 @@ class AddEditTrxScreen extends StatelessWidget {
                               ],
                             ),
                           ),
-                          Padding(
+                          Container(
+                            height: 100,
                             padding: const EdgeInsets.fromLTRB(15, 0, 10, 8),
                             child: GridView.builder(
                                 physics: NeverScrollableScrollPhysics(),

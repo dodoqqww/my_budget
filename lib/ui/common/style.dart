@@ -18,8 +18,11 @@ class AppListItemDivider extends StatelessWidget {
 
 // textfield decoration
 InputDecoration getAppTextFieldDecoration(
-    {String labelText, String hintText = ""}) {
+    {@required String labelText,
+    String hintText = "",
+    @required BuildContext context}) {
   return InputDecoration(
+    labelStyle: Theme.of(context).textTheme.bodyText1,
     enabledBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(25),
       borderSide: BorderSide(color: Colors.blue, width: 1.0),

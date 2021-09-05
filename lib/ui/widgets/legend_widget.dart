@@ -4,9 +4,14 @@ class MyLegendWidget extends StatelessWidget {
   final String text;
   final MaterialColor color;
   final double space;
+  final TextStyle style;
 
   const MyLegendWidget(
-      {Key key, @required this.text, @required this.color, this.space = 3})
+      {Key key,
+      @required this.text,
+      @required this.color,
+      this.space = 3,
+      this.style})
       : super(key: key);
 
   @override
@@ -23,7 +28,8 @@ class MyLegendWidget extends StatelessWidget {
           ),
           Text(
             text,
-            style: Theme.of(context).textTheme.bodyText2,
+            style:
+                style == null ? Theme.of(context).textTheme.bodyText2 : style,
           )
         ],
       ),

@@ -10,7 +10,10 @@ Future<void> addCategoryDialog(BuildContext context) async {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(25.0),
             ),
-            title: Text('Add category'),
+            title: Text(
+              'Add category',
+              style: Theme.of(context).textTheme.headline2,
+            ),
             content: Column(mainAxisSize: MainAxisSize.min, children: [
               Row(
                 children: [
@@ -29,13 +32,15 @@ Future<void> addCategoryDialog(BuildContext context) async {
                   Container(
                     width: 200,
                     child: TextField(
+                      style: Theme.of(context).textTheme.bodyText1,
                       onChanged: (value) {
                         // setState(() {
                         //   valueText = value;
                         // });
                       },
                       //controller: _textFieldController,
-                      decoration: getAppTextFieldDecoration(labelText: "Name"),
+                      decoration: getAppTextFieldDecoration(
+                          labelText: "Name", context: context),
                     ),
                   ),
                 ],
@@ -112,7 +117,7 @@ void openColorPicker(BuildContext context) async {
                       onPressed: () {
                         Navigator.pop(context);
                       },
-                      child: Icon(Icons.save),
+                      child: Icon(Icons.edit),
                     )
                   ],
                 ),
