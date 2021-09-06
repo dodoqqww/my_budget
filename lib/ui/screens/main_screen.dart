@@ -1,9 +1,6 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart'
     hide DropdownButton, DropdownMenuItem, DropdownButtonHideUnderline;
 import 'package:flutter/services.dart';
-import 'package:flutter_money_formatter/flutter_money_formatter.dart';
 import 'package:intl/intl.dart';
 import 'package:my_budget/ui/widgets/add_category_dialog.dart';
 import 'package:my_budget/ui/widgets/fitted_text.dart';
@@ -94,8 +91,6 @@ class MainScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List asd = <String>[];
-
     print("MainScreen build()");
     return Scaffold(
       body: Container(

@@ -3,7 +3,6 @@
 import 'package:charts_flutter/flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
-import 'package:charts_common/common.dart' as color;
 
 //top chart
 class ComboChart extends StatelessWidget {

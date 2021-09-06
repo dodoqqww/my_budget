@@ -100,7 +100,6 @@ class MonthSelectorWidget extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              //TODO picker mint frequencynél
               Text(
                 "2021.Aug",
                 style: Theme.of(context)

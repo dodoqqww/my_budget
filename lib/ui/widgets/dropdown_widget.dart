@@ -802,6 +802,7 @@ class DropdownButtonHideUnderline extends InheritedWidget {
 ///  * [DropdownMenuItem], the class used to represent the [items].
 ///  * [DropdownButtonHideUnderline], which prevents its descendant dropdown buttons
 ///    from displaying their underlines.
+// ignore: deprecated_member_use
 ///  * [RaisedButton], [FlatButton], ordinary buttons that trigger a single action.
 ///  * <https://material.io/design/components/menus.html#dropdown-menu>
 class DropdownButton<T> extends StatefulWidget {
@@ -1210,6 +1211,7 @@ class _DropdownButtonState<T> extends State<DropdownButton<T>>
             : _kUnalignedMenuMargin;
 
     final List<_MenuItem<T>> menuItems =
+        // ignore: deprecated_member_use
         List<_MenuItem<T>>(widget.items.length);
     for (int index = 0; index < widget.items.length; index += 1) {
       menuItems[index] = _MenuItem<T>(
@@ -1520,6 +1522,7 @@ class DropdownButtonFormField<T> extends FormField<T> {
           onSaved: onSaved,
           initialValue: value,
           validator: validator,
+          // ignore: deprecated_member_use
           autovalidate: autovalidate,
           builder: (FormFieldState<T> field) {
             final _DropdownButtonFormFieldState<T> state =

@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:my_budget/providers/settings_screen_provider.dart';
 import './services/service_locator.dart';
 import './ui/common/theme.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import './generated/l10n.dart';
-import './providers/bottom_nav_state.dart';
+import 'providers/bottom_nav_provider.dart';
 import './ui/bottom_nav.dart';
+import 'ui/screens/settings_screen.dart';
 
 void main() {
   setupServiceLocator();
@@ -30,6 +32,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<NavigationProvider>(
             child: BottomNavigation(),
             create: (BuildContext context) => NavigationProvider()),
+        ChangeNotifierProvider<SettingsScreenProvider>(
+            child: SettingsScreen(),
+            create: (BuildContext context) => SettingsScreenProvider()),
         // CartModel is implemented as a ChangeNotifier, which calls for the use
         // of ChangeNotifierProvider. Moreover, CartModel depends
         // on CatalogModel, so a ProxyProvider is needed.

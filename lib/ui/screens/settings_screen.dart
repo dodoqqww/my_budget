@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_picker/flutter_picker.dart';
+import 'package:my_budget/providers/settings_screen_provider.dart';
 import 'package:my_budget/ui/widgets/add_category_dialog.dart';
 import 'package:my_budget/ui/widgets/fitted_text.dart';
 import 'package:my_budget/ui/widgets/legend_widget.dart';
@@ -12,6 +13,7 @@ import './/ui/common/animations.dart';
 import './/ui/common/style.dart';
 import './/utils/util_datas.dart';
 import 'package:toggle_switch/toggle_switch.dart';
+import 'package:provider/provider.dart';
 
 class SettingsScreen extends StatelessWidget {
   @override
@@ -32,13 +34,10 @@ class SettingsScreen extends StatelessWidget {
 }
 
 class WalletSettings extends StatelessWidget {
-  final wallet1 = Wallet(
-      id: "1", name: "OTP card", amount: 123456.0, type: WalletType.card);
-  final wallet2 = Wallet(
-      id: "2", name: "Home wallet", amount: 1234.0, type: WalletType.cash);
-
   @override
   Widget build(BuildContext context) {
+    final settingsScreenProvider = context.watch<SettingsScreenProvider>();
+
     return getAppCardStyle(
       child: ListView(
         physics: NeverScrollableScrollPhysics(),
@@ -64,16 +63,13 @@ class WalletSettings extends StatelessWidget {
           Divider(
             thickness: 2,
           ),
-          ListView(
+          ListView.builder(
             shrinkWrap: true,
-            children: [
-              WalletListWidget(
-                wallet: wallet1,
-              ),
-              WalletListWidget(
-                wallet: wallet2,
-              )
-            ],
+            itemCount: settingsScreenProvider.allWallets.length,
+            itemBuilder: (BuildContext context, int index) {
+              return WalletListWidget(
+                  wallet: settingsScreenProvider.allWallets[index]);
+            },
           )
         ],
       ),
@@ -376,10 +372,10 @@ class AddEditWalletScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final settingsScreenProvider = Provider.of<SettingsScreenProvider>(context);
     bool hasWallet = false;
     WalletType type;
     if (wallet != null) {
-      print("asd");
       hasWallet = true;
       nameCtrl.text = wallet.name;
       amountCtrl.text = wallet.amount.toString();
@@ -502,6 +498,7 @@ class AddEditWalletScreen extends StatelessWidget {
                                   child: Icon(Icons.delete),
                                   backgroundColor: Colors.red,
                                   onPressed: () {
+                                    settingsScreenProvider.deleteWallet(wallet);
                                     Navigator.pop(context);
                                   }),
                             ),
@@ -512,6 +509,11 @@ class AddEditWalletScreen extends StatelessWidget {
                                     : Icon(Icons.add),
                                 backgroundColor: Colors.green,
                                 onPressed: () {
+                                  wallet != null
+                                      ? settingsScreenProvider
+                                          .updateWallet(wallet)
+                                      : settingsScreenProvider
+                                          .addWallet(wallet);
                                   Navigator.pop(context);
                                 }),
                           ],
@@ -620,7 +622,6 @@ class AddEditReminderScreen extends StatelessWidget {
   }
 }
 
-//TODO make better UI
 class AddEditCategoryScreen extends StatelessWidget {
   final nameCtrl = TextEditingController();
 

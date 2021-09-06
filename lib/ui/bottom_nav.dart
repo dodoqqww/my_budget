@@ -1,6 +1,6 @@
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:my_budget/providers/bottom_nav_state.dart';
+import 'package:my_budget/providers/bottom_nav_provider.dart';
 import 'package:provider/provider.dart';
 
 import './screens/main_screen.dart';
