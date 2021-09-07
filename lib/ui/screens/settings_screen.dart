@@ -1,7 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_picker/flutter_picker.dart';
-import 'package:my_budget/providers/settings_screen_provider.dart';
+import 'package:my_budget/models/transaction_category.dart';
+import 'package:my_budget/providers/settings_screen_providers.dart';
 import 'package:my_budget/ui/widgets/add_category_dialog.dart';
 import 'package:my_budget/ui/widgets/fitted_text.dart';
 import 'package:my_budget/ui/widgets/legend_widget.dart';
@@ -26,18 +27,18 @@ class SettingsScreen extends StatelessWidget {
       child: SingleChildScrollView(
         clipBehavior: Clip.none,
         child: Column(
-          children: [WalletSettings(), RemindersSettings(), OtherSettings()],
+          children: [WalletsSettings(), RemindersSettings(), OtherSettings()],
         ),
       ),
     ));
   }
 }
 
-class WalletSettings extends StatelessWidget {
+class WalletsSettings extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final settingsScreenProvider = context.watch<SettingsScreenProvider>();
-
+    print("WalletSettings build()");
+    final walletSettingsProvider = context.watch<WalletSettingsProvider>();
     return getAppCardStyle(
       child: ListView(
         physics: NeverScrollableScrollPhysics(),
@@ -65,10 +66,10 @@ class WalletSettings extends StatelessWidget {
           ),
           ListView.builder(
             shrinkWrap: true,
-            itemCount: settingsScreenProvider.allWallets.length,
+            itemCount: walletSettingsProvider.allWallets.length,
             itemBuilder: (BuildContext context, int index) {
               return WalletListWidget(
-                  wallet: settingsScreenProvider.allWallets[index]);
+                  wallet: walletSettingsProvider.allWallets[index]);
             },
           )
         ],
@@ -153,13 +154,10 @@ class WalletListWidget extends StatelessWidget {
 }
 
 class RemindersSettings extends StatelessWidget {
-  final rem1 = Reminder(
-      id: "1", name: "Add salary", frequency: "Every month 10. at 12h");
-  final rem2 =
-      Reminder(id: "2", name: "Add food", frequency: "Every day at 6h");
-
   @override
   Widget build(BuildContext context) {
+    print("RemindersSettings build()");
+    final reminderSettingsProvider = context.watch<ReminderSettingsProvider>();
     return getAppCardStyle(
       child: ListView(
         physics: NeverScrollableScrollPhysics(),
@@ -185,18 +183,14 @@ class RemindersSettings extends StatelessWidget {
           Divider(
             thickness: 2,
           ),
-          ListView(
-            physics: ClampingScrollPhysics(),
-            shrinkWrap: true,
-            children: [
-              ReminderListWidget(
-                reminder: rem1,
-              ),
-              ReminderListWidget(
-                reminder: rem2,
-              ),
-            ],
-          ),
+          ListView.builder(
+              physics: ClampingScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: reminderSettingsProvider.allReminders.length,
+              itemBuilder: (BuildContext context, int index) {
+                return ReminderListWidget(
+                    reminder: reminderSettingsProvider.allReminders[index]);
+              }),
         ],
       ),
     );
@@ -260,8 +254,8 @@ class ReminderListWidget extends StatelessWidget {
               minWidth: 40.0,
               cornerRadius: 20.0,
               activeBgColors: [
-                [Colors.green],
-                [Colors.red]
+                [Colors.blue],
+                [Colors.blue]
               ],
               activeFgColor: Colors.white,
               inactiveBgColor: Colors.grey,
@@ -273,7 +267,7 @@ class ReminderListWidget extends StatelessWidget {
               //curve: Curves.decelerate,
               radiusStyle: true,
               onToggle: (index) {
-                print('switched to: $index');
+                print(reminder.name + ' switched to: $index');
               },
             ),
           ])
@@ -286,6 +280,7 @@ class ReminderListWidget extends StatelessWidget {
 class OtherSettings extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    print("OtherSettings build()");
     return getAppCardStyle(
       child: ListView(
         physics: NeverScrollableScrollPhysics(),
@@ -372,7 +367,7 @@ class AddEditWalletScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final settingsScreenProvider = Provider.of<SettingsScreenProvider>(context);
+    final walletSettingsProvider = context.read<WalletSettingsProvider>();
     bool hasWallet = false;
     WalletType type;
     if (wallet != null) {
@@ -498,7 +493,7 @@ class AddEditWalletScreen extends StatelessWidget {
                                   child: Icon(Icons.delete),
                                   backgroundColor: Colors.red,
                                   onPressed: () {
-                                    settingsScreenProvider.deleteWallet(wallet);
+                                    walletSettingsProvider.deleteWallet(wallet);
                                     Navigator.pop(context);
                                   }),
                             ),
@@ -510,9 +505,9 @@ class AddEditWalletScreen extends StatelessWidget {
                                 backgroundColor: Colors.green,
                                 onPressed: () {
                                   wallet != null
-                                      ? settingsScreenProvider
+                                      ? walletSettingsProvider
                                           .updateWallet(wallet)
-                                      : settingsScreenProvider
+                                      : walletSettingsProvider
                                           .addWallet(wallet);
                                   Navigator.pop(context);
                                 }),
@@ -537,6 +532,7 @@ class AddEditReminderScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final reminderSettingsProvider = context.read<ReminderSettingsProvider>();
     final picker = Picker(
       textStyle: Theme.of(context).textTheme.bodyText1,
       hideHeader: true,
@@ -595,13 +591,18 @@ class AddEditReminderScreen extends StatelessWidget {
                                   Navigator.pop(context);
                                 },
                                 icon: Icon(Icons.arrow_back)),
-                            FloatingActionButton(
-                                heroTag: "deleteFreBtn",
-                                child: Icon(Icons.delete),
-                                backgroundColor: Colors.red,
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                }),
+                            Visibility(
+                              visible: reminder != null,
+                              child: FloatingActionButton(
+                                  heroTag: "deleteFreBtn",
+                                  child: Icon(Icons.delete),
+                                  backgroundColor: Colors.red,
+                                  onPressed: () {
+                                    reminderSettingsProvider
+                                        .deleteReminder(reminder);
+                                    Navigator.pop(context);
+                                  }),
+                            ),
                             FloatingActionButton(
                                 heroTag: "saveAddFreBtn",
                                 child: reminder != null
@@ -609,8 +610,12 @@ class AddEditReminderScreen extends StatelessWidget {
                                     : Icon(Icons.add),
                                 backgroundColor: Colors.green,
                                 onPressed: () {
-                                  print(pickAdapter.getSelectedValues());
-                                  print(picker.selecteds);
+                                  reminder != null
+                                      ? reminderSettingsProvider
+                                          .updateReminder(reminder)
+                                      : reminderSettingsProvider.addReminder();
+                                  // print(pickAdapter.getSelectedValues());
+                                  // print(picker.selecteds);
                                   Navigator.pop(context);
                                 }),
                           ],
@@ -628,6 +633,8 @@ class AddEditCategoryScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     print("AddEditCategoryScreen build()");
+    final addEditCategoryScreenProvider =
+        context.watch<AddEditCategoryScreenProvider>();
     return Material(
         type: MaterialType.transparency,
         // make sure that the overlay content is not cut off
@@ -663,13 +670,18 @@ class AddEditCategoryScreen extends StatelessWidget {
                                     Padding(
                                       padding: const EdgeInsets.all(10.0),
                                       child: InkWell(
-                                        onTap: () {
-                                          openColorPicker(context);
+                                        onTap: () async {
+                                          addEditCategoryScreenProvider
+                                              .changeSelectedCategoryColor(
+                                                  await openColorPicker(context,
+                                                      color: addEditCategoryScreenProvider
+                                                          .selectedCategoryColor));
                                         },
                                         child: Icon(
                                           Icons.circle,
                                           size: 32,
-                                          color: Colors.amber,
+                                          color: addEditCategoryScreenProvider
+                                              .selectedCategoryColor,
                                         ),
                                       ),
                                     ),
@@ -707,43 +719,17 @@ class AddEditCategoryScreen extends StatelessWidget {
                           Container(
                             padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
                             height: 350,
-                            child: ListView(
-                              shrinkWrap: true,
-                              children: [
-                                _settingsMyLegendWidget(
-                                    text: "Investment",
-                                    color: Colors.amber,
-                                    context: context),
-                                _settingsMyLegendWidget(
-                                    text: "Food",
-                                    color: Colors.red,
-                                    context: context),
-                                _settingsMyLegendWidget(
-                                    text: "Car",
-                                    color: Colors.green,
-                                    context: context),
-                                _settingsMyLegendWidget(
-                                    text: "legendtest",
-                                    color: Colors.amber,
-                                    context: context),
-                                _settingsMyLegendWidget(
-                                    text: "legendtest",
-                                    color: Colors.amber,
-                                    context: context),
-                                _settingsMyLegendWidget(
-                                    text: "legendtest",
-                                    color: Colors.amber,
-                                    context: context),
-                                _settingsMyLegendWidget(
-                                    text: "legendtest",
-                                    color: Colors.amber,
-                                    context: context),
-                                _settingsMyLegendWidget(
-                                    text: "legendtest",
-                                    color: Colors.amber,
-                                    context: context),
-                              ],
-                            ),
+                            child: ListView.builder(
+                                shrinkWrap: true,
+                                itemCount: addEditCategoryScreenProvider
+                                    .allCategorys.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  return SettingsMyLegendWidget(
+                                      nameCtrl: nameCtrl,
+                                      category: addEditCategoryScreenProvider
+                                          .allCategorys[index],
+                                      context: context);
+                                }),
                           )
                         ],
                       ),
@@ -763,6 +749,8 @@ class AddEditCategoryScreen extends StatelessWidget {
                                 child: Icon(Icons.delete),
                                 backgroundColor: Colors.red,
                                 onPressed: () {
+                                  addEditCategoryScreenProvider
+                                      .deleteCategory();
                                   Navigator.pop(context);
                                 }),
                             FloatingActionButton(
@@ -770,6 +758,8 @@ class AddEditCategoryScreen extends StatelessWidget {
                                 child: Icon(Icons.save),
                                 backgroundColor: Colors.green,
                                 onPressed: () {
+                                  addEditCategoryScreenProvider
+                                      .updateCategory();
                                   Navigator.pop(context);
                                 }),
                           ],
@@ -779,29 +769,45 @@ class AddEditCategoryScreen extends StatelessWidget {
                   )),
             )));
   }
+}
 
-  Widget _settingsMyLegendWidget(
-      {@required String text,
-      @required Color color,
-      @required BuildContext context}) {
+class SettingsMyLegendWidget extends StatelessWidget {
+  const SettingsMyLegendWidget({
+    Key key,
+    @required this.nameCtrl,
+    @required this.category,
+    @required this.context,
+  }) : super(key: key);
+
+  final TextEditingController nameCtrl;
+  final TrxCategory category;
+
+  final BuildContext context;
+
+  @override
+  Widget build(BuildContext context) {
+    final addEditCategoryScreenProvider =
+        context.read<AddEditCategoryScreenProvider>();
     return GestureDetector(
       onTap: () {
-        print("ouch: $text");
-        nameCtrl.text = text;
+        addEditCategoryScreenProvider.changeSelectedCategory(category);
+        nameCtrl.text = category.name;
       },
-      child: Column(
-        children: [
-          MyLegendWidget(
-            style: Theme.of(context).textTheme.bodyText1,
-            text: text,
-            color: color,
-            space: 5.0,
-          ),
-          Divider(
-            thickness: 1,
-            color: Colors.grey,
-          )
-        ],
+      child: Container(
+        child: Column(
+          children: [
+            MyLegendWidget(
+              style: Theme.of(context).textTheme.bodyText1,
+              text: category.name,
+              color: category.color,
+              space: 5.0,
+            ),
+            Divider(
+              thickness: 1,
+              color: Colors.grey,
+            )
+          ],
+        ),
       ),
     );
   }

@@ -5,5 +5,5 @@ class TrxCategory {
   String name;
   MaterialColor color;
 
-  TrxCategory({@required this.id, @required this.name, this.color});
+  TrxCategory({@required this.id, @required this.name, @required this.color});
 }
