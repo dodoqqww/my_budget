@@ -2,12 +2,13 @@ import 'package:flutter/material.dart'
     hide DropdownButton, DropdownMenuItem, DropdownButtonHideUnderline;
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:my_budget/providers/main_screen_providers.dart';
 import 'package:my_budget/ui/widgets/add_category_dialog.dart';
 import 'package:my_budget/ui/widgets/fitted_text.dart';
 import 'package:my_budget/utils/util_methods.dart';
 import './/models/transaction_category.dart';
 import './/ui/widgets/dropdown_widget.dart';
-
+import 'package:provider/provider.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter_date_picker_timeline/flutter_date_picker_timeline.dart';
 import 'package:month_picker_dialog/month_picker_dialog.dart';
@@ -19,76 +20,6 @@ import './/ui/common/style.dart';
 import 'package:quiver/time.dart';
 
 class MainScreen extends StatelessWidget {
-  final List<Transaction> list1 = [
-    Transaction(
-        id: "id1",
-        amount: 1200000000.4,
-        isIncome: true,
-        category: TrxCategory(id: "1", name: "Gift", color: Colors.amber),
-        date: DateTime.now(),
-        desc: "desc1",
-        name: "name1",
-        wallet: Wallet(
-            id: "1",
-            name: "OTP Bank",
-            amount: 123456.0,
-            type: WalletType.card)),
-    Transaction(
-        id: "id2",
-        amount: 1221.4,
-        isIncome: true,
-        category: TrxCategory(id: "2", name: "Food", color: Colors.amber),
-        date: DateTime.now(),
-        desc: "desc2",
-        name: "name2",
-        wallet: Wallet(
-            id: "2",
-            name: "Home wallet",
-            amount: 1234.0,
-            type: WalletType.cash))
-  ];
-  final List<Transaction> list2 = [
-    Transaction(
-        id: "id1",
-        amount: 120.4,
-        isIncome: false,
-        category: TrxCategory(id: "1", name: "Gift", color: Colors.amber),
-        date: DateTime.now(),
-        desc: "desc1",
-        name: "name1",
-        wallet: Wallet(
-            id: "1",
-            name: "OTP Bank",
-            amount: 123456.0,
-            type: WalletType.card)),
-    Transaction(
-        id: "id1",
-        amount: 120.4,
-        isIncome: false,
-        category: TrxCategory(id: "1", name: "Gift", color: Colors.amber),
-        date: DateTime.now(),
-        desc: "desc1",
-        name: "name1",
-        wallet: Wallet(
-            id: "1",
-            name: "OTP Bank",
-            amount: 123456.0,
-            type: WalletType.card)),
-    Transaction(
-        id: "id2",
-        amount: 1221.4,
-        isIncome: false,
-        category: TrxCategory(id: "2", name: "Food", color: Colors.amber),
-        date: DateTime.now(),
-        desc: "desc2",
-        name: "name2",
-        wallet: Wallet(
-            id: "2",
-            name: "Home wallet",
-            amount: 1234.0,
-            type: WalletType.cash))
-  ];
-
   @override
   Widget build(BuildContext context) {
     print("MainScreen build()");
@@ -147,14 +78,8 @@ class MainScreen extends StatelessWidget {
               Divider(
                 thickness: 2,
               ),
-              FinancialSummaryWidget(
-                list: list1,
-                isIncome: true,
-              ),
-              FinancialSummaryWidget(
-                list: list2,
-                isIncome: false,
-              ),
+              IncomeWidget(),
+              ExpenseWidget(),
             ],
           ),
         ),
@@ -163,21 +88,11 @@ class MainScreen extends StatelessWidget {
   }
 }
 
-class FinancialSummaryWidget extends StatelessWidget {
-  final bool isIncome;
-  final List<Transaction> list;
-
-  FinancialSummaryWidget(
-      {Key key, @required this.isIncome, @required this.list})
-      : super(key: key);
-
+class IncomeWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     print("IncomeWidget build()");
-
-    String prefix = isIncome ? "+" : "-";
-
-    //_getFormattedCurrency(context);
+    final incomeWidgetProvider = context.watch<IncomeWidgetProvider>();
 
     return ExpandableNotifier(
       // <-- Provides ExpandableController to its children
@@ -193,10 +108,12 @@ class FinancialSummaryWidget extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       FittedText(
-                        style: Theme.of(context).textTheme.headline1.copyWith(
-                            color: isIncome ? Colors.green : Colors.red),
+                        style: Theme.of(context)
+                            .textTheme
+                            .headline1
+                            .copyWith(color: Colors.green),
                         text:
-                            "$prefix ${getFormattedCurrency(context: context, value: 1234512)}",
+                            "+ ${getFormattedCurrency(context: context, value: incomeWidgetProvider.sumIncome)}",
                         fitSize: 250,
                       )
                     ],
@@ -204,12 +121,12 @@ class FinancialSummaryWidget extends StatelessWidget {
                   FloatingActionButton(
                       child: Icon(Icons.add),
                       heroTag: null,
-                      backgroundColor: isIncome ? Colors.green : Colors.red,
+                      backgroundColor: Colors.green,
                       onPressed: () {
                         openDialog(
                             context,
                             AddEditTrxScreen(
-                              isIncome: isIncome,
+                              isIncome: true,
                             ));
                       })
                 ],
@@ -242,8 +159,89 @@ class FinancialSummaryWidget extends StatelessWidget {
                 ),
 
                 expanded: TrxDetailsWidget(
-                  list: list,
-                  isIncome: isIncome,
+                  list: incomeWidgetProvider.allIncomeTrxs,
+                  isIncome: true,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class ExpenseWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    print("ExpenseWidget build()");
+    final expenseWidgetProvider = context.watch<ExpenseWidgetProvider>();
+    // print(expenseWidgetProvider.allExpenseTrxs.length);
+    //_getFormattedCurrency(context);
+
+    return ExpandableNotifier(
+      // <-- Provides ExpandableController to its children
+      child: getAppCardStyle(
+        child: Column(
+          children: [
+            Container(
+              padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      FittedText(
+                        style: Theme.of(context)
+                            .textTheme
+                            .headline1
+                            .copyWith(color: Colors.red),
+                        text:
+                            "- ${getFormattedCurrency(context: context, value: expenseWidgetProvider.sumExpense)}",
+                        fitSize: 250,
+                      )
+                    ],
+                  ),
+                  FloatingActionButton(
+                      child: Icon(Icons.add),
+                      heroTag: null,
+                      backgroundColor: Colors.red,
+                      onPressed: () {
+                        openDialog(context, AddEditTrxScreen(isIncome: false));
+                      })
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 10.0, right: 10),
+              child: Divider(
+                thickness: 1,
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.only(left: 10),
+              child: Expandable(
+                // <-- Driven by ExpandableController from ExpandableNotifier
+                collapsed: ExpandableButton(
+                  // <-- Expands when tapped on the cover photo
+                  child: Container(
+                    padding: EdgeInsets.only(bottom: 5),
+                    alignment: Alignment.center,
+                    width: double.infinity,
+                    child: Text(
+                      "Details",
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyText1
+                          .copyWith(color: Colors.blue),
+                    ),
+                  ),
+                ),
+
+                expanded: TrxDetailsWidget(
+                  list: expenseWidgetProvider.allExpenseTrxs,
+                  isIncome: false,
                 ),
               ),
             ),
@@ -419,6 +417,7 @@ class AddEditTrxScreen extends StatelessWidget {
       amountCtrl.text = trx.amount.toString();
       descCtrl.text = trx.desc;
     }
+    String selectedValue = "Apple";
 
     return Material(
         type: MaterialType.transparency,
@@ -479,7 +478,7 @@ class AddEditTrxScreen extends StatelessWidget {
                                               style: Theme.of(context)
                                                   .textTheme
                                                   .bodyText1,
-                                              value: "Apple",
+                                              value: selectedValue,
                                               items: [
                                                 DropdownMenuItem(
                                                     value: "Apple",
@@ -495,6 +494,7 @@ class AddEditTrxScreen extends StatelessWidget {
                                                     child: Text('Sony')),
                                               ],
                                               onChanged: (String newValue) {
+                                                selectedValue = newValue;
                                                 //S setState(() {
                                                 //S   dropdownValue = newValue;
                                                 //S });

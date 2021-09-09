@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:my_budget/providers/main_screen_providers.dart';
 import 'package:my_budget/providers/settings_screen_providers.dart';
+import 'package:my_budget/ui/screens/main_screen.dart';
 import './services/service_locator.dart';
 import './ui/common/theme.dart';
 import 'package:provider/provider.dart';
@@ -41,6 +43,12 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<ReminderSettingsProvider>(
             child: SettingsScreen(),
             create: (BuildContext context) => ReminderSettingsProvider()),
+        ChangeNotifierProvider<IncomeWidgetProvider>(
+            child: MainScreen(),
+            create: (BuildContext context) => IncomeWidgetProvider()),
+        ChangeNotifierProvider<ExpenseWidgetProvider>(
+            child: MainScreen(),
+            create: (BuildContext context) => ExpenseWidgetProvider()),
         // CartModel is implemented as a ChangeNotifier, which calls for the use
         // of ChangeNotifierProvider. Moreover, CartModel depends
         // on CatalogModel, so a ProxyProvider is needed.
