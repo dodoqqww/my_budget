@@ -62,11 +62,7 @@ class WalletSettingsProvider with ChangeNotifier {
   addWallet(Wallet wallet) {
     print("add wallet");
     _storageService.addWallet();
-    print(allWallets.length);
-    allWallets.add(Wallet(
-        id: "1", name: "OTP card", amount: 123456.0, type: WalletType.card));
-
-    print(allWallets.length);
+    allWallets.add(wallet);
     notifyListeners();
   }
 
@@ -94,9 +90,10 @@ class ReminderSettingsProvider with ChangeNotifier {
   List<Reminder> allReminders;
   Wallet selectedWallet;
 
-  addReminder() {
+  addReminder(Reminder reminder) {
     print("add Reminder");
     _storageService.addReminder();
+    allReminders.add(reminder);
     notifyListeners();
   }
 

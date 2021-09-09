@@ -130,7 +130,7 @@ class WalletListWidget extends StatelessWidget {
               children: [
                 wallet.type.icon,
                 FittedText(
-                  text: wallet.name,
+                  text: wallet.type.name,
                   style: Theme.of(context).textTheme.bodyText1,
                   fitSize: 125,
                 ),
@@ -263,10 +263,9 @@ class ReminderListWidget extends StatelessWidget {
               initialLabelIndex: 1,
               totalSwitches: 2,
               labels: ['On', 'Off'],
-              //animate: true,
-              //curve: Curves.decelerate,
               radiusStyle: true,
               onToggle: (index) {
+                // TODO  implement reminder notification on/off
                 print(reminder.name + ' switched to: $index');
               },
             ),
@@ -443,36 +442,15 @@ class AddEditWalletScreen extends StatelessWidget {
                               ],
                               icons: [Icons.credit_card, Icons.paid],
                               onToggle: (index) {
+                                type = (index == 0)
+                                    ? WalletType.card
+                                    : WalletType.cash;
                                 print('switched to: $index');
                               },
                             ),
                           ),
 
                           // TODO implement oprional fee feature
-
-                          //  Padding(
-                          //    padding: const EdgeInsets.fromLTRB(10, 0, 10, 8),
-                          //    child: Row(
-                          //      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          //      children: [
-                          //        Text("Other options:"),
-                          //        IconButton(
-                          //            onPressed: () {}, icon: Icon(Icons.add))
-                          //      ],
-                          //    ),
-                          //  ),
-                          //  ListView(
-                          //    shrinkWrap: true,
-                          //    padding: EdgeInsets.only(left: 25),
-                          //    children: [
-                          //      Row(
-                          //        mainAxisAlignment:
-                          //            MainAxisAlignment.spaceBetween,
-                          //        children: [Text("Online fee"), Text("xxx Ft")],
-                          //      ),
-                          //      Text("Other fee")
-                          //    ],
-                          //  )
                         ],
                       ),
                       Spacer(),
@@ -500,15 +478,18 @@ class AddEditWalletScreen extends StatelessWidget {
                             FloatingActionButton(
                                 heroTag: "saveAddRemBtn",
                                 child: wallet != null
-                                    ? Icon(Icons.save)
+                                    ? Icon(Icons.edit)
                                     : Icon(Icons.add),
                                 backgroundColor: Colors.green,
                                 onPressed: () {
                                   wallet != null
                                       ? walletSettingsProvider
                                           .updateWallet(wallet)
-                                      : walletSettingsProvider
-                                          .addWallet(wallet);
+                                      : walletSettingsProvider.addWallet(Wallet(
+                                          id: "testwallet1",
+                                          name: nameCtrl.text,
+                                          amount: double.parse(amountCtrl.text),
+                                          type: type));
                                   Navigator.pop(context);
                                 }),
                           ],
@@ -606,15 +587,25 @@ class AddEditReminderScreen extends StatelessWidget {
                             FloatingActionButton(
                                 heroTag: "saveAddFreBtn",
                                 child: reminder != null
-                                    ? Icon(Icons.save)
+                                    ? Icon(Icons.edit)
                                     : Icon(Icons.add),
                                 backgroundColor: Colors.green,
                                 onPressed: () {
+                                  List<String> freqList =
+                                      pickAdapter.getSelectedValues();
                                   reminder != null
                                       ? reminderSettingsProvider
                                           .updateReminder(reminder)
-                                      : reminderSettingsProvider.addReminder();
-                                  // print(pickAdapter.getSelectedValues());
+                                      : reminderSettingsProvider.addReminder(
+                                          Reminder(
+                                              id: "testreminder1",
+                                              name: nameCtrl.text,
+                                              frequency: freqList[0] +
+                                                  " " +
+                                                  freqList[1] +
+                                                  " " +
+                                                  freqList[2]));
+                                  //print(pickAdapter.getSelectedValues());
                                   // print(picker.selecteds);
                                   Navigator.pop(context);
                                 }),
@@ -755,7 +746,7 @@ class AddEditCategoryScreen extends StatelessWidget {
                                 }),
                             FloatingActionButton(
                                 heroTag: "saveCatBtn",
-                                child: Icon(Icons.save),
+                                child: Icon(Icons.edit),
                                 backgroundColor: Colors.green,
                                 onPressed: () {
                                   addEditCategoryScreenProvider
