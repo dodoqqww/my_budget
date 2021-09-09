@@ -19,6 +19,18 @@ class IncomeWidgetProvider with ChangeNotifier {
   double sumIncome;
   List<Transaction> allIncomeTrxs;
 
+  double getSumIncome({DateTime month}) {
+    print("getSumExpense()");
+    print(month);
+    return sumIncome;
+  }
+
+  List<Transaction> getAllExpenseTrxs({DateTime month}) {
+    print("getAllExpenseTrxs()");
+    print(month);
+    return allIncomeTrxs;
+  }
+
   addTrx() {
     print("add inTrx");
     _storageService.addTrx();
@@ -61,8 +73,20 @@ class ExpenseWidgetProvider with ChangeNotifier {
   // List<Transaction> allIncomeTrxs;
   List<Transaction> allExpenseTrxs;
 
+  double getSumExpense({DateTime month}) {
+    print("getSumExpense()");
+    print(month);
+    return sumExpense;
+  }
+
+  List<Transaction> getAllExpenseTrxs({DateTime month}) {
+    print("getAllExpenseTrxs()");
+    print(month);
+    return allExpenseTrxs;
+  }
+
   addTrx() {
-    print("add inTrx");
+    print("add exTrx");
     _storageService.addTrx();
     // sumIncome = _trxManagerService.getSumIncome();
     // sumExpense = _trxManagerService.getSumExpense();
@@ -70,7 +94,7 @@ class ExpenseWidgetProvider with ChangeNotifier {
   }
 
   deleteTrx() {
-    print("delete inTrx");
+    print("delete exTrx");
     _storageService.deleteTrx();
     // sumIncome = _trxManagerService.getSumIncome();
     // sumExpense = _trxManagerService.getSumExpense();
@@ -78,10 +102,23 @@ class ExpenseWidgetProvider with ChangeNotifier {
   }
 
   updateTrx() {
-    print("update inTrx");
+    print("update exTrx");
     _storageService.updateTrx();
     // sumIncome = _trxManagerService.getSumIncome();
     // sumExpense = _trxManagerService.getSumExpense();
+    notifyListeners();
+  }
+}
+
+class MainScreenProvider with ChangeNotifier {
+  DateTime selectedDate;
+
+  MainScreenProvider() {
+    selectedDate = DateTime.now();
+  }
+
+  changeDate(DateTime newDate) {
+    selectedDate = newDate;
     notifyListeners();
   }
 }
