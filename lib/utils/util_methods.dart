@@ -10,3 +10,20 @@ String getFormattedCurrency({BuildContext context, double value}) {
 
   return format.format(value);
 }
+
+String getFormatedMMddDate(DateTime date) {
+  final DateFormat formatter = DateFormat('MM.dd.');
+  return formatter.format(date);
+}
+
+String getFormatedyyyyMMMMDate(DateTime date) {
+  final DateFormat formatter = DateFormat('yyyy.MMMM');
+  var schema = formatter.format(date);
+  return formatter.format(date).replaceRange(5, 6, schema[5].toUpperCase());
+}
+
+String getFormatedyyyyMMMDate(DateTime date) {
+  final DateFormat formatter = DateFormat('yyyy.MMM');
+  var schema = formatter.format(date);
+  return formatter.format(date).replaceRange(5, 6, schema[5].toUpperCase());
+}

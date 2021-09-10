@@ -23,6 +23,7 @@ class MainScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     print("MainScreen build()");
+    final mainScreenProvider = context.watch<MainScreenProvider>();
     return Scaffold(
       body: Container(
         padding: EdgeInsets.all(10),
@@ -44,14 +45,11 @@ class MainScreen extends StatelessWidget {
                                 context: context,
                                 // firstDate: DateTime(DateTime.now().year - 1, 5),
                                 // lastDate: DateTime(DateTime.now().year + 1, 9),
-                                initialDate: DateTime.now(),
+                                initialDate: mainScreenProvider.selectedDate,
                                 //locale: Locale("es"),
                               ).then((date) {
-                                // if (date != null) {
-                                //   setState(() {
-                                //     selectedDate = date;
-                                //   });
-                                // }
+                                print("asd");
+                                mainScreenProvider.changeDate(date);
                               });
                             },
                             icon: Icon(
@@ -59,7 +57,8 @@ class MainScreen extends StatelessWidget {
                               color: Colors.blue,
                             )),
                         Text(
-                          "2021.August",
+                          getFormatedyyyyMMMMDate(
+                              mainScreenProvider.selectedDate),
                           style: Theme.of(context).textTheme.headline2,
                         ),
                       ],
@@ -78,8 +77,8 @@ class MainScreen extends StatelessWidget {
               Divider(
                 thickness: 2,
               ),
-              IncomeWidget(),
-              ExpenseWidget(),
+              IncomeWidget(selectedDate: mainScreenProvider.selectedDate),
+              ExpenseWidget(selectedDate: mainScreenProvider.selectedDate),
             ],
           ),
         ),
@@ -89,6 +88,10 @@ class MainScreen extends StatelessWidget {
 }
 
 class IncomeWidget extends StatelessWidget {
+  final DateTime selectedDate;
+
+  const IncomeWidget({Key key, this.selectedDate}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     print("IncomeWidget build()");
@@ -113,7 +116,7 @@ class IncomeWidget extends StatelessWidget {
                             .headline1
                             .copyWith(color: Colors.green),
                         text:
-                            "+ ${getFormattedCurrency(context: context, value: incomeWidgetProvider.sumIncome)}",
+                            "+ ${getFormattedCurrency(context: context, value: incomeWidgetProvider.getSumIncome(month: selectedDate))}",
                         fitSize: 250,
                       )
                     ],
@@ -159,7 +162,8 @@ class IncomeWidget extends StatelessWidget {
                 ),
 
                 expanded: TrxDetailsWidget(
-                  list: incomeWidgetProvider.allIncomeTrxs,
+                  list: incomeWidgetProvider.getAllExpenseTrxs(
+                      month: selectedDate),
                   isIncome: true,
                 ),
               ),
@@ -172,6 +176,10 @@ class IncomeWidget extends StatelessWidget {
 }
 
 class ExpenseWidget extends StatelessWidget {
+  final DateTime selectedDate;
+
+  const ExpenseWidget({Key key, this.selectedDate}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     print("ExpenseWidget build()");
@@ -198,7 +206,7 @@ class ExpenseWidget extends StatelessWidget {
                             .headline1
                             .copyWith(color: Colors.red),
                         text:
-                            "- ${getFormattedCurrency(context: context, value: expenseWidgetProvider.sumExpense)}",
+                            "- ${getFormattedCurrency(context: context, value: expenseWidgetProvider.getSumExpense(month: selectedDate))}",
                         fitSize: 250,
                       )
                     ],
@@ -240,7 +248,8 @@ class ExpenseWidget extends StatelessWidget {
                 ),
 
                 expanded: TrxDetailsWidget(
-                  list: expenseWidgetProvider.allExpenseTrxs,
+                  list: expenseWidgetProvider.getAllExpenseTrxs(
+                      month: selectedDate),
                   isIncome: false,
                 ),
               ),
@@ -300,15 +309,13 @@ class TrxListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(_getFormatedMMddDate(trx.date));
-
     String prefix = trx.isIncome ? "+" : "-";
     return Row(
       children: [
         RotatedBox(
             quarterTurns: 3,
             child: Text(
-              _getFormatedMMddDate(trx.date),
+              getFormatedMMddDate(trx.date),
               style: Theme.of(context).textTheme.bodyText2,
             )),
         Container(
@@ -387,11 +394,6 @@ class TrxListItem extends StatelessWidget {
       ],
     );
   }
-
-  String _getFormatedMMddDate(DateTime date) {
-    final DateFormat formatter = DateFormat('MM.dd.');
-    return formatter.format(date);
-  }
 }
 
 class AddEditTrxScreen extends StatelessWidget {
@@ -409,6 +411,8 @@ class AddEditTrxScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     print("AddEditTrxScreen build()");
+
+    final addEditTrxScreenProvider = context.read<AddEditTrxScreenProvider>();
 
     bool hasTrx = false;
     if (trx != null) {
@@ -654,6 +658,7 @@ class AddEditTrxScreen extends StatelessWidget {
                                   backgroundColor:
                                       isIncome ? Colors.green : Colors.red,
                                   onPressed: () {
+                                    addEditTrxScreenProvider.addTrx();
                                     Navigator.pop(context);
                                   }),
                             ),
@@ -666,6 +671,7 @@ class AddEditTrxScreen extends StatelessWidget {
                                         child: Icon(Icons.delete),
                                         backgroundColor: Colors.red,
                                         onPressed: () {
+                                          addEditTrxScreenProvider.deleteTrx();
                                           Navigator.pop(context);
                                         }),
                                     SizedBox(
@@ -676,6 +682,7 @@ class AddEditTrxScreen extends StatelessWidget {
                                         heroTag: "copyBtn",
                                         backgroundColor: Colors.blue,
                                         onPressed: () {
+                                          addEditTrxScreenProvider.copyTrx();
                                           Navigator.pop(context);
                                         }),
                                     SizedBox(
@@ -686,6 +693,7 @@ class AddEditTrxScreen extends StatelessWidget {
                                         child: Icon(Icons.save),
                                         backgroundColor: Colors.green,
                                         onPressed: () {
+                                          addEditTrxScreenProvider.updateTrx();
                                           Navigator.pop(context);
                                         }),
                                   ],

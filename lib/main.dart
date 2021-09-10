@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:my_budget/providers/graphs_screen_providers.dart';
 import 'package:my_budget/providers/main_screen_providers.dart';
 import 'package:my_budget/providers/settings_screen_providers.dart';
 import 'package:my_budget/ui/screens/main_screen.dart';
@@ -11,6 +12,7 @@ import 'package:responsive_framework/responsive_framework.dart';
 import './generated/l10n.dart';
 import 'providers/bottom_nav_provider.dart';
 import './ui/bottom_nav.dart';
+import 'ui/screens/graph_screen.dart';
 import 'ui/screens/settings_screen.dart';
 
 void main() {
@@ -49,6 +51,15 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<ExpenseWidgetProvider>(
             child: MainScreen(),
             create: (BuildContext context) => ExpenseWidgetProvider()),
+        ChangeNotifierProvider<MainScreenProvider>(
+            child: MainScreen(),
+            create: (BuildContext context) => MainScreenProvider()),
+        ChangeNotifierProvider<AddEditTrxScreenProvider>(
+            child: MainScreen(),
+            create: (BuildContext context) => AddEditTrxScreenProvider()),
+        ChangeNotifierProvider<GraphsScreenProvider>(
+            child: GraphScreen(),
+            create: (BuildContext context) => GraphsScreenProvider()),
         // CartModel is implemented as a ChangeNotifier, which calls for the use
         // of ChangeNotifierProvider. Moreover, CartModel depends
         // on CatalogModel, so a ProxyProvider is needed.

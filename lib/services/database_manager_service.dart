@@ -12,6 +12,7 @@ abstract class DatabaseManagerService {
   List<Reminder> getAllReminders();
   List<Transaction> getAllTransaction();
   void addTrx();
+  void copyTrx();
   void deleteTrx();
   void updateTrx();
   void addWallet();
@@ -113,6 +114,12 @@ class HiveDatabaseManagerService extends DatabaseManagerService {
   @override
   void updateTrx() {
     print("updateTrx() from service");
+    // TODO: implement updateTrx
+  }
+
+  @override
+  void copyTrx() {
+    print("copyTrx() from service");
     // TODO: implement updateTrx
   }
 

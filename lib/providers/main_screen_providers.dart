@@ -122,3 +122,35 @@ class MainScreenProvider with ChangeNotifier {
     notifyListeners();
   }
 }
+
+class AddEditTrxScreenProvider with ChangeNotifier {
+  DatabaseManagerService _storageService;
+
+  AddEditTrxScreenProvider() {
+    _storageService = getIt<DatabaseManagerService>();
+  }
+
+  addTrx() {
+    print("add Trx");
+    _storageService.addTrx();
+    notifyListeners();
+  }
+
+  updateTrx() {
+    print("update Trx");
+    _storageService.updateTrx();
+    notifyListeners();
+  }
+
+  copyTrx() {
+    print("copy Trx");
+    _storageService.copyTrx();
+    notifyListeners();
+  }
+
+  deleteTrx() {
+    print("delete Trx");
+    _storageService.deleteTrx();
+    notifyListeners();
+  }
+}

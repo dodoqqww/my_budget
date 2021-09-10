@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:month_picker_dialog/month_picker_dialog.dart';
+import 'package:my_budget/providers/graphs_screen_providers.dart';
 import 'package:my_budget/ui/widgets/chart_widgets.dart';
 import 'package:my_budget/ui/widgets/legend_widget.dart';
+import 'package:my_budget/utils/util_methods.dart';
 import './/ui/common/style.dart';
+import 'package:provider/provider.dart';
 
 class GraphScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     print("GraphScreen build()");
+    final graphsScreenProvider = context.watch<GraphsScreenProvider>();
     return Scaffold(
       body: Container(
         //padding: EdgeInsets.all(10),
@@ -92,46 +96,39 @@ class MonthSelectorWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final graphsScreenProvider = context.read<GraphsScreenProvider>();
     return Padding(
       padding: const EdgeInsets.only(right: 10),
       child: getAppCardStyle(
         child: Padding(
           padding: const EdgeInsets.only(left: 20, right: 15),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                "2021.Aug",
-                style: Theme.of(context)
-                    .textTheme
-                    .headline3
-                    .copyWith(decoration: TextDecoration.underline),
-              ),
-              IconButton(
-                  onPressed: () {
-                    showMonthPicker(
-                      okText: "Confirm",
-                      context: context,
-                      // firstDate: DateTime(DateTime.now().year - 1, 5),
-                      // lastDate: DateTime(DateTime.now().year + 1, 9),
-                      initialDate: DateTime.now(),
-                      //locale: Locale("es"),
-                    ).then((date) {
-                      // if (date != null) {
-                      //   setState(() {
-                      //     selectedDate = date;
-                      //   });
-                      // }
-                    });
-                  },
-                  icon: Icon(
-                    Icons.date_range,
-                    color: Colors.blue,
-                  ))
-              //SizedBox(
-              //  width: 20,
-              //),
-            ],
+          child: TextButton(
+            child: Text(
+              getFormatedyyyyMMMDate(graphsScreenProvider.selectedDate),
+              style: Theme.of(context).textTheme.headline3.copyWith(
+                  decoration: TextDecoration.underline, color: Colors.blue),
+            ),
+            onPressed: () {
+              showMonthPicker(
+                okText: "Confirm",
+                context: context,
+                // firstDate: DateTime(DateTime.now().year - 1, 5),
+                // lastDate: DateTime(DateTime.now().year + 1, 9),
+                initialDate: DateTime.now(),
+                //locale: Locale("es"),
+              ).then((date) {
+                graphsScreenProvider.changeSelectedDate(date);
+                // if (date != null) {
+                //   setState(() {
+                //     selectedDate = date;
+                //   });
+                // }
+              });
+            },
+
+            //SizedBox(
+            //  width: 20,
+            //),
           ),
         ),
       ),
