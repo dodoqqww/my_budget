@@ -483,6 +483,7 @@ class AddEditTrxScreen extends StatelessWidget {
                                                   .textTheme
                                                   .bodyText1,
                                               value: selectedValue,
+                                              // TODO solve pick change
                                               items: [
                                                 DropdownMenuItem(
                                                     value: "Apple",
