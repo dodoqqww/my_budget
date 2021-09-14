@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:my_budget/models/transaction.dart';
+import 'package:my_budget/models/transaction_category.dart';
+import 'package:my_budget/models/wallet.dart';
 import 'package:my_budget/services/database_manager_service.dart';
 import 'package:my_budget/services/service_locator.dart';
 import 'package:my_budget/services/transaction_manager_service.dart';
@@ -128,6 +130,26 @@ class AddEditTrxScreenProvider with ChangeNotifier {
 
   AddEditTrxScreenProvider() {
     _storageService = getIt<DatabaseManagerService>();
+    allCategorys = _storageService.getAllTrxCategorys();
+    allWallets = _storageService.getAllWallets();
+    selectedWallet = allWallets[0];
+    selectedCategory = allCategorys[0];
+  }
+
+  TrxCategory selectedCategory;
+  Wallet selectedWallet;
+
+  List<TrxCategory> allCategorys;
+  List<Wallet> allWallets;
+
+  changeSelectedCategory(TrxCategory category) {
+    selectedCategory = category;
+    notifyListeners();
+  }
+
+  changeSelectedWallet(Wallet wallet) {
+    selectedWallet = wallet;
+    notifyListeners();
   }
 
   addTrx() {

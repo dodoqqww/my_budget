@@ -52,6 +52,7 @@ class HiveDatabaseManagerService extends DatabaseManagerService {
     return [
       TrxCategory(id: "1", name: "Food", color: Colors.red),
       TrxCategory(id: "2", name: "Investments", color: Colors.pink),
+      TrxCategory(id: "3", name: "Gift", color: Colors.orange),
     ];
   }
 

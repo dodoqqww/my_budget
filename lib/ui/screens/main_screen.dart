@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart'
     hide DropdownButton, DropdownMenuItem, DropdownButtonHideUnderline;
 import 'package:flutter/services.dart';
@@ -309,6 +310,7 @@ class TrxListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final addEditTrxScreenProvider = context.read<AddEditTrxScreenProvider>();
     String prefix = trx.isIncome ? "+" : "-";
     return Row(
       children: [
@@ -345,6 +347,10 @@ class TrxListItem extends StatelessWidget {
                     ),
                     InkWell(
                         onTap: () {
+                          addEditTrxScreenProvider
+                              .changeSelectedCategory(trx.category);
+                          addEditTrxScreenProvider
+                              .changeSelectedWallet(trx.wallet);
                           openDialog(context, AddEditTrxScreen(trx: trx));
                         },
                         child: Text(
@@ -412,7 +418,7 @@ class AddEditTrxScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     print("AddEditTrxScreen build()");
 
-    final addEditTrxScreenProvider = context.read<AddEditTrxScreenProvider>();
+    final addEditTrxScreenProvider = context.watch<AddEditTrxScreenProvider>();
 
     bool hasTrx = false;
     if (trx != null) {
@@ -421,7 +427,6 @@ class AddEditTrxScreen extends StatelessWidget {
       amountCtrl.text = trx.amount.toString();
       descCtrl.text = trx.desc;
     }
-    String selectedValue = "Apple";
 
     return Material(
         type: MaterialType.transparency,
@@ -478,31 +483,23 @@ class AddEditTrxScreen extends StatelessWidget {
                                           child: Padding(
                                             padding: const EdgeInsets.only(
                                                 right: 15),
-                                            child: DropdownButton<String>(
+                                            child: DropdownButton<TrxCategory>(
                                               style: Theme.of(context)
                                                   .textTheme
                                                   .bodyText1,
-                                              value: selectedValue,
-                                              // TODO solve pick change
-                                              items: [
-                                                DropdownMenuItem(
-                                                    value: "Apple",
-                                                    child: Text('Apple')),
-                                                DropdownMenuItem(
-                                                    value: 'Google',
-                                                    child: Text('Google')),
-                                                DropdownMenuItem(
-                                                    value: 'Samsung',
-                                                    child: Text('Samsung')),
-                                                DropdownMenuItem(
-                                                    value: 'Sony',
-                                                    child: Text('Sony')),
-                                              ],
-                                              onChanged: (String newValue) {
-                                                selectedValue = newValue;
-                                                //S setState(() {
-                                                //S   dropdownValue = newValue;
-                                                //S });
+                                              value: addEditTrxScreenProvider
+                                                  .selectedCategory,
+                                              items: getTrxDropDown(
+                                                  addEditTrxScreenProvider
+                                                      .allCategorys,
+                                                  cat: hasTrx
+                                                      ? trx.category
+                                                      : null),
+                                              onChanged:
+                                                  (TrxCategory newValue) {
+                                                addEditTrxScreenProvider
+                                                    .changeSelectedCategory(
+                                                        newValue);
                                               },
                                             ),
                                           ),
@@ -535,23 +532,18 @@ class AddEditTrxScreen extends StatelessWidget {
                                     height: 25,
                                     child: Padding(
                                       padding: const EdgeInsets.only(right: 15),
-                                      child: DropdownButton<String>(
+                                      child: DropdownButton<Wallet>(
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodyText1,
-                                        value: "Otp card",
-                                        items: [
-                                          DropdownMenuItem(
-                                              value: "Otp card",
-                                              child: Text('Otp card')),
-                                          DropdownMenuItem(
-                                              value: 'Home cash',
-                                              child: Text('Home wallet')),
-                                        ],
-                                        onChanged: (String newValue) {
-                                          //S setState(() {
-                                          //S   dropdownValue = newValue;
-                                          //S });
+                                        value: addEditTrxScreenProvider
+                                            .selectedWallet,
+                                        items: getWalletDropDown(
+                                            addEditTrxScreenProvider.allWallets,
+                                            wallet: hasTrx ? trx.wallet : null),
+                                        onChanged: (Wallet newValue) {
+                                          addEditTrxScreenProvider
+                                              .changeSelectedWallet(newValue);
                                         },
                                       ),
                                     ),
@@ -626,12 +618,6 @@ class AddEditTrxScreen extends StatelessWidget {
                                 itemBuilder: (context, index) =>
                                     GestureDetector(
                                       child: Container(
-                                        //decoration: BoxDecoration(
-                                        //  image: DecorationImage(
-                                        //    image: FileImage(images[index]),
-                                        //    fit: BoxFit.cover,
-                                        //  ),
-                                        //),
                                         child: Text('2'),
                                       ),
                                       onTap: () => print("image"),
@@ -705,5 +691,43 @@ class AddEditTrxScreen extends StatelessWidget {
                     ],
                   )),
             )));
+  }
+
+  List<DropdownMenuItem> getTrxDropDown(List<TrxCategory> cats,
+      {TrxCategory cat}) {
+    List<DropdownMenuItem> list = cats.map((e) {
+      return new DropdownMenuItem<TrxCategory>(
+        child: Text(e.name),
+        value: e,
+      );
+    }).toList();
+    if (trx != null) {
+      list.add(new DropdownMenuItem<TrxCategory>(
+        child: Text(cat.name),
+        value: cat,
+      ));
+    }
+
+    return list;
+  }
+
+  //TODO BUG
+  List<DropdownMenuItem> getWalletDropDown(List<Wallet> wallets,
+      {Wallet wallet}) {
+    List<DropdownMenuItem> list = wallets.map((e) {
+      return new DropdownMenuItem<Wallet>(
+        child: Text(e.name),
+        value: e,
+      );
+    }).toList();
+
+    if (wallet != null) {
+      list.add(new DropdownMenuItem<Wallet>(
+        child: Text(wallet.name),
+        value: wallet,
+      ));
+    }
+
+    return list;
   }
 }
