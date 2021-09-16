@@ -132,23 +132,35 @@ class AddEditTrxScreenProvider with ChangeNotifier {
     _storageService = getIt<DatabaseManagerService>();
     allCategorys = _storageService.getAllTrxCategorys();
     allWallets = _storageService.getAllWallets();
-    selectedWallet = allWallets[0];
-    selectedCategory = allCategorys[0];
+    selectedAddWallet = allWallets[0];
+    selectedAddCategory = allCategorys[0];
   }
 
-  TrxCategory selectedCategory;
-  Wallet selectedWallet;
+  TrxCategory selectedAddCategory;
+  TrxCategory selectedEditCategory;
+  Wallet selectedAddWallet;
+  Wallet selectedEditWallet;
 
   List<TrxCategory> allCategorys;
   List<Wallet> allWallets;
 
-  changeSelectedCategory(TrxCategory category) {
-    selectedCategory = category;
+  changeSelectedAddCategory(TrxCategory category) {
+    selectedAddCategory = category;
     notifyListeners();
   }
 
-  changeSelectedWallet(Wallet wallet) {
-    selectedWallet = wallet;
+  changeSelectedEditCategory(TrxCategory category) {
+    selectedEditCategory = category;
+    notifyListeners();
+  }
+
+  changeSelectedEditWallet(Wallet wallet) {
+    selectedEditWallet = wallet;
+    notifyListeners();
+  }
+
+  changeSelectedAddWallet(Wallet wallet) {
+    selectedAddWallet = wallet;
     notifyListeners();
   }
 

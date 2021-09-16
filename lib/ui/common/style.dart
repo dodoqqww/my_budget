@@ -42,9 +42,10 @@ InputDecoration getAppTextFieldDecoration(
 }
 
 // card shape
-Card getAppCardStyle({Widget child}) {
+Card getAppCardStyle({@required Widget child, Color color = Colors.white}) {
   return Card(
     elevation: 20,
+    color: color,
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(25.0),
     ),

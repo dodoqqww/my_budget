@@ -100,6 +100,7 @@ class MonthSelectorWidget extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(right: 10),
       child: getAppCardStyle(
+        // color: Colors.blue,
         child: Padding(
           padding: const EdgeInsets.only(left: 20, right: 15),
           child: TextButton(
@@ -109,16 +110,17 @@ class MonthSelectorWidget extends StatelessWidget {
                   decoration: TextDecoration.underline, color: Colors.blue),
             ),
             onPressed: () {
-              // TODO if cancel picker then error
               showMonthPicker(
                 okText: "Confirm",
                 context: context,
                 // firstDate: DateTime(DateTime.now().year - 1, 5),
                 // lastDate: DateTime(DateTime.now().year + 1, 9),
-                initialDate: DateTime.now(),
+                initialDate: graphsScreenProvider.selectedDate,
                 //locale: Locale("es"),
               ).then((date) {
-                graphsScreenProvider.changeSelectedDate(date);
+                if (date != null && date != graphsScreenProvider.selectedDate) {
+                  graphsScreenProvider.changeSelectedDate(date);
+                }
                 // if (date != null) {
                 //   setState(() {
                 //     selectedDate = date;

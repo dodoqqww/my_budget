@@ -49,8 +49,10 @@ class MainScreen extends StatelessWidget {
                                 initialDate: mainScreenProvider.selectedDate,
                                 //locale: Locale("es"),
                               ).then((date) {
-                                print("asd");
-                                mainScreenProvider.changeDate(date);
+                                if (date != null &&
+                                    date != mainScreenProvider.selectedDate) {
+                                  mainScreenProvider.changeDate(date);
+                                }
                               });
                             },
                             icon: Icon(
@@ -129,7 +131,7 @@ class IncomeWidget extends StatelessWidget {
                       onPressed: () {
                         openDialog(
                             context,
-                            AddEditTrxScreen(
+                            AddTrxScreen(
                               isIncome: true,
                             ));
                       })
@@ -217,7 +219,7 @@ class ExpenseWidget extends StatelessWidget {
                       heroTag: null,
                       backgroundColor: Colors.red,
                       onPressed: () {
-                        openDialog(context, AddEditTrxScreen(isIncome: false));
+                        openDialog(context, AddTrxScreen(isIncome: false));
                       })
                 ],
               ),
@@ -348,10 +350,10 @@ class TrxListItem extends StatelessWidget {
                     InkWell(
                         onTap: () {
                           addEditTrxScreenProvider
-                              .changeSelectedCategory(trx.category);
+                              .changeSelectedEditCategory(trx.category);
                           addEditTrxScreenProvider
-                              .changeSelectedWallet(trx.wallet);
-                          openDialog(context, AddEditTrxScreen(trx: trx));
+                              .changeSelectedEditWallet(trx.wallet);
+                          openDialog(context, EditTrxScreen(trx: trx));
                         },
                         child: Text(
                           "Edit",
@@ -402,8 +404,7 @@ class TrxListItem extends StatelessWidget {
   }
 }
 
-class AddEditTrxScreen extends StatelessWidget {
-  final Transaction trx;
+class AddTrxScreen extends StatelessWidget {
   final bool isIncome;
 
   final DateTime time = DateTime.now();
@@ -412,21 +413,13 @@ class AddEditTrxScreen extends StatelessWidget {
   final amountCtrl = TextEditingController();
   final descCtrl = TextEditingController();
 
-  AddEditTrxScreen({Key key, this.trx, this.isIncome = true}) : super(key: key);
+  AddTrxScreen({Key key, this.isIncome = true}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    print("AddEditTrxScreen build()");
+    print("AddTrxScreen build()");
 
     final addEditTrxScreenProvider = context.watch<AddEditTrxScreenProvider>();
-
-    bool hasTrx = false;
-    if (trx != null) {
-      hasTrx = true;
-      nameCtrl.text = trx.name;
-      amountCtrl.text = trx.amount.toString();
-      descCtrl.text = trx.desc;
-    }
 
     return Material(
         type: MaterialType.transparency,
@@ -483,22 +476,20 @@ class AddEditTrxScreen extends StatelessWidget {
                                           child: Padding(
                                             padding: const EdgeInsets.only(
                                                 right: 15),
-                                            child: DropdownButton<TrxCategory>(
+                                            child:
+                                                new DropdownButton<TrxCategory>(
                                               style: Theme.of(context)
                                                   .textTheme
                                                   .bodyText1,
                                               value: addEditTrxScreenProvider
-                                                  .selectedCategory,
-                                              items: getTrxDropDown(
+                                                  .selectedAddCategory,
+                                              items: _getCatDropDown(
                                                   addEditTrxScreenProvider
-                                                      .allCategorys,
-                                                  cat: hasTrx
-                                                      ? trx.category
-                                                      : null),
+                                                      .allCategorys),
                                               onChanged:
                                                   (TrxCategory newValue) {
                                                 addEditTrxScreenProvider
-                                                    .changeSelectedCategory(
+                                                    .changeSelectedAddCategory(
                                                         newValue);
                                               },
                                             ),
@@ -537,13 +528,14 @@ class AddEditTrxScreen extends StatelessWidget {
                                             .textTheme
                                             .bodyText1,
                                         value: addEditTrxScreenProvider
-                                            .selectedWallet,
-                                        items: getWalletDropDown(
-                                            addEditTrxScreenProvider.allWallets,
-                                            wallet: hasTrx ? trx.wallet : null),
+                                            .selectedAddWallet,
+                                        items: _getWalletDropDown(
+                                            addEditTrxScreenProvider
+                                                .allWallets),
                                         onChanged: (Wallet newValue) {
                                           addEditTrxScreenProvider
-                                              .changeSelectedWallet(newValue);
+                                              .changeSelectedAddWallet(
+                                                  newValue);
                                         },
                                       ),
                                     ),
@@ -637,54 +629,40 @@ class AddEditTrxScreen extends StatelessWidget {
                                 },
                                 icon: Icon(Icons.arrow_back)),
                             Spacer(),
-                            Visibility(
-                              visible: !hasTrx,
-                              child: FloatingActionButton(
-                                  heroTag: "addBtn",
-                                  child: Icon(Icons.add),
-                                  backgroundColor:
-                                      isIncome ? Colors.green : Colors.red,
-                                  onPressed: () {
-                                    addEditTrxScreenProvider.addTrx();
-                                    Navigator.pop(context);
-                                  }),
-                            ),
-                            Visibility(
-                                visible: hasTrx,
-                                child: Row(
-                                  children: [
-                                    FloatingActionButton(
-                                        heroTag: "deleteBtn",
-                                        child: Icon(Icons.delete),
-                                        backgroundColor: Colors.red,
-                                        onPressed: () {
-                                          addEditTrxScreenProvider.deleteTrx();
-                                          Navigator.pop(context);
-                                        }),
-                                    SizedBox(
-                                      width: 15,
-                                    ),
-                                    FloatingActionButton(
-                                        child: Icon(Icons.copy),
-                                        heroTag: "copyBtn",
-                                        backgroundColor: Colors.blue,
-                                        onPressed: () {
-                                          addEditTrxScreenProvider.copyTrx();
-                                          Navigator.pop(context);
-                                        }),
-                                    SizedBox(
-                                      width: 15,
-                                    ),
-                                    FloatingActionButton(
-                                        heroTag: "saveBtn",
-                                        child: Icon(Icons.save),
-                                        backgroundColor: Colors.green,
-                                        onPressed: () {
-                                          addEditTrxScreenProvider.updateTrx();
-                                          Navigator.pop(context);
-                                        }),
-                                  ],
-                                ))
+                            Row(
+                              children: [
+                                FloatingActionButton(
+                                    heroTag: "deleteBtn",
+                                    child: Icon(Icons.delete),
+                                    backgroundColor: Colors.red,
+                                    onPressed: () {
+                                      addEditTrxScreenProvider.deleteTrx();
+                                      Navigator.pop(context);
+                                    }),
+                                SizedBox(
+                                  width: 15,
+                                ),
+                                FloatingActionButton(
+                                    child: Icon(Icons.copy),
+                                    heroTag: "copyBtn",
+                                    backgroundColor: Colors.blue,
+                                    onPressed: () {
+                                      addEditTrxScreenProvider.copyTrx();
+                                      Navigator.pop(context);
+                                    }),
+                                SizedBox(
+                                  width: 15,
+                                ),
+                                FloatingActionButton(
+                                    heroTag: "saveBtn",
+                                    child: Icon(Icons.save),
+                                    backgroundColor: Colors.green,
+                                    onPressed: () {
+                                      addEditTrxScreenProvider.updateTrx();
+                                      Navigator.pop(context);
+                                    }),
+                              ],
+                            )
                           ],
                         ),
                       )
@@ -693,15 +671,289 @@ class AddEditTrxScreen extends StatelessWidget {
             )));
   }
 
-  List<DropdownMenuItem> getTrxDropDown(List<TrxCategory> cats,
-      {TrxCategory cat}) {
+  List<DropdownMenuItem<TrxCategory>> _getCatDropDown(List<TrxCategory> cats) {
     List<DropdownMenuItem> list = cats.map((e) {
       return new DropdownMenuItem<TrxCategory>(
         child: Text(e.name),
         value: e,
       );
     }).toList();
-    if (trx != null) {
+    return list;
+  }
+
+  List<DropdownMenuItem> _getWalletDropDown(List<Wallet> wallets) {
+    List<DropdownMenuItem> list = wallets.map((e) {
+      return new DropdownMenuItem<Wallet>(
+        child: Text(e.name),
+        value: e,
+      );
+    }).toList();
+
+    return list;
+  }
+}
+
+class EditTrxScreen extends StatelessWidget {
+  final Transaction trx;
+  final bool isIncome;
+
+  final nameCtrl = TextEditingController();
+  final amountCtrl = TextEditingController();
+  final descCtrl = TextEditingController();
+
+  EditTrxScreen({Key key, this.trx, this.isIncome = true}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    print("AddEditTrxScreen build()");
+
+    DateTime time = DateTime.now();
+
+    final addEditTrxScreenProvider = context.watch<AddEditTrxScreenProvider>();
+
+    amountCtrl.text = trx.amount.toString();
+    descCtrl.text = trx.desc;
+    time = trx.date;
+
+    return Material(
+        type: MaterialType.transparency,
+        // make sure that the overlay content is not cut off
+        child: Container(
+            padding: EdgeInsets.fromLTRB(10, 35, 10, 75),
+            child: getAppCardStyle(
+              child: Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.all(10),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                        child: FlutterDatePickerTimeline(
+                          unselectedItemTextStyle: Theme.of(context)
+                              .textTheme
+                              .bodyText1
+                              .copyWith(color: Colors.blue),
+                          selectedItemTextStyle: Theme.of(context)
+                              .textTheme
+                              .bodyText1
+                              .copyWith(color: Colors.white),
+                          selectedItemBackgroundColor: Colors.blue,
+                          startDate: DateTime(time.year, time.month, 01),
+                          endDate: DateTime(time.year, time.month,
+                              daysInMonth(time.year, time.month)),
+                          initialSelectedDate: time,
+                          onSelectedDateChange: (DateTime dateTime) {
+                            print(dateTime);
+                          },
+                        ),
+                      ),
+                      ListView(
+                        shrinkWrap: true,
+                        children: [
+                          Padding(
+                              padding: const EdgeInsets.fromLTRB(10, 0, 10, 8),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Container(
+                                    height: 50,
+                                    width: 275,
+                                    child: InputDecorator(
+                                      decoration: getAppTextFieldDecoration(
+                                          labelText: "Category",
+                                          context: context),
+                                      child: DropdownButtonHideUnderline(
+                                        child: Container(
+                                          height: 25,
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(
+                                                right: 15),
+                                            child: DropdownButton<TrxCategory>(
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyText1,
+                                              value: addEditTrxScreenProvider
+                                                  .selectedEditCategory,
+                                              items: _getCatDropDown(
+                                                  addEditTrxScreenProvider
+                                                      .allCategorys,
+                                                  cat: trx.category),
+                                              onChanged:
+                                                  (TrxCategory newValue) {
+                                                addEditTrxScreenProvider
+                                                    .changeSelectedEditCategory(
+                                                        newValue);
+                                              },
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  InkWell(
+                                    onTap: () {
+                                      addCategoryDialog(context);
+                                    },
+                                    child: Icon(
+                                      Icons.add_rounded,
+                                      color: Colors.blue,
+                                      size: 40,
+                                    ),
+                                  )
+                                ],
+                              )),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(10, 0, 10, 8),
+                            child: Container(
+                              height: 50,
+                              width: 275,
+                              child: InputDecorator(
+                                decoration: getAppTextFieldDecoration(
+                                    labelText: "Wallet", context: context),
+                                child: DropdownButtonHideUnderline(
+                                  child: Container(
+                                    height: 25,
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(right: 15),
+                                      child: DropdownButton<Wallet>(
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1,
+                                        value: addEditTrxScreenProvider
+                                            .selectedEditWallet,
+                                        items: _getWalletDropDown(
+                                            addEditTrxScreenProvider.allWallets,
+                                            wallet: trx.wallet),
+                                        onChanged: (Wallet newValue) {
+                                          addEditTrxScreenProvider
+                                              .changeSelectedEditWallet(
+                                                  newValue);
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(10, 0, 10, 8),
+                            child: TextField(
+                              style: Theme.of(context).textTheme.bodyText1,
+                              controller: amountCtrl,
+                              keyboardType: TextInputType.number,
+                              inputFormatters: <TextInputFormatter>[
+                                FilteringTextInputFormatter.digitsOnly
+                              ],
+                              decoration: getAppTextFieldDecoration(
+                                  labelText: "Amount", context: context),
+                              autofocus: false,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(10, 0, 10, 8),
+                            child: TextField(
+                              style: Theme.of(context).textTheme.bodyText1,
+                              controller: descCtrl,
+                              maxLines: 6,
+                              decoration: getAppTextFieldDecoration(
+                                  labelText: 'Details', context: context),
+                              autofocus: false,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(15, 0, 10, 8),
+                            child: Row(
+                              children: <Widget>[
+                                Text(
+                                  "Images:",
+                                  textAlign: TextAlign.center,
+                                  style: Theme.of(context).textTheme.bodyText1,
+                                ),
+                                Spacer(),
+                                IconButton(
+                                  icon: Icon(
+                                    Icons.camera,
+                                    color: Colors.blue,
+                                  ),
+                                  onPressed: () {
+                                    //getImage(ImageSource.camera);
+                                  },
+                                ),
+                                IconButton(
+                                  icon: Icon(Icons.image, color: Colors.blue),
+                                  onPressed: () {
+                                    //getImage(ImageSource.gallery);
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                          Container(
+                            height: 100,
+                            padding: const EdgeInsets.fromLTRB(15, 0, 10, 8),
+                            child: GridView.builder(
+                                physics: NeverScrollableScrollPhysics(),
+                                shrinkWrap: true,
+                                gridDelegate:
+                                    SliverGridDelegateWithFixedCrossAxisCount(
+                                        crossAxisCount: 3),
+                                itemCount: 1,
+                                itemBuilder: (context, index) =>
+                                    GestureDetector(
+                                      child: Container(
+                                        child: Text('2'),
+                                      ),
+                                      onTap: () => print("image"),
+                                    )),
+                          )
+                        ],
+                      ),
+                      Spacer(),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            IconButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                icon: Icon(Icons.arrow_back)),
+                            Spacer(),
+                            FloatingActionButton(
+                                heroTag: "addBtn",
+                                child: Icon(Icons.add),
+                                backgroundColor:
+                                    isIncome ? Colors.green : Colors.red,
+                                onPressed: () {
+                                  addEditTrxScreenProvider.addTrx();
+                                  Navigator.pop(context);
+                                }),
+                          ],
+                        ),
+                      )
+                    ],
+                  )),
+            )));
+  }
+
+  List<DropdownMenuItem> _getCatDropDown(List<TrxCategory> cats,
+      {TrxCategory cat}) {
+    bool contains = false;
+    List<DropdownMenuItem> list = cats.map((e) {
+      if (e == cat) {
+        contains = true;
+      }
+
+      return new DropdownMenuItem<TrxCategory>(
+        child: Text(e.name),
+        value: e,
+      );
+    }).toList();
+    if (!contains) {
       list.add(new DropdownMenuItem<TrxCategory>(
         child: Text(cat.name),
         value: cat,
@@ -711,8 +963,8 @@ class AddEditTrxScreen extends StatelessWidget {
     return list;
   }
 
-  //TODO BUG
-  List<DropdownMenuItem> getWalletDropDown(List<Wallet> wallets,
+  //TODO what do you do if delete a wallet??
+  List<DropdownMenuItem> _getWalletDropDown(List<Wallet> wallets,
       {Wallet wallet}) {
     List<DropdownMenuItem> list = wallets.map((e) {
       return new DropdownMenuItem<Wallet>(
