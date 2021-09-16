@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:my_budget/models/transaction.dart';
 
 enum WalletType {
   cash,
@@ -36,11 +37,14 @@ class Wallet {
   double amount;
   WalletType type;
   //TODO transactions
+  List<Transaction> transactions;
   //plus options
 
   Wallet(
       {@required this.id,
       @required this.name,
       @required this.amount,
-      @required this.type});
+      @required this.type,
+      //@required
+      this.transactions});
 }
