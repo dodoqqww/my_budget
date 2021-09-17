@@ -1,23 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:hive/hive.dart';
+import 'package:my_budget/hive_helper/register_adapters.dart';
 import 'package:my_budget/providers/graphs_screen_providers.dart';
 import 'package:my_budget/providers/main_screen_providers.dart';
 import 'package:my_budget/providers/settings_screen_providers.dart';
 import 'package:my_budget/ui/screens/main_screen.dart';
+import 'package:path_provider/path_provider.dart';
 import './services/service_locator.dart';
 import './ui/common/theme.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import './generated/l10n.dart';
+import 'models/wallet.dart';
 import 'providers/bottom_nav_provider.dart';
 import './ui/bottom_nav.dart';
 import 'ui/screens/graph_screen.dart';
 import 'ui/screens/settings_screen.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  registerAdapters();
+  await initHive();
+
   setupServiceLocator();
   runApp(MyApp());
+}
+
+Future initHive() async {
+  var dir = await getApplicationDocumentsDirectory();
+  Hive.init(dir.path);
+  await Hive.openBox<Wallet>('walletsBox');
 }
 
 class MyApp extends StatelessWidget {

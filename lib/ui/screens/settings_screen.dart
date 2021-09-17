@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_picker/flutter_picker.dart';
 import 'package:my_budget/models/transaction_category.dart';
+import 'package:my_budget/models/wallet_type.dart';
 import 'package:my_budget/providers/settings_screen_providers.dart';
 import 'package:my_budget/ui/widgets/add_category_dialog.dart';
 import 'package:my_budget/ui/widgets/fitted_text.dart';
@@ -68,6 +69,7 @@ class WalletsSettings extends StatelessWidget {
             shrinkWrap: true,
             itemCount: walletSettingsProvider.allWallets.length,
             itemBuilder: (BuildContext context, int index) {
+              print(walletSettingsProvider.allWallets[index].toString());
               return WalletListWidget(
                   wallet: walletSettingsProvider.allWallets[index]);
             },
@@ -471,6 +473,7 @@ class AddEditWalletScreen extends StatelessWidget {
                                   child: Icon(Icons.delete),
                                   backgroundColor: Colors.red,
                                   onPressed: () {
+                                    print(wallet.toString());
                                     walletSettingsProvider.deleteWallet(wallet);
                                     Navigator.pop(context);
                                   }),
@@ -486,7 +489,6 @@ class AddEditWalletScreen extends StatelessWidget {
                                       ? walletSettingsProvider
                                           .updateWallet(wallet)
                                       : walletSettingsProvider.addWallet(Wallet(
-                                          id: "testwallet1",
                                           name: nameCtrl.text,
                                           amount: double.parse(amountCtrl.text),
                                           type: type));

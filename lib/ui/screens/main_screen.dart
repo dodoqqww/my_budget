@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart'
     hide DropdownButton, DropdownMenuItem, DropdownButtonHideUnderline;
 import 'package:flutter/services.dart';
-import 'package:intl/intl.dart';
+import 'package:my_budget/models/wallet_type.dart';
 import 'package:my_budget/providers/main_screen_providers.dart';
 import 'package:my_budget/ui/widgets/add_category_dialog.dart';
 import 'package:my_budget/ui/widgets/fitted_text.dart';

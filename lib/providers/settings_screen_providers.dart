@@ -72,9 +72,9 @@ class WalletSettingsProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  deleteWallet(Wallet wallet) {
+  deleteWallet(Wallet wallet) async {
     print("delete wallet");
-    _storageService.deleteWallet();
+    await _storageService.deleteWallet(wallet);
     notifyListeners();
   }
 }

@@ -1,10 +1,12 @@
 //import 'package:math_expressions/math_expressions.dart';
 //
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:my_budget/models/reminder.dart';
 import 'package:my_budget/models/transaction.dart';
 import 'package:my_budget/models/transaction_category.dart';
 import 'package:my_budget/models/wallet.dart';
+import 'package:my_budget/models/wallet_type.dart';
 
 abstract class DatabaseManagerService {
   List<Wallet> getAllWallets();
@@ -16,7 +18,7 @@ abstract class DatabaseManagerService {
   void deleteTrx();
   void updateTrx();
   void addWallet();
-  void deleteWallet();
+  Future<void> deleteWallet(Wallet wallet);
   void updateWallet();
   void addTrxCategory();
   void deleteTrxCategory();
@@ -43,8 +45,10 @@ class HiveDatabaseManagerService extends DatabaseManagerService {
   }
 
   @override
-  void deleteWallet() {
+  Future<void> deleteWallet(Wallet wallet) async {
     print("deleteWallet() from service");
+    var box = Hive.box<Wallet>('walletsBox');
+    await box.delete(wallet.id);
   }
 
   @override
@@ -58,12 +62,21 @@ class HiveDatabaseManagerService extends DatabaseManagerService {
 
   @override
   List<Wallet> getAllWallets() {
-    return [
-      Wallet(
-          id: "1", name: "OTP card", amount: 123456.0, type: WalletType.card),
-      Wallet(
-          id: "2", name: "Home wallet", amount: 2234.0, type: WalletType.cash)
-    ];
+    var box = Hive.box<Wallet>('walletsBox');
+
+    if (box.values.length == 0) {
+      var defaultWallet =
+          Wallet(name: "Default", amount: 0.0, type: WalletType.card);
+
+      box.put(
+        defaultWallet.id,
+        defaultWallet,
+      );
+    }
+
+    print(box.values.length);
+
+    return box.values.toList();
   }
 
   @override
@@ -137,10 +150,7 @@ class HiveDatabaseManagerService extends DatabaseManagerService {
           desc: "desc1",
           name: "name1",
           wallet: Wallet(
-              id: "1",
-              name: "OTP Bank",
-              amount: 123456.0,
-              type: WalletType.card)),
+              name: "OTP Bank", amount: 123456.0, type: WalletType.card)),
       Transaction(
           id: "id2",
           amount: 1221.4,
@@ -150,10 +160,7 @@ class HiveDatabaseManagerService extends DatabaseManagerService {
           desc: "desc2",
           name: "name2",
           wallet: Wallet(
-              id: "2",
-              name: "Home wallet",
-              amount: 1234.0,
-              type: WalletType.cash)),
+              name: "Home wallet", amount: 1234.0, type: WalletType.cash)),
       Transaction(
           id: "id3",
           amount: 120.4,
@@ -163,10 +170,7 @@ class HiveDatabaseManagerService extends DatabaseManagerService {
           desc: "desc1",
           name: "name1",
           wallet: Wallet(
-              id: "1",
-              name: "OTP Bank",
-              amount: 123456.0,
-              type: WalletType.card)),
+              name: "OTP Bank", amount: 123456.0, type: WalletType.card)),
       Transaction(
           id: "id4",
           amount: 120.4,
@@ -176,10 +180,7 @@ class HiveDatabaseManagerService extends DatabaseManagerService {
           desc: "desc1",
           name: "name1",
           wallet: Wallet(
-              id: "1",
-              name: "OTP Bank",
-              amount: 123456.0,
-              type: WalletType.card)),
+              name: "OTP Bank", amount: 123456.0, type: WalletType.card)),
       Transaction(
           id: "id2",
           amount: 1221.4,
@@ -189,10 +190,7 @@ class HiveDatabaseManagerService extends DatabaseManagerService {
           desc: "desc2",
           name: "name2",
           wallet: Wallet(
-              id: "2",
-              name: "Home wallet",
-              amount: 1234.0,
-              type: WalletType.cash))
+              name: "Home wallet", amount: 1234.0, type: WalletType.cash))
     ];
   }
 }
