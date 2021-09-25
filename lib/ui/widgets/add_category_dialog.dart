@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_material_color_picker/flutter_material_color_picker.dart';
+import 'package:my_budget/models/transaction_category.dart';
 import 'package:my_budget/providers/settings_screen_providers.dart';
 import 'package:my_budget/ui/common/style.dart';
 import 'package:provider/provider.dart';
@@ -75,7 +76,10 @@ Future<void> addCategoryDialog(BuildContext context) async {
                             icon: Icon(Icons.arrow_back)),
                         FloatingActionButton(
                           onPressed: () {
-                            addEditCategoryScreenProvider.addCategory();
+                            addEditCategoryScreenProvider.addCategory(
+                                TrxCategory(
+                                    name: nameCtrl.text,
+                                    colorCode: color.value));
                             Navigator.pop(context);
                           },
                           child: Icon(Icons.save),

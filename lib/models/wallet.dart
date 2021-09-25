@@ -34,6 +34,6 @@ class Wallet extends HiveObject {
   }
 
   String toString() {
-    return 'Wallet(id: $id, name: $name, amount: $amount, transactions: $transactions)';
+    return 'Wallet(id: $id, name: $name, amount: $amount, transactions: $transactions , type: ${type.name})';
   }
 }

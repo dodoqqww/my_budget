@@ -4,6 +4,7 @@ import 'package:flutter/material.dart'
 import 'package:flutter/services.dart';
 import 'package:my_budget/models/wallet_type.dart';
 import 'package:my_budget/providers/main_screen_providers.dart';
+import 'package:my_budget/providers/settings_screen_providers.dart';
 import 'package:my_budget/ui/widgets/add_category_dialog.dart';
 import 'package:my_budget/ui/widgets/fitted_text.dart';
 import 'package:my_budget/utils/util_methods.dart';
@@ -420,6 +421,9 @@ class AddTrxScreen extends StatelessWidget {
     print("AddTrxScreen build()");
 
     final addEditTrxScreenProvider = context.watch<AddEditTrxScreenProvider>();
+    final addEditCategoryScreenProvider =
+        context.watch<AddEditCategoryScreenProvider>();
+    final walletSettingsProvider = context.watch<WalletSettingsProvider>();
 
     return Material(
         type: MaterialType.transparency,
@@ -484,7 +488,7 @@ class AddTrxScreen extends StatelessWidget {
                                               value: addEditTrxScreenProvider
                                                   .selectedAddCategory,
                                               items: _getCatDropDown(
-                                                  addEditTrxScreenProvider
+                                                  addEditCategoryScreenProvider
                                                       .allCategorys),
                                               onChanged:
                                                   (TrxCategory newValue) {
@@ -530,8 +534,7 @@ class AddTrxScreen extends StatelessWidget {
                                         value: addEditTrxScreenProvider
                                             .selectedAddWallet,
                                         items: _getWalletDropDown(
-                                            addEditTrxScreenProvider
-                                                .allWallets),
+                                            walletSettingsProvider.allWallets),
                                         onChanged: (Wallet newValue) {
                                           addEditTrxScreenProvider
                                               .changeSelectedAddWallet(
@@ -710,6 +713,9 @@ class EditTrxScreen extends StatelessWidget {
     DateTime time = DateTime.now();
 
     final addEditTrxScreenProvider = context.watch<AddEditTrxScreenProvider>();
+    final addEditCategoryScreenProvider =
+        context.watch<AddEditCategoryScreenProvider>();
+    final walletSettingsProvider = context.watch<WalletSettingsProvider>();
 
     amountCtrl.text = trx.amount.toString();
     descCtrl.text = trx.desc;
@@ -777,7 +783,7 @@ class EditTrxScreen extends StatelessWidget {
                                               value: addEditTrxScreenProvider
                                                   .selectedEditCategory,
                                               items: _getCatDropDown(
-                                                  addEditTrxScreenProvider
+                                                  addEditCategoryScreenProvider
                                                       .allCategorys,
                                                   cat: trx.category),
                                               onChanged:
@@ -824,7 +830,7 @@ class EditTrxScreen extends StatelessWidget {
                                         value: addEditTrxScreenProvider
                                             .selectedEditWallet,
                                         items: _getWalletDropDown(
-                                            addEditTrxScreenProvider.allWallets,
+                                            walletSettingsProvider.allWallets,
                                             wallet: trx.wallet),
                                         onChanged: (Wallet newValue) {
                                           addEditTrxScreenProvider

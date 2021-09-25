@@ -370,7 +370,7 @@ class AddEditWalletScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final walletSettingsProvider = context.read<WalletSettingsProvider>();
     bool hasWallet = false;
-    WalletType type;
+    WalletType type = WalletType.card;
     if (wallet != null) {
       hasWallet = true;
       nameCtrl.text = wallet.name;
@@ -720,6 +720,9 @@ class AddEditCategoryScreen extends StatelessWidget {
                                 itemCount: addEditCategoryScreenProvider
                                     .allCategorys.length,
                                 itemBuilder: (BuildContext context, int index) {
+                                  print(addEditCategoryScreenProvider
+                                      .allCategorys[index]
+                                      .toString());
                                   return SettingsMyLegendWidget(
                                       nameCtrl: nameCtrl,
                                       category: addEditCategoryScreenProvider
@@ -747,16 +750,17 @@ class AddEditCategoryScreen extends StatelessWidget {
                                 onPressed: () {
                                   addEditCategoryScreenProvider
                                       .deleteCategory();
-                                  Navigator.pop(context);
+                                  nameCtrl.text = "";
+                                  // Navigator.pop(context);
                                 }),
                             FloatingActionButton(
                                 heroTag: "saveCatBtn",
                                 child: Icon(Icons.edit),
                                 backgroundColor: Colors.green,
                                 onPressed: () {
-                                  addEditCategoryScreenProvider
-                                      .updateCategory();
-                                  Navigator.pop(context);
+                                  addEditCategoryScreenProvider.updateCategory(
+                                      name: nameCtrl.text);
+                                  //Navigator.pop(context);
                                 }),
                           ],
                         ),
@@ -795,7 +799,7 @@ class SettingsMyLegendWidget extends StatelessWidget {
             MyLegendWidget(
               style: Theme.of(context).textTheme.bodyText1,
               text: category.name,
-              color: category.color,
+              color: category.getColor(),
               space: 5.0,
             ),
             Divider(

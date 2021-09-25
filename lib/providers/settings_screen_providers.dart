@@ -24,31 +24,39 @@ class AddEditCategoryScreenProvider with ChangeNotifier {
   }
 
   changeSelectedCategory(TrxCategory category) {
-    selectedCategoryColor = category.color;
+    selectedCategoryColor = category.getColor();
     selectedCategory = category;
     notifyListeners();
   }
 
-  addCategory() {
+  addCategory(TrxCategory category) {
     print("add Category");
-    _storageService.addTrxCategory();
-    allCategorys.add(TrxCategory(id: "3", name: "Food", color: Colors.green));
+    _storageService.addTrxCategory(category);
+    allCategorys.add(category);
     notifyListeners();
   }
 
-  updateCategory() {
+  updateCategory({
+    @required String name,
+  }) {
     print("update Category");
-    _storageService.updateTrxCategory();
+    var category = selectedCategory;
+    category.name = name;
+    category.colorCode = selectedCategoryColor.value;
+    _storageService.updateTrxCategory(category);
+    selectedCategory = category;
     notifyListeners();
   }
 
   deleteCategory() {
     print("delete Category");
-    _storageService.deleteTrxCategory();
+    _storageService.deleteTrxCategory(selectedCategory);
+    allCategorys.remove(selectedCategory);
     notifyListeners();
   }
 }
 
+//ready
 class WalletSettingsProvider with ChangeNotifier {
   DatabaseManagerService _storageService;
 

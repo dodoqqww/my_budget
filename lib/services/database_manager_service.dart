@@ -20,24 +20,28 @@ abstract class DatabaseManagerService {
   void addWallet(Wallet wallet);
   Future<void> deleteWallet(Wallet wallet);
   Future<void> updateWallet(Wallet wallet);
-  void addTrxCategory();
-  void deleteTrxCategory();
-  void updateTrxCategory();
+  void addTrxCategory(TrxCategory category);
+  void deleteTrxCategory(TrxCategory category);
+  void updateTrxCategory(TrxCategory category);
   void addReminder();
   void deleteReminder();
   void updateReminder();
 }
 
 class HiveDatabaseManagerService extends DatabaseManagerService {
+  //ready
   @override
-  void addTrxCategory() {
-    print("addTrxCategory() from service");
+  void addTrxCategory(TrxCategory category) {
+    var box = Hive.box<TrxCategory>('trxCategoryBox');
+    box.put(
+      category.id,
+      category,
+    );
   }
 
   //ready
   @override
   void addWallet(Wallet wallet) {
-    print("addWallet() from service");
     var box = Hive.box<Wallet>('walletsBox');
     box.put(
       wallet.id,
@@ -45,26 +49,33 @@ class HiveDatabaseManagerService extends DatabaseManagerService {
     );
   }
 
+  //ready
   @override
-  void deleteTrxCategory() {
-    print("deleteTrxCategory() from service");
+  void deleteTrxCategory(TrxCategory category) {
+    var box = Hive.box<TrxCategory>('trxCategoryBox');
+    box.delete(category.id);
   }
 
   //ready
   @override
   Future<void> deleteWallet(Wallet wallet) async {
-    print("deleteWallet() from service");
     var box = Hive.box<Wallet>('walletsBox');
     await box.delete(wallet.id);
   }
 
   @override
   List<TrxCategory> getAllTrxCategorys() {
-    return [
-      TrxCategory(id: "1", name: "Food", color: Colors.red),
-      TrxCategory(id: "2", name: "Investments", color: Colors.pink),
-      TrxCategory(id: "3", name: "Gift", color: Colors.orange),
-    ];
+    var box = Hive.box<TrxCategory>('trxCategoryBox');
+    if (box.values.length == 0) {
+      print("add default");
+      var defaultTrxCategory =
+          TrxCategory(name: "Food", colorCode: Colors.green.value);
+      box.put(
+        defaultTrxCategory.id,
+        defaultTrxCategory,
+      );
+    }
+    return box.values.toList();
   }
 
   //ready
@@ -72,7 +83,7 @@ class HiveDatabaseManagerService extends DatabaseManagerService {
   List<Wallet> getAllWallets() {
     var box = Hive.box<Wallet>('walletsBox');
     if (box.values.length == 0) {
-      print("added default");
+      print("add default");
       var defaultWallet =
           Wallet(name: "Default", amount: 0.0, type: WalletType.card);
       box.put(
@@ -83,15 +94,20 @@ class HiveDatabaseManagerService extends DatabaseManagerService {
     return box.values.toList();
   }
 
+  //ready
   @override
-  void updateTrxCategory() {
-    print("updateTrxCategory() from service");
+  void updateTrxCategory(TrxCategory category) {
+    var box = Hive.box<TrxCategory>('trxCategoryBox');
+    box.delete(category.id);
+    box.put(
+      category.id,
+      category,
+    );
   }
 
   //ready
   @override
   Future<void> updateWallet(Wallet wallet) async {
-    print("updateWallet() from service");
     var box = Hive.box<Wallet>('walletsBox');
     await box.delete(wallet.id);
     box.put(
@@ -156,7 +172,7 @@ class HiveDatabaseManagerService extends DatabaseManagerService {
           id: "id1",
           amount: 1200000000.4,
           isIncome: true,
-          category: TrxCategory(id: "3", name: "Gift", color: Colors.amber),
+          category: TrxCategory(name: "Gift", colorCode: Colors.amber.value),
           date: DateTime.now(),
           desc: "desc1",
           name: "name1",
@@ -166,7 +182,7 @@ class HiveDatabaseManagerService extends DatabaseManagerService {
           id: "id2",
           amount: 1221.4,
           isIncome: true,
-          category: TrxCategory(id: "1", name: "Food", color: Colors.amber),
+          category: TrxCategory(name: "Food", colorCode: Colors.amber.value),
           date: DateTime.now(),
           desc: "desc2",
           name: "name2",
@@ -176,7 +192,7 @@ class HiveDatabaseManagerService extends DatabaseManagerService {
           id: "id3",
           amount: 120.4,
           isIncome: false,
-          category: TrxCategory(id: "3", name: "Gift", color: Colors.amber),
+          category: TrxCategory(name: "Gift", colorCode: Colors.amber.value),
           date: DateTime.now(),
           desc: "desc1",
           name: "name1",
@@ -186,7 +202,7 @@ class HiveDatabaseManagerService extends DatabaseManagerService {
           id: "id4",
           amount: 120.4,
           isIncome: false,
-          category: TrxCategory(id: "3", name: "Gift", color: Colors.amber),
+          category: TrxCategory(name: "Gift", colorCode: Colors.amber.value),
           date: DateTime.now(),
           desc: "desc1",
           name: "name1",
@@ -196,7 +212,7 @@ class HiveDatabaseManagerService extends DatabaseManagerService {
           id: "id2",
           amount: 1221.4,
           isIncome: false,
-          category: TrxCategory(id: "1", name: "Food", color: Colors.amber),
+          category: TrxCategory(name: "Food", colorCode: Colors.amber.value),
           date: DateTime.now(),
           desc: "desc2",
           name: "name2",
