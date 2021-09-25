@@ -17,9 +17,9 @@ abstract class DatabaseManagerService {
   void copyTrx();
   void deleteTrx();
   void updateTrx();
-  void addWallet();
+  void addWallet(Wallet wallet);
   Future<void> deleteWallet(Wallet wallet);
-  void updateWallet();
+  Future<void> updateWallet(Wallet wallet);
   void addTrxCategory();
   void deleteTrxCategory();
   void updateTrxCategory();
@@ -34,9 +34,15 @@ class HiveDatabaseManagerService extends DatabaseManagerService {
     print("addTrxCategory() from service");
   }
 
+  //ready
   @override
-  void addWallet() {
+  void addWallet(Wallet wallet) {
     print("addWallet() from service");
+    var box = Hive.box<Wallet>('walletsBox');
+    box.put(
+      wallet.id,
+      wallet,
+    );
   }
 
   @override
@@ -44,6 +50,7 @@ class HiveDatabaseManagerService extends DatabaseManagerService {
     print("deleteTrxCategory() from service");
   }
 
+  //ready
   @override
   Future<void> deleteWallet(Wallet wallet) async {
     print("deleteWallet() from service");
@@ -60,22 +67,19 @@ class HiveDatabaseManagerService extends DatabaseManagerService {
     ];
   }
 
+  //ready
   @override
   List<Wallet> getAllWallets() {
     var box = Hive.box<Wallet>('walletsBox');
-
     if (box.values.length == 0) {
+      print("added default");
       var defaultWallet =
           Wallet(name: "Default", amount: 0.0, type: WalletType.card);
-
       box.put(
         defaultWallet.id,
         defaultWallet,
       );
     }
-
-    print(box.values.length);
-
     return box.values.toList();
   }
 
@@ -84,9 +88,16 @@ class HiveDatabaseManagerService extends DatabaseManagerService {
     print("updateTrxCategory() from service");
   }
 
+  //ready
   @override
-  void updateWallet() {
+  Future<void> updateWallet(Wallet wallet) async {
     print("updateWallet() from service");
+    var box = Hive.box<Wallet>('walletsBox');
+    await box.delete(wallet.id);
+    box.put(
+      wallet.id,
+      wallet,
+    );
   }
 
   @override

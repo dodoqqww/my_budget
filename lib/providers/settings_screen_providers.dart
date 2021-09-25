@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:my_budget/models/reminder.dart';
 import 'package:my_budget/models/transaction_category.dart';
 import 'package:my_budget/models/wallet.dart';
+import 'package:my_budget/models/wallet_type.dart';
 import 'package:my_budget/services/database_manager_service.dart';
 import 'package:my_budget/services/service_locator.dart';
 
@@ -61,20 +62,27 @@ class WalletSettingsProvider with ChangeNotifier {
 
   addWallet(Wallet wallet) {
     print("add wallet");
-    _storageService.addWallet();
+    _storageService.addWallet(wallet);
     allWallets.add(wallet);
     notifyListeners();
   }
 
-  updateWallet(Wallet wallet) {
+  updateWallet(Wallet wallet,
+      {@required String name,
+      @required double amount,
+      @required WalletType type}) {
     print("update wallet");
-    _storageService.updateWallet();
+    wallet.amount = amount;
+    wallet.name = name;
+    wallet.type = type;
+    _storageService.updateWallet(wallet);
     notifyListeners();
   }
 
   deleteWallet(Wallet wallet) async {
     print("delete wallet");
     await _storageService.deleteWallet(wallet);
+    allWallets.remove(wallet);
     notifyListeners();
   }
 }

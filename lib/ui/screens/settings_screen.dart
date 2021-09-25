@@ -486,8 +486,11 @@ class AddEditWalletScreen extends StatelessWidget {
                                 backgroundColor: Colors.green,
                                 onPressed: () {
                                   wallet != null
-                                      ? walletSettingsProvider
-                                          .updateWallet(wallet)
+                                      ? walletSettingsProvider.updateWallet(
+                                          wallet,
+                                          name: nameCtrl.text,
+                                          amount: double.parse(amountCtrl.text),
+                                          type: type)
                                       : walletSettingsProvider.addWallet(Wallet(
                                           name: nameCtrl.text,
                                           amount: double.parse(amountCtrl.text),
