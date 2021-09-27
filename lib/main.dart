@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hive/hive.dart';
 import 'package:my_budget/hive_helper/register_adapters.dart';
+import 'package:my_budget/models/transaction.dart';
 import 'package:my_budget/models/transaction_category.dart';
 import 'package:my_budget/providers/graphs_screen_providers.dart';
 import 'package:my_budget/providers/main_screen_providers.dart';
@@ -34,6 +35,7 @@ Future initHive() async {
   Hive.init(dir.path);
   await Hive.openBox<Wallet>('walletsBox');
   await Hive.openBox<TrxCategory>('trxCategoryBox');
+  await Hive.openBox<Transaction>('trxBox');
 }
 
 class MyApp extends StatelessWidget {

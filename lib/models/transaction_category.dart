@@ -21,6 +21,12 @@ class TrxCategory extends HiveObject {
     this.id = "trxCategory-" + Uuid().v1();
   }
 
+  TrxCategory.fromId({@required String id}) {
+    this.id = id;
+    this.name = "Deleted";
+    this.colorCode = Colors.blue.value;
+  }
+
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;

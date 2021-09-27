@@ -490,11 +490,13 @@ class AddEditWalletScreen extends StatelessWidget {
                                           wallet,
                                           name: nameCtrl.text,
                                           amount: double.parse(amountCtrl.text),
-                                          type: type)
+                                          type: type,
+                                          transactions: wallet.transactionsId)
                                       : walletSettingsProvider.addWallet(Wallet(
                                           name: nameCtrl.text,
                                           amount: double.parse(amountCtrl.text),
-                                          type: type));
+                                          type: type,
+                                          transactionsId: []));
                                   Navigator.pop(context);
                                 }),
                           ],

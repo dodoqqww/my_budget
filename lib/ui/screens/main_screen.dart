@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart'
     hide DropdownButton, DropdownMenuItem, DropdownButtonHideUnderline;
@@ -5,6 +7,8 @@ import 'package:flutter/services.dart';
 import 'package:my_budget/models/wallet_type.dart';
 import 'package:my_budget/providers/main_screen_providers.dart';
 import 'package:my_budget/providers/settings_screen_providers.dart';
+import 'package:my_budget/services/database_manager_service.dart';
+import 'package:my_budget/services/service_locator.dart';
 import 'package:my_budget/ui/widgets/add_category_dialog.dart';
 import 'package:my_budget/ui/widgets/fitted_text.dart';
 import 'package:my_budget/utils/util_methods.dart';
@@ -120,7 +124,7 @@ class IncomeWidget extends StatelessWidget {
                             .headline1
                             .copyWith(color: Colors.green),
                         text:
-                            "+ ${getFormattedCurrency(context: context, value: incomeWidgetProvider.getSumIncome(month: selectedDate))}",
+                            "+ ${getFormattedCurrency(context: context, value: incomeWidgetProvider.sumIncome)}",
                         fitSize: 250,
                       )
                     ],
@@ -166,8 +170,7 @@ class IncomeWidget extends StatelessWidget {
                 ),
 
                 expanded: TrxDetailsWidget(
-                  list: incomeWidgetProvider.getAllExpenseTrxs(
-                      month: selectedDate),
+                  list: incomeWidgetProvider.allIncomeTrxs,
                   isIncome: true,
                 ),
               ),
@@ -210,7 +213,7 @@ class ExpenseWidget extends StatelessWidget {
                             .headline1
                             .copyWith(color: Colors.red),
                         text:
-                            "- ${getFormattedCurrency(context: context, value: expenseWidgetProvider.getSumExpense(month: selectedDate))}",
+                            "- ${getFormattedCurrency(context: context, value: expenseWidgetProvider.sumExpense)}",
                         fitSize: 250,
                       )
                     ],
@@ -252,8 +255,7 @@ class ExpenseWidget extends StatelessWidget {
                 ),
 
                 expanded: TrxDetailsWidget(
-                  list: expenseWidgetProvider.getAllExpenseTrxs(
-                      month: selectedDate),
+                  list: expenseWidgetProvider.allExpenseTrxs,
                   isIncome: false,
                 ),
               ),
@@ -282,16 +284,19 @@ class TrxDetailsWidget extends StatelessWidget {
                 fontSize: Theme.of(context).textTheme.bodyText1.fontSize,
                 decoration: TextDecoration.underline,
               ))),
-      ListView.builder(
-          scrollDirection: Axis.vertical,
-          physics: NeverScrollableScrollPhysics(),
-          shrinkWrap: true,
-          itemCount: list.length,
-          itemBuilder: (BuildContext context, int index) {
-            return TrxListItem(
-                trx: list[index],
-                amountColor: isIncome ? Colors.green : Colors.red);
-          }),
+      list.length == 0
+          ? Text("No Data")
+          : ListView.builder(
+              scrollDirection: Axis.vertical,
+              physics: NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: list.length,
+              itemBuilder: (BuildContext context, int index) {
+                print("$isIncome " + list[index].toString());
+                return TrxListItem(
+                    trx: list[index],
+                    amountColor: isIncome ? Colors.green : Colors.red);
+              }),
       //TrxListItem(trx:asd2, Colors.green),
       Container(
         padding: EdgeInsets.fromLTRB(5, 5, 15, 5),
@@ -314,6 +319,12 @@ class TrxListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final addEditTrxScreenProvider = context.read<AddEditTrxScreenProvider>();
+
+    Wallet wallet = getIt<DatabaseManagerService>().getWalletById(trx.walletId);
+
+    TrxCategory trxCategory =
+        getIt<DatabaseManagerService>().getTrxCategoryById(trx.categoryId);
+
     String prefix = trx.isIncome ? "+" : "-";
     return Row(
       children: [
@@ -344,17 +355,22 @@ class TrxListItem extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     FittedText(
-                      text: trx.category.name,
+                      text: trxCategory.name,
                       style: Theme.of(context).textTheme.bodyText1,
                       fitSize: 185,
                     ),
                     InkWell(
                         onTap: () {
                           addEditTrxScreenProvider
-                              .changeSelectedEditCategory(trx.category);
+                              .changeSelectedEditCategory(trxCategory);
                           addEditTrxScreenProvider
-                              .changeSelectedEditWallet(trx.wallet);
-                          openDialog(context, EditTrxScreen(trx: trx));
+                              .changeSelectedEditWallet(wallet);
+                          openDialog(
+                              context,
+                              EditTrxScreen(
+                                trx: trx,
+                                isIncome: trx.isIncome,
+                              ));
                         },
                         child: Text(
                           "Edit",
@@ -377,9 +393,9 @@ class TrxListItem extends StatelessWidget {
                     children: [
                       Row(
                         children: [
-                          trx.wallet.type.icon,
+                          wallet.type.icon,
                           FittedText(
-                            text: trx.wallet.name,
+                            text: wallet.name,
                             style: Theme.of(context).textTheme.bodyText1,
                             fitSize: 125,
                           ),
@@ -408,8 +424,6 @@ class TrxListItem extends StatelessWidget {
 class AddTrxScreen extends StatelessWidget {
   final bool isIncome;
 
-  final DateTime time = DateTime.now();
-
   final nameCtrl = TextEditingController();
   final amountCtrl = TextEditingController();
   final descCtrl = TextEditingController();
@@ -418,12 +432,16 @@ class AddTrxScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("AddTrxScreen build()");
+    print("AddScreen build()");
+    DateTime time = DateTime.now();
 
     final addEditTrxScreenProvider = context.watch<AddEditTrxScreenProvider>();
     final addEditCategoryScreenProvider =
         context.watch<AddEditCategoryScreenProvider>();
     final walletSettingsProvider = context.watch<WalletSettingsProvider>();
+    final incomeWidgetProvider = context.watch<IncomeWidgetProvider>();
+    final expenseWidgetProvider = context.watch<ExpenseWidgetProvider>();
+    final mainScreenProvider = context.watch<MainScreenProvider>();
 
     return Material(
         type: MaterialType.transparency,
@@ -454,6 +472,7 @@ class AddTrxScreen extends StatelessWidget {
                               daysInMonth(time.year, time.month)),
                           initialSelectedDate: time,
                           onSelectedDateChange: (DateTime dateTime) {
+                            time = dateTime;
                             print(dateTime);
                           },
                         ),
@@ -632,40 +651,26 @@ class AddTrxScreen extends StatelessWidget {
                                 },
                                 icon: Icon(Icons.arrow_back)),
                             Spacer(),
-                            Row(
-                              children: [
-                                FloatingActionButton(
-                                    heroTag: "deleteBtn",
-                                    child: Icon(Icons.delete),
-                                    backgroundColor: Colors.red,
-                                    onPressed: () {
-                                      addEditTrxScreenProvider.deleteTrx();
-                                      Navigator.pop(context);
-                                    }),
-                                SizedBox(
-                                  width: 15,
-                                ),
-                                FloatingActionButton(
-                                    child: Icon(Icons.copy),
-                                    heroTag: "copyBtn",
-                                    backgroundColor: Colors.blue,
-                                    onPressed: () {
-                                      addEditTrxScreenProvider.copyTrx();
-                                      Navigator.pop(context);
-                                    }),
-                                SizedBox(
-                                  width: 15,
-                                ),
-                                FloatingActionButton(
-                                    heroTag: "saveBtn",
-                                    child: Icon(Icons.save),
-                                    backgroundColor: Colors.green,
-                                    onPressed: () {
-                                      addEditTrxScreenProvider.updateTrx();
-                                      Navigator.pop(context);
-                                    }),
-                              ],
-                            )
+                            FloatingActionButton(
+                                heroTag: "saveBtn",
+                                child: Icon(Icons.save),
+                                backgroundColor: Colors.green,
+                                onPressed: () async {
+                                  Navigator.pop(context);
+                                  await addEditTrxScreenProvider.addTrx(
+                                      desc: descCtrl.text,
+                                      amount: double.parse(amountCtrl.text),
+                                      isIncome: isIncome,
+                                      date: time);
+
+                                  isIncome
+                                      ? incomeWidgetProvider.refreshIncome(
+                                          month:
+                                              mainScreenProvider.selectedDate)
+                                      : expenseWidgetProvider.refreshExpense(
+                                          month:
+                                              mainScreenProvider.selectedDate);
+                                }),
                           ],
                         ),
                       )
@@ -708,7 +713,7 @@ class EditTrxScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("AddEditTrxScreen build()");
+    print("EditTrxScreen build()");
 
     DateTime time = DateTime.now();
 
@@ -716,6 +721,13 @@ class EditTrxScreen extends StatelessWidget {
     final addEditCategoryScreenProvider =
         context.watch<AddEditCategoryScreenProvider>();
     final walletSettingsProvider = context.watch<WalletSettingsProvider>();
+    final incomeWidgetProvider = context.watch<IncomeWidgetProvider>();
+    final expenseWidgetProvider = context.watch<ExpenseWidgetProvider>();
+    final mainScreenProvider = context.watch<MainScreenProvider>();
+
+    Wallet wallet = getIt<DatabaseManagerService>().getWalletById(trx.walletId);
+    TrxCategory trxCategory =
+        getIt<DatabaseManagerService>().getTrxCategoryById(trx.categoryId);
 
     amountCtrl.text = trx.amount.toString();
     descCtrl.text = trx.desc;
@@ -751,6 +763,7 @@ class EditTrxScreen extends StatelessWidget {
                           initialSelectedDate: time,
                           onSelectedDateChange: (DateTime dateTime) {
                             print(dateTime);
+                            time = dateTime;
                           },
                         ),
                       ),
@@ -785,7 +798,7 @@ class EditTrxScreen extends StatelessWidget {
                                               items: _getCatDropDown(
                                                   addEditCategoryScreenProvider
                                                       .allCategorys,
-                                                  cat: trx.category),
+                                                  cat: trxCategory),
                                               onChanged:
                                                   (TrxCategory newValue) {
                                                 addEditTrxScreenProvider
@@ -831,7 +844,7 @@ class EditTrxScreen extends StatelessWidget {
                                             .selectedEditWallet,
                                         items: _getWalletDropDown(
                                             walletSettingsProvider.allWallets,
-                                            wallet: trx.wallet),
+                                            wallet: wallet),
                                         onChanged: (Wallet newValue) {
                                           addEditTrxScreenProvider
                                               .changeSelectedEditWallet(
@@ -929,15 +942,56 @@ class EditTrxScreen extends StatelessWidget {
                                 },
                                 icon: Icon(Icons.arrow_back)),
                             Spacer(),
-                            FloatingActionButton(
-                                heroTag: "addBtn",
-                                child: Icon(Icons.add),
-                                backgroundColor:
-                                    isIncome ? Colors.green : Colors.red,
-                                onPressed: () {
-                                  addEditTrxScreenProvider.addTrx();
-                                  Navigator.pop(context);
-                                }),
+                            Row(children: [
+                              FloatingActionButton(
+                                  heroTag: "deleteBtn",
+                                  child: Icon(Icons.delete),
+                                  backgroundColor: Colors.red,
+                                  onPressed: () {
+                                    addEditTrxScreenProvider.deleteTrx(trx);
+                                    Navigator.pop(context);
+                                    isIncome
+                                        ? incomeWidgetProvider.refreshIncome(
+                                            month:
+                                                mainScreenProvider.selectedDate)
+                                        : expenseWidgetProvider.refreshExpense(
+                                            month: mainScreenProvider
+                                                .selectedDate);
+                                  }),
+                              SizedBox(
+                                width: 15,
+                              ),
+                              FloatingActionButton(
+                                  child: Icon(Icons.copy),
+                                  heroTag: "copyBtn",
+                                  backgroundColor: Colors.blue,
+                                  onPressed: () {
+                                    addEditTrxScreenProvider.copyTrx();
+                                    Navigator.pop(context);
+                                  }),
+                              SizedBox(
+                                width: 15,
+                              ),
+                              FloatingActionButton(
+                                  heroTag: "editBtn",
+                                  child: Icon(Icons.edit),
+                                  backgroundColor: Colors.green,
+                                  onPressed: () {
+                                    addEditTrxScreenProvider.updateTrx(trx,
+                                        amount: double.parse(amountCtrl.text),
+                                        desc: descCtrl.text,
+                                        time: time);
+                                    Navigator.pop(context);
+
+                                    isIncome
+                                        ? incomeWidgetProvider.refreshIncome(
+                                            month:
+                                                mainScreenProvider.selectedDate)
+                                        : expenseWidgetProvider.refreshExpense(
+                                            month: mainScreenProvider
+                                                .selectedDate);
+                                  }),
+                            ])
                           ],
                         ),
                       )
@@ -969,17 +1023,20 @@ class EditTrxScreen extends StatelessWidget {
     return list;
   }
 
-  //TODO what do you do if delete a wallet??
   List<DropdownMenuItem> _getWalletDropDown(List<Wallet> wallets,
       {Wallet wallet}) {
+    bool contains = false;
     List<DropdownMenuItem> list = wallets.map((e) {
+      if (e == wallet) {
+        contains = true;
+      }
       return new DropdownMenuItem<Wallet>(
         child: Text(e.name),
         value: e,
       );
     }).toList();
 
-    if (wallet != null) {
+    if (!contains) {
       list.add(new DropdownMenuItem<Wallet>(
         child: Text(wallet.name),
         value: wallet,

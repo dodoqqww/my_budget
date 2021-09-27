@@ -1,11 +1,13 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-import 'package:my_budget/hive_helper/hive_types.dart';
-import 'package:my_budget/hive_helper/hive_adapters.dart';
+import 'package:uuid/uuid.dart';
+
 import 'package:my_budget/hive_helper/fields/wallet_fields.dart';
+import 'package:my_budget/hive_helper/hive_adapters.dart';
+import 'package:my_budget/hive_helper/hive_types.dart';
 import 'package:my_budget/models/transaction.dart';
 import 'package:my_budget/models/wallet_type.dart';
-import 'package:uuid/uuid.dart';
 
 part 'wallet.g.dart';
 
@@ -21,19 +23,40 @@ class Wallet extends HiveObject {
   WalletType type;
   //TODO transactions
   @HiveField(WalletFields.transactions)
-  List<Transaction> transactions;
+  List<String> transactionsId;
   //plus options
 
   Wallet(
       {@required this.name,
       @required this.amount,
       @required this.type,
-      //@required
-      this.transactions}) {
+      @required this.transactionsId}) {
     this.id = "wallet-" + Uuid().v1();
   }
 
+  Wallet.fromId({
+    @required String id,
+  }) {
+    this.id = id;
+    this.amount = 0;
+    this.name = "Deleted";
+    this.type = WalletType.card;
+    this.transactionsId = [];
+  }
+
   String toString() {
-    return 'Wallet(id: $id, name: $name, amount: $amount, transactions: $transactions , type: ${type.name})';
+    return 'Wallet(id: $id, name: $name, amount: $amount, transactionsId: $transactionsId , type: ${type.name})';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is Wallet && other.id == id;
+  }
+
+  @override
+  int get hashCode {
+    return id.hashCode;
   }
 }

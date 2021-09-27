@@ -1,26 +1,44 @@
-import 'package:flutter/cupertino.dart';
-import '../models/transaction_category.dart';
-import '../models/wallet.dart';
+import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+import 'package:my_budget/hive_helper/hive_types.dart';
+import 'package:my_budget/hive_helper/hive_adapters.dart';
+import 'package:my_budget/hive_helper/fields/transaction_fields.dart';
+import 'package:my_budget/models/transaction_category.dart';
+import 'package:my_budget/models/wallet.dart';
+import 'package:uuid/uuid.dart';
 
-class Transaction {
+part 'transaction.g.dart';
+
+@HiveType(typeId: HiveTypes.transaction, adapterName: HiveAdapters.transaction)
+class Transaction extends HiveObject {
+  @HiveField(TransactionFields.id)
   String id;
-  String name;
-  TrxCategory category;
+  @HiveField(TransactionFields.category)
+  String categoryId;
+  @HiveField(TransactionFields.isIncome)
   bool isIncome;
+  @HiveField(TransactionFields.date)
   DateTime date;
+  @HiveField(TransactionFields.amount)
   double amount;
+  @HiveField(TransactionFields.desc)
   String desc;
-  //TODO foreign key
-  Wallet wallet;
+  @HiveField(TransactionFields.wallet)
+  String walletId;
   // photos
 
   Transaction(
-      {@required this.id,
-      @required this.name,
-      @required this.category,
+      {@required this.categoryId,
       @required this.isIncome,
       @required this.date,
       @required this.amount,
       @required this.desc,
-      @required this.wallet});
+      @required this.walletId}) {
+    this.id = "trx-" + Uuid().v1();
+  }
+
+  @override
+  String toString() {
+    return 'Transaction(id: $id, categoryId: $categoryId, isIncome: $isIncome, date: $date, amount: $amount, desc: $desc, walletId: $walletId)';
+  }
 }

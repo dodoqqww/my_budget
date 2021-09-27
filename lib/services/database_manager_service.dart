@@ -13,10 +13,10 @@ abstract class DatabaseManagerService {
   List<TrxCategory> getAllTrxCategorys();
   List<Reminder> getAllReminders();
   List<Transaction> getAllTransaction();
-  void addTrx();
+  Future<void> addTrx(Transaction trx);
   void copyTrx();
-  void deleteTrx();
-  void updateTrx();
+  void deleteTrx(Transaction trx);
+  void updateTrx(Transaction trx);
   void addWallet(Wallet wallet);
   Future<void> deleteWallet(Wallet wallet);
   Future<void> updateWallet(Wallet wallet);
@@ -26,6 +26,8 @@ abstract class DatabaseManagerService {
   void addReminder();
   void deleteReminder();
   void updateReminder();
+  Wallet getWalletById(String id);
+  TrxCategory getTrxCategoryById(String id);
 }
 
 class HiveDatabaseManagerService extends DatabaseManagerService {
@@ -63,6 +65,7 @@ class HiveDatabaseManagerService extends DatabaseManagerService {
     await box.delete(wallet.id);
   }
 
+  //ready
   @override
   List<TrxCategory> getAllTrxCategorys() {
     var box = Hive.box<TrxCategory>('trxCategoryBox');
@@ -84,8 +87,11 @@ class HiveDatabaseManagerService extends DatabaseManagerService {
     var box = Hive.box<Wallet>('walletsBox');
     if (box.values.length == 0) {
       print("add default");
-      var defaultWallet =
-          Wallet(name: "Default", amount: 0.0, type: WalletType.card);
+      var defaultWallet = Wallet(
+          name: "Default",
+          amount: 0.0,
+          type: WalletType.card,
+          transactionsId: []);
       box.put(
         defaultWallet.id,
         defaultWallet,
@@ -98,7 +104,7 @@ class HiveDatabaseManagerService extends DatabaseManagerService {
   @override
   void updateTrxCategory(TrxCategory category) {
     var box = Hive.box<TrxCategory>('trxCategoryBox');
-    box.delete(category.id);
+    //box.delete(category.id);
     box.put(
       category.id,
       category,
@@ -109,7 +115,7 @@ class HiveDatabaseManagerService extends DatabaseManagerService {
   @override
   Future<void> updateWallet(Wallet wallet) async {
     var box = Hive.box<Wallet>('walletsBox');
-    await box.delete(wallet.id);
+    // await box.delete(wallet.id);
     box.put(
       wallet.id,
       wallet,
@@ -140,22 +146,31 @@ class HiveDatabaseManagerService extends DatabaseManagerService {
     ];
   }
 
+  //ready
   @override
-  void addTrx() {
+  Future<void> addTrx(Transaction trx) async {
     print("addTrx() from service");
-    // TODO: implement addTrx
+    var box = Hive.box<Transaction>('trxBox');
+    Wallet wallet = getWalletById(trx.walletId);
+    wallet.transactionsId.add(trx.id);
+    await updateWallet(wallet);
+    box.put(trx.id, trx);
   }
 
+  //ready
   @override
-  void deleteTrx() {
+  void deleteTrx(Transaction trx) {
     print("deleteTrx() from service");
-    // TODO: implement deleteTrx
+    var box = Hive.box<Transaction>('trxBox');
+    box.delete(trx.id);
   }
 
+  //ready
   @override
-  void updateTrx() {
+  void updateTrx(Transaction trx) {
     print("updateTrx() from service");
-    // TODO: implement updateTrx
+    var box = Hive.box<Transaction>('trxBox');
+    box.put(trx.id, trx);
   }
 
   @override
@@ -164,60 +179,32 @@ class HiveDatabaseManagerService extends DatabaseManagerService {
     // TODO: implement updateTrx
   }
 
+  //ready
   @override
   List<Transaction> getAllTransaction() {
-    // TODO: implement getAllTransaction
-    return [
-      Transaction(
-          id: "id1",
-          amount: 1200000000.4,
-          isIncome: true,
-          category: TrxCategory(name: "Gift", colorCode: Colors.amber.value),
-          date: DateTime.now(),
-          desc: "desc1",
-          name: "name1",
-          wallet: Wallet(
-              name: "OTP Bank", amount: 123456.0, type: WalletType.card)),
-      Transaction(
-          id: "id2",
-          amount: 1221.4,
-          isIncome: true,
-          category: TrxCategory(name: "Food", colorCode: Colors.amber.value),
-          date: DateTime.now(),
-          desc: "desc2",
-          name: "name2",
-          wallet: Wallet(
-              name: "Home wallet", amount: 1234.0, type: WalletType.cash)),
-      Transaction(
-          id: "id3",
-          amount: 120.4,
-          isIncome: false,
-          category: TrxCategory(name: "Gift", colorCode: Colors.amber.value),
-          date: DateTime.now(),
-          desc: "desc1",
-          name: "name1",
-          wallet: Wallet(
-              name: "OTP Bank", amount: 123456.0, type: WalletType.card)),
-      Transaction(
-          id: "id4",
-          amount: 120.4,
-          isIncome: false,
-          category: TrxCategory(name: "Gift", colorCode: Colors.amber.value),
-          date: DateTime.now(),
-          desc: "desc1",
-          name: "name1",
-          wallet: Wallet(
-              name: "OTP Bank", amount: 123456.0, type: WalletType.card)),
-      Transaction(
-          id: "id2",
-          amount: 1221.4,
-          isIncome: false,
-          category: TrxCategory(name: "Food", colorCode: Colors.amber.value),
-          date: DateTime.now(),
-          desc: "desc2",
-          name: "name2",
-          wallet: Wallet(
-              name: "Home wallet", amount: 1234.0, type: WalletType.cash))
-    ];
+    var box = Hive.box<Transaction>('trxBox');
+    return box.values.toList();
+  }
+
+  //ready
+  @override
+  Wallet getWalletById(String id) {
+    var box = Hive.box<Wallet>('walletsBox');
+    print("id: " + id);
+    print(box.values);
+    return box.values.firstWhere((element) => element.id == id, orElse: () {
+      return Wallet.fromId(id: id);
+    });
+  }
+
+  //ready
+  @override
+  TrxCategory getTrxCategoryById(String id) {
+    var box = Hive.box<TrxCategory>('trxCategoryBox');
+    print("id: " + id);
+    print(box.values);
+    return box.values.firstWhere((element) => element.id == id, orElse: () {
+      return TrxCategory.fromId(id: id);
+    });
   }
 }
