@@ -12,7 +12,7 @@ abstract class DatabaseManagerService {
   List<Wallet> getAllWallets();
   List<TrxCategory> getAllTrxCategorys();
   List<Reminder> getAllReminders();
-  List<Transaction> getAllTransaction();
+  List<Transaction> getAllTransactionByMonth(DateTime month);
   Future<void> addTrx(Transaction trx);
   void copyTrx();
   void deleteTrx(Transaction trx);
@@ -181,9 +181,12 @@ class HiveDatabaseManagerService extends DatabaseManagerService {
 
   //ready
   @override
-  List<Transaction> getAllTransaction() {
+  List<Transaction> getAllTransactionByMonth(DateTime month) {
     var box = Hive.box<Transaction>('trxBox');
-    return box.values.toList();
+    return box.values
+        .where((element) => (element.date.year == month.year &&
+            element.date.month == month.month))
+        .toList();
   }
 
   //ready

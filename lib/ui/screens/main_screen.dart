@@ -30,6 +30,8 @@ class MainScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     print("MainScreen build()");
     final mainScreenProvider = context.watch<MainScreenProvider>();
+    final incomeWidgetProvider = context.read<IncomeWidgetProvider>();
+    final expenseWidgetProvider = context.read<ExpenseWidgetProvider>();
     return Scaffold(
       body: Container(
         padding: EdgeInsets.all(10),
@@ -57,6 +59,10 @@ class MainScreen extends StatelessWidget {
                                 if (date != null &&
                                     date != mainScreenProvider.selectedDate) {
                                   mainScreenProvider.changeDate(date);
+                                  incomeWidgetProvider.refreshIncome(
+                                      month: date);
+                                  expenseWidgetProvider.refreshExpense(
+                                      month: date);
                                 }
                               });
                             },
@@ -433,7 +439,6 @@ class AddTrxScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     print("AddScreen build()");
-    DateTime time = DateTime.now();
 
     final addEditTrxScreenProvider = context.watch<AddEditTrxScreenProvider>();
     final addEditCategoryScreenProvider =
@@ -442,6 +447,8 @@ class AddTrxScreen extends StatelessWidget {
     final incomeWidgetProvider = context.watch<IncomeWidgetProvider>();
     final expenseWidgetProvider = context.watch<ExpenseWidgetProvider>();
     final mainScreenProvider = context.watch<MainScreenProvider>();
+
+    DateTime time = mainScreenProvider.selectedDate;
 
     return Material(
         type: MaterialType.transparency,

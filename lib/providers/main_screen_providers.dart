@@ -13,8 +13,8 @@ class IncomeWidgetProvider with ChangeNotifier {
   IncomeWidgetProvider() {
     _trxManagerService = getIt<TransactionManagerService>();
     _storageService = getIt<DatabaseManagerService>();
-    allIncomeTrxs =
-        _trxManagerService.getIncomeTrxs(_storageService.getAllTransaction());
+    allIncomeTrxs = _trxManagerService.getIncomeTrxs(
+        _storageService.getAllTransactionByMonth(DateTime.now()));
     sumIncome = _trxManagerService.getSumTrxAmount(allIncomeTrxs);
   }
 
@@ -23,8 +23,8 @@ class IncomeWidgetProvider with ChangeNotifier {
 
   refreshIncome({@required DateTime month}) {
     print("getSumExpense()");
-    allIncomeTrxs =
-        _trxManagerService.getIncomeTrxs(_storageService.getAllTransaction());
+    allIncomeTrxs = _trxManagerService
+        .getIncomeTrxs(_storageService.getAllTransactionByMonth(month));
     sumIncome = _trxManagerService.getSumTrxAmount(allIncomeTrxs);
     print(month);
     notifyListeners();
@@ -38,8 +38,8 @@ class ExpenseWidgetProvider with ChangeNotifier {
   ExpenseWidgetProvider() {
     _trxManagerService = getIt<TransactionManagerService>();
     _storageService = getIt<DatabaseManagerService>();
-    allExpenseTrxs =
-        _trxManagerService.getExpenseTrxs(_storageService.getAllTransaction());
+    allExpenseTrxs = _trxManagerService.getExpenseTrxs(
+        _storageService.getAllTransactionByMonth(DateTime.now()));
     sumExpense = _trxManagerService.getSumTrxAmount(allExpenseTrxs);
   }
 
@@ -50,8 +50,8 @@ class ExpenseWidgetProvider with ChangeNotifier {
 
   refreshExpense({@required DateTime month}) {
     print("getSumExpense()");
-    allExpenseTrxs =
-        _trxManagerService.getExpenseTrxs(_storageService.getAllTransaction());
+    allExpenseTrxs = _trxManagerService
+        .getExpenseTrxs(_storageService.getAllTransactionByMonth(month));
     sumExpense = _trxManagerService.getSumTrxAmount(allExpenseTrxs);
     print(month);
     notifyListeners();
