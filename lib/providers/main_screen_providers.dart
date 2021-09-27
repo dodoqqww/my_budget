@@ -21,39 +21,12 @@ class IncomeWidgetProvider with ChangeNotifier {
   double sumIncome;
   List<Transaction> allIncomeTrxs;
 
-  double getSumIncome({DateTime month}) {
+  refreshIncome({@required DateTime month}) {
     print("getSumExpense()");
+    allIncomeTrxs =
+        _trxManagerService.getIncomeTrxs(_storageService.getAllTransaction());
+    sumIncome = _trxManagerService.getSumTrxAmount(allIncomeTrxs);
     print(month);
-    return sumIncome;
-  }
-
-  List<Transaction> getAllExpenseTrxs({DateTime month}) {
-    print("getAllExpenseTrxs()");
-    print(month);
-    return allIncomeTrxs;
-  }
-
-  addTrx() {
-    print("add inTrx");
-    _storageService.addTrx();
-    // sumIncome = _trxManagerService.getSumIncome();
-    // sumExpense = _trxManagerService.getSumExpense();
-    notifyListeners();
-  }
-
-  deleteTrx() {
-    print("delete inTrx");
-    _storageService.deleteTrx();
-    // sumIncome = _trxManagerService.getSumIncome();
-    // sumExpense = _trxManagerService.getSumExpense();
-    notifyListeners();
-  }
-
-  updateTrx() {
-    print("update inTrx");
-    _storageService.updateTrx();
-    // sumIncome = _trxManagerService.getSumIncome();
-    // sumExpense = _trxManagerService.getSumExpense();
     notifyListeners();
   }
 }
@@ -75,39 +48,12 @@ class ExpenseWidgetProvider with ChangeNotifier {
   // List<Transaction> allIncomeTrxs;
   List<Transaction> allExpenseTrxs;
 
-  double getSumExpense({DateTime month}) {
+  refreshExpense({@required DateTime month}) {
     print("getSumExpense()");
+    allExpenseTrxs =
+        _trxManagerService.getExpenseTrxs(_storageService.getAllTransaction());
+    sumExpense = _trxManagerService.getSumTrxAmount(allExpenseTrxs);
     print(month);
-    return sumExpense;
-  }
-
-  List<Transaction> getAllExpenseTrxs({DateTime month}) {
-    print("getAllExpenseTrxs()");
-    print(month);
-    return allExpenseTrxs;
-  }
-
-  addTrx() {
-    print("add exTrx");
-    _storageService.addTrx();
-    // sumIncome = _trxManagerService.getSumIncome();
-    // sumExpense = _trxManagerService.getSumExpense();
-    notifyListeners();
-  }
-
-  deleteTrx() {
-    print("delete exTrx");
-    _storageService.deleteTrx();
-    // sumIncome = _trxManagerService.getSumIncome();
-    // sumExpense = _trxManagerService.getSumExpense();
-    notifyListeners();
-  }
-
-  updateTrx() {
-    print("update exTrx");
-    _storageService.updateTrx();
-    // sumIncome = _trxManagerService.getSumIncome();
-    // sumExpense = _trxManagerService.getSumExpense();
     notifyListeners();
   }
 }
@@ -159,15 +105,36 @@ class AddEditTrxScreenProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  addTrx() {
+  //ready
+  addTrx(
+      {@required double amount,
+      @required String desc,
+      @required DateTime date,
+      @required bool isIncome}) async {
     print("add Trx");
-    _storageService.addTrx();
+    print(date);
+    await _storageService.addTrx(Transaction(
+        categoryId: selectedAddCategory.id,
+        isIncome: isIncome,
+        date: date,
+        amount: amount,
+        desc: desc,
+        walletId: selectedAddWallet.id));
     notifyListeners();
   }
 
-  updateTrx() {
+  //ready
+  updateTrx(Transaction trx,
+      {@required String desc,
+      @required double amount,
+      @required DateTime time}) {
     print("update Trx");
-    _storageService.updateTrx();
+    trx.amount = amount;
+    trx.desc = desc;
+    trx.walletId = selectedEditWallet.id;
+    trx.categoryId = selectedEditCategory.id;
+    trx.date = time;
+    _storageService.updateTrx(trx);
     notifyListeners();
   }
 
@@ -177,9 +144,10 @@ class AddEditTrxScreenProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  deleteTrx() {
+  //ready
+  deleteTrx(Transaction trx) {
     print("delete Trx");
-    _storageService.deleteTrx();
+    _storageService.deleteTrx(trx);
     notifyListeners();
   }
 }
