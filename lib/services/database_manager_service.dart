@@ -14,9 +14,9 @@ abstract class DatabaseManagerService {
   List<Reminder> getAllReminders();
   List<Transaction> getAllTransactionByMonth(DateTime month);
   Future<void> addTrx(Transaction trx);
-  void copyTrx();
+  void copyTrx(Transaction trx, DateTime selectedDate);
   void deleteTrx(Transaction trx);
-  void updateTrx(Transaction trx);
+  void updateTrx(Transaction trx, double oldAmount);
   void addWallet(Wallet wallet);
   Future<void> deleteWallet(Wallet wallet);
   Future<void> updateWallet(Wallet wallet);
@@ -153,29 +153,58 @@ class HiveDatabaseManagerService extends DatabaseManagerService {
     var box = Hive.box<Transaction>('trxBox');
     Wallet wallet = getWalletById(trx.walletId);
     wallet.transactionsId.add(trx.id);
+    if (trx.isIncome) {
+      wallet.amount += trx.amount;
+    } else {
+      wallet.amount -= trx.amount;
+    }
     await updateWallet(wallet);
     box.put(trx.id, trx);
   }
 
   //ready
   @override
-  void deleteTrx(Transaction trx) {
+  Future<void> deleteTrx(Transaction trx) async {
     print("deleteTrx() from service");
     var box = Hive.box<Transaction>('trxBox');
+    Wallet wallet = getWalletById(trx.walletId);
+    wallet.transactionsId.remove(trx.id);
+    if (trx.isIncome) {
+      wallet.amount -= trx.amount;
+    } else {
+      wallet.amount += trx.amount;
+    }
+    await updateWallet(wallet);
     box.delete(trx.id);
   }
 
   //ready
   @override
-  void updateTrx(Transaction trx) {
+  Future<void> updateTrx(Transaction trx, double oldAmount) async {
     print("updateTrx() from service");
     var box = Hive.box<Transaction>('trxBox');
+    Wallet wallet = getWalletById(trx.walletId);
+    wallet.transactionsId.remove(trx.id);
+    if (trx.isIncome) {
+      wallet.amount -= oldAmount;
+    } else {
+      wallet.amount += oldAmount;
+    }
+    wallet.transactionsId.add(trx.id);
+    if (trx.isIncome) {
+      wallet.amount += trx.amount;
+    } else {
+      wallet.amount -= trx.amount;
+    }
+    await updateWallet(wallet);
     box.put(trx.id, trx);
   }
 
   @override
-  void copyTrx() {
+  void copyTrx(Transaction trx, DateTime selectedDate) {
+    Transaction newTrx = Transaction.copy(trx: trx, date: selectedDate);
     print("copyTrx() from service");
+    addTrx(newTrx);
     // TODO: implement updateTrx
   }
 

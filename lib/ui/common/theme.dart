@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 final appTheme = ThemeData(
   primarySwatch: Colors.blue,
+  secondaryHeaderColor: Colors.blue[300],
   shadowColor: Colors.lightBlue,
   dividerColor: Colors.blue,
   iconTheme: IconThemeData(size: 24),

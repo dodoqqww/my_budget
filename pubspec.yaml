@@ -67,6 +67,12 @@ dependencies:
     git:
       url: https://github.com/dodoqqww/month_picker_dialog.git
   
+  flutter_rounded_date_picker:
+    git:
+      url: https://github.com/dodoqqww/flutter_rounded_date_picker.git
+
+      
+  
   uuid: ^3.0.4
   hive: ^2.0.4
   path_provider: ^1.5.1

@@ -1,9 +1,9 @@
-import 'dart:ffi';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart'
     hide DropdownButton, DropdownMenuItem, DropdownButtonHideUnderline;
 import 'package:flutter/services.dart';
+import 'package:flutter_rounded_date_picker/flutter_rounded_date_picker.dart';
+
 import 'package:my_budget/models/wallet_type.dart';
 import 'package:my_budget/providers/main_screen_providers.dart';
 import 'package:my_budget/providers/settings_screen_providers.dart';
@@ -954,9 +954,10 @@ class EditTrxScreen extends StatelessWidget {
                                   heroTag: "deleteBtn",
                                   child: Icon(Icons.delete),
                                   backgroundColor: Colors.red,
-                                  onPressed: () {
-                                    addEditTrxScreenProvider.deleteTrx(trx);
-                                    Navigator.pop(context);
+                                  onPressed: () async {
+                                    await addEditTrxScreenProvider
+                                        .deleteTrx(trx);
+
                                     isIncome
                                         ? incomeWidgetProvider.refreshIncome(
                                             month:
@@ -964,6 +965,8 @@ class EditTrxScreen extends StatelessWidget {
                                         : expenseWidgetProvider.refreshExpense(
                                             month: mainScreenProvider
                                                 .selectedDate);
+                                    print("itt:  + $isIncome");
+                                    Navigator.pop(context);
                                   }),
                               SizedBox(
                                 width: 15,
@@ -972,8 +975,81 @@ class EditTrxScreen extends StatelessWidget {
                                   child: Icon(Icons.copy),
                                   heroTag: "copyBtn",
                                   backgroundColor: Colors.blue,
-                                  onPressed: () {
-                                    addEditTrxScreenProvider.copyTrx();
+                                  onPressed: () async {
+                                    DateTime selectedDate =
+                                        await showRoundedDatePicker(
+                                            height: 400,
+                                            context: context,
+                                            textPositiveButton: "Rendben",
+                                            styleDatePicker:
+                                                MaterialRoundedDatePickerStyle(
+                                              textStyleDayButton: TextStyle(
+                                                  fontSize: 24,
+                                                  color: Colors.black),
+                                              textStyleYearButton: TextStyle(
+                                                fontSize: 32,
+                                                color: Colors.white,
+                                              ),
+                                              textStyleDayHeader: TextStyle(
+                                                  fontSize: 16,
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.bold),
+                                              textStyleCurrentDayOnCalendar:
+                                                  TextStyle(
+                                                      fontSize: 24,
+                                                      color: Colors.black,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                              textStyleDayOnCalendar: TextStyle(
+                                                  fontSize: 18,
+                                                  color: Colors.black),
+                                              textStyleDayOnCalendarSelected:
+                                                  TextStyle(
+                                                      fontSize: 24,
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                              textStyleDayOnCalendarDisabled:
+                                                  TextStyle(
+                                                      fontSize: 18,
+                                                      color: Colors.black
+                                                          .withOpacity(0.1)),
+                                              textStyleMonthYearHeader:
+                                                  TextStyle(
+                                                fontSize: 24,
+                                                color: Colors.white,
+                                              ),
+                                              paddingDatePicker:
+                                                  EdgeInsets.all(0),
+                                              paddingMonthHeader:
+                                                  EdgeInsets.all(10),
+                                              paddingActionBar:
+                                                  EdgeInsets.all(16),
+                                              paddingDateYearHeader:
+                                                  EdgeInsets.all(10),
+                                              sizeArrow: 25,
+                                              colorArrowNext: Colors.white,
+                                              colorArrowPrevious: Colors.white,
+                                              // marginLeftArrowPrevious: 5,
+                                              //marginTopArrowPrevious: 1000,
+                                              // marginTopArrowNext: 15,
+                                              //marginRightArrowNext: 5,
+                                              backgroundHeaderMonth:
+                                                  Theme.of(context)
+                                                      .secondaryHeaderColor,
+                                            ));
+
+                                    print(selectedDate.toString());
+
+                                    await addEditTrxScreenProvider.copyTrx(
+                                        trx, selectedDate);
+                                    isIncome
+                                        ? incomeWidgetProvider.refreshIncome(
+                                            month:
+                                                mainScreenProvider.selectedDate)
+                                        : expenseWidgetProvider.refreshExpense(
+                                            month: mainScreenProvider
+                                                .selectedDate);
                                     Navigator.pop(context);
                                   }),
                               SizedBox(

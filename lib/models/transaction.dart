@@ -37,6 +37,16 @@ class Transaction extends HiveObject {
     this.id = "trx-" + Uuid().v1();
   }
 
+  Transaction.copy({@required Transaction trx, @required DateTime date}) {
+    this.id = "trx-" + Uuid().v1();
+    this.categoryId = trx.categoryId;
+    this.isIncome = trx.isIncome;
+    this.date = date;
+    this.amount = trx.amount;
+    this.desc = trx.desc;
+    this.walletId = trx.walletId;
+  }
+
   @override
   String toString() {
     return 'Transaction(id: $id, categoryId: $categoryId, isIncome: $isIncome, date: $date, amount: $amount, desc: $desc, walletId: $walletId)';

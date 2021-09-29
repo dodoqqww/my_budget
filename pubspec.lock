@@ -265,6 +265,15 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.2"
+  flutter_rounded_date_picker:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: HEAD
+      resolved-ref: "5cdaa9f4f61e8483d94e30130c024f2509acc5d7"
+      url: "https://github.com/dodoqqww/flutter_rounded_date_picker.git"
+    source: git
+    version: "2.0.2"
   flutter_staggered_grid_view:
     dependency: "direct main"
     description:

@@ -129,18 +129,20 @@ class AddEditTrxScreenProvider with ChangeNotifier {
       @required double amount,
       @required DateTime time}) {
     print("update Trx");
+    double oldAmount = trx.amount;
     trx.amount = amount;
     trx.desc = desc;
     trx.walletId = selectedEditWallet.id;
     trx.categoryId = selectedEditCategory.id;
     trx.date = time;
-    _storageService.updateTrx(trx);
+    _storageService.updateTrx(trx, oldAmount);
     notifyListeners();
   }
 
-  copyTrx() {
+  //ready
+  copyTrx(Transaction trx, DateTime selectedDate) {
     print("copy Trx");
-    _storageService.copyTrx();
+    _storageService.copyTrx(trx, selectedDate);
     notifyListeners();
   }
 
