@@ -22,7 +22,7 @@ class IncomeWidgetProvider with ChangeNotifier {
   List<Transaction> allIncomeTrxs;
 
   refreshIncome({@required DateTime month}) {
-    print("getSumExpense()");
+    print("getSumIncome()");
     allIncomeTrxs = _trxManagerService
         .getIncomeTrxs(_storageService.getAllTransactionByMonth(month));
     sumIncome = _trxManagerService.getSumTrxAmount(allIncomeTrxs);

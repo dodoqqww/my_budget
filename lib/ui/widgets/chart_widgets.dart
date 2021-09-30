@@ -6,23 +6,16 @@ import 'package:charts_flutter/flutter.dart' as charts;
 
 //top chart
 class ComboChart extends StatelessWidget {
-  final List<charts.Series> seriesList;
+  final List<List<OrdinalSales>> datas;
+
   final bool animate;
 
-  ComboChart(this.seriesList, {this.animate});
-
-  factory ComboChart.withSampleData() {
-    return new ComboChart(
-      _createSampleData(),
-      // Disable animations for image tests.
-      animate: false,
-    );
-  }
+  ComboChart(this.datas, {this.animate});
 
   @override
   Widget build(BuildContext context) {
     return new charts.OrdinalComboChart(
-      seriesList,
+      _createData(datas[0], datas[1], datas[2]),
       animate: animate,
 
       domainAxis: new charts.OrdinalAxisSpec(
@@ -154,6 +147,34 @@ class ComboChart extends StatelessWidget {
         ..setAttribute(charts.rendererIdKey, 'customLine'),
     ];
   }
+
+  List<charts.Series<OrdinalSales, String>> _createData(
+      List<OrdinalSales> incomeDatas,
+      List<OrdinalSales> expenseDatas,
+      List<OrdinalSales> restDatas) {
+    return [
+      new charts.Series<OrdinalSales, String>(
+          id: 'Income',
+          colorFn: (_, __) => charts.MaterialPalette.green.shadeDefault,
+          domainFn: (OrdinalSales sales, _) => sales.year,
+          measureFn: (OrdinalSales sales, _) => sales.sales,
+          data: incomeDatas),
+      new charts.Series<OrdinalSales, String>(
+          id: 'Expense',
+          colorFn: (_, __) => charts.MaterialPalette.red.shadeDefault,
+          domainFn: (OrdinalSales sales, _) => sales.year,
+          measureFn: (OrdinalSales sales, _) => sales.sales,
+          data: expenseDatas),
+      new charts.Series<OrdinalSales, String>(
+          id: 'Rest ',
+          colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
+          domainFn: (OrdinalSales sales, _) => sales.year,
+          measureFn: (OrdinalSales sales, _) => sales.sales,
+          data: restDatas)
+        // Configure our custom line renderer for this series.
+        ..setAttribute(charts.rendererIdKey, 'customLine'),
+    ];
+  }
 }
 
 class OrdinalSales {
@@ -165,23 +186,15 @@ class OrdinalSales {
 
 //pie chart
 class PieCHart extends StatelessWidget {
-  final List<charts.Series> seriesList;
+  final List<LinearSales> seriesList;
   final bool animate;
 
-  PieCHart(this.seriesList, {this.animate});
-
-  factory PieCHart.withSampleData(BuildContext context) {
-    return new PieCHart(
-      _createSampleData(context),
-      // Disable animations for image tests.
-      animate: false,
-    );
-  }
+  PieCHart(this.seriesList, {this.animate = false});
 
   @override
   Widget build(BuildContext context) {
     return new charts.PieChart(
-      seriesList,
+      _createData(context, seriesList),
       animate: animate,
       defaultRenderer: new charts.ArcRendererConfig(arcRendererDecorators: [
         new charts.ArcLabelDecorator(
@@ -190,17 +203,8 @@ class PieCHart extends StatelessWidget {
     );
   }
 
-  /// Create series list with one series
-  static List<charts.Series<LinearSales, String>> _createSampleData(
-      BuildContext context) {
-    final data = [
-      new LinearSales("Food", 100, Colors.amber),
-      new LinearSales("Investment", 75, Colors.green),
-      new LinearSales("Invoices", 25, Colors.cyan),
-      new LinearSales("3", 5, Colors.pink),
-      new LinearSales("4", 100, Colors.blue),
-    ];
-
+  List<charts.Series<LinearSales, String>> _createData(
+      BuildContext context, List<LinearSales> data) {
     return [
       new charts.Series<LinearSales, String>(
         id: 'Sales',
@@ -236,24 +240,15 @@ class LinearSales {
 
 //mont line chart
 class MonthLineChart extends StatelessWidget {
-  final List<charts.Series> seriesList;
+  final List<TimeSeriesSales> seriesList;
   final bool animate;
 
   MonthLineChart(this.seriesList, {this.animate});
 
-  /// Creates a [TimeSeriesChart] with sample data and no transition.
-  factory MonthLineChart.withSampleData() {
-    return new MonthLineChart(
-      _createSampleData(),
-      // Disable animations for image tests.
-      animate: false,
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return new charts.TimeSeriesChart(
-      seriesList,
+      _createData(seriesList),
       animate: animate,
 
       domainAxis: new DateTimeAxisSpec(
@@ -332,36 +327,20 @@ class MonthLineChart extends StatelessWidget {
     );
   }
 
-  /// Create one series with sample hard coded data.
-  static List<charts.Series<TimeSeriesSales, DateTime>> _createSampleData() {
-    final data = [
-      new TimeSeriesSales(new DateTime(2017, 9, 1), 240000),
-      new TimeSeriesSales(new DateTime(2017, 9, 3), 200000),
-      new TimeSeriesSales(new DateTime(2017, 9, 5), 100000),
-      new TimeSeriesSales(new DateTime(2017, 9, 10), -75000),
-      new TimeSeriesSales(new DateTime(2017, 9, 15), 65000),
-      new TimeSeriesSales(new DateTime(2017, 9, 23), 51000),
-      new TimeSeriesSales(new DateTime(2017, 9, 24), 50000),
-      new TimeSeriesSales(new DateTime(2017, 9, 25), -7500),
-      new TimeSeriesSales(new DateTime(2017, 9, 26), 1000),
-      new TimeSeriesSales(new DateTime(2017, 9, 27), 750),
-      new TimeSeriesSales(new DateTime(2017, 9, 28), 75000),
-    ];
-
-// Generate 2 shades of each color so that we can style the line segments.
+  List<charts.Series<TimeSeriesSales, DateTime>> _createData(
+      List<TimeSeriesSales> data) {
     final red = charts.MaterialPalette.red.shadeDefault;
     final green = charts.MaterialPalette.green.shadeDefault;
 
     return [
       new charts.Series<TimeSeriesSales, DateTime>(
         id: 'Sales',
-        seriesColor: green,
-        colorFn: (TimeSeriesSales asd, __) =>
-            asd.sales % 10000 == 0 ? green : red,
+        // seriesColor: green,
+        colorFn: (TimeSeriesSales asd, __) => asd.isIncome ? green : red,
         domainFn: (TimeSeriesSales sales, _) => sales.time,
         measureFn: (TimeSeriesSales sales, _) => sales.sales,
-        areaColorFn: (TimeSeriesSales asd, __) =>
-            asd.sales % 10000 == 0 ? green : red,
+        //areaColorFn: (TimeSeriesSales asd, __) =>
+        //    asd.sales % 10000 == 0 ? green : red,
         data: data,
       )
     ];
@@ -371,6 +350,7 @@ class MonthLineChart extends StatelessWidget {
 class TimeSeriesSales {
   final DateTime time;
   final int sales;
+  final bool isIncome;
 
-  TimeSeriesSales(this.time, this.sales);
+  TimeSeriesSales(this.time, this.sales, this.isIncome);
 }

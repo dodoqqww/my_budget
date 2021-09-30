@@ -22,27 +22,27 @@ class GraphsScreenProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  getPieChartDatas() {
-    print("getPieChartDatas()");
-    _graphsManagerService.getPieChartDatasByDate();
-    notifyListeners();
-  }
-
-  getMonthChartDatas() {
-    print("getMonthChartDatas()");
-    _graphsManagerService.getMonthChartDatasByDate();
-    notifyListeners();
-  }
-
-  getPreviousMonthsDatas() {
-    print("getPreviousMonthsDatas()");
-    _graphsManagerService.getPreviousMonthsDatasByDate();
-    notifyListeners();
-  }
-
-  getLegendsDatas() {
-    print("getLegendsDatas()");
-    _graphsManagerService.getLegendsDatasByDate();
-    notifyListeners();
-  }
+  // getPieChartDatas() {
+  //   print("getPieChartDatas()");
+  //   _graphsManagerService.getPieChartDatasByDate();
+  //   notifyListeners();
+  // }
+//
+  // getMonthChartDatas() {
+  //   print("getMonthChartDatas()");
+  //   _graphsManagerService.getMonthChartDatasByDate();
+  //   notifyListeners();
+  // }
+//
+  // getPreviousMonthsDatas() {
+  //   print("getPreviousMonthsDatas()");
+  //   _graphsManagerService.getPreviousMonthsDatasByDate();
+  //   notifyListeners();
+  // }
+//
+  // getLegendsDatas() {
+  //   print("getLegendsDatas()");
+  //   _graphsManagerService.getLegendsDatasByDate();
+  //   notifyListeners();
+  // }
 }

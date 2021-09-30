@@ -200,6 +200,7 @@ class HiveDatabaseManagerService extends DatabaseManagerService {
     box.put(trx.id, trx);
   }
 
+  //ready
   @override
   void copyTrx(Transaction trx, DateTime selectedDate) {
     Transaction newTrx = Transaction.copy(trx: trx, date: selectedDate);
