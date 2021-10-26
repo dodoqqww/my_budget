@@ -100,54 +100,6 @@ class ComboChart extends StatelessWidget {
     );
   }
 
-  /// Create series list with multiple series
-  static List<charts.Series<OrdinalSales, String>> _createSampleData() {
-    final desktopSalesData = [
-      new OrdinalSales('2014.Jan', 200000),
-      new OrdinalSales('2015.Jan', 250000),
-      new OrdinalSales('2016.Jan', 100000),
-      //  new OrdinalSales('2017.Jan', 175000),
-    ];
-
-    final tableSalesData = [
-      new OrdinalSales('2014.Jan', -150000),
-      new OrdinalSales('2015.Jan', -100000),
-      new OrdinalSales('2016.Jan', -100000),
-      // new OrdinalSales('2017.Jan', -81500),
-    ];
-
-    //TODO megtakarítás
-    final mobileSalesData = [
-      new OrdinalSales('2014.Jan', 10000),
-      new OrdinalSales('2015.Jan', 150000),
-      new OrdinalSales('2016.Jan', 200000),
-      //  new OrdinalSales('2017.Jan', 1500000),
-    ];
-
-    return [
-      new charts.Series<OrdinalSales, String>(
-          id: 'Desktop',
-          colorFn: (_, __) => charts.MaterialPalette.green.shadeDefault,
-          domainFn: (OrdinalSales sales, _) => sales.year,
-          measureFn: (OrdinalSales sales, _) => sales.sales,
-          data: desktopSalesData),
-      new charts.Series<OrdinalSales, String>(
-          id: 'Tablet',
-          colorFn: (_, __) => charts.MaterialPalette.red.shadeDefault,
-          domainFn: (OrdinalSales sales, _) => sales.year,
-          measureFn: (OrdinalSales sales, _) => sales.sales,
-          data: tableSalesData),
-      new charts.Series<OrdinalSales, String>(
-          id: 'Mobile ',
-          colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
-          domainFn: (OrdinalSales sales, _) => sales.year,
-          measureFn: (OrdinalSales sales, _) => sales.sales,
-          data: mobileSalesData)
-        // Configure our custom line renderer for this series.
-        ..setAttribute(charts.rendererIdKey, 'customLine'),
-    ];
-  }
-
   List<charts.Series<OrdinalSales, String>> _createData(
       List<OrdinalSales> incomeDatas,
       List<OrdinalSales> expenseDatas,

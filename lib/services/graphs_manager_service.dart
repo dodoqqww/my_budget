@@ -65,31 +65,40 @@ class AppGraphsManagerService extends GraphsManagerService {
     }
 
     bool previousIsIncome = trxs[0].isIncome;
+    // = trxs[0].date.subtract(Duration(days: 1));
 
     List<TimeSeriesSales> datas = [
       TimeSeriesSales(DateTime(month.year, month.month, 1), 0, previousIsIncome)
     ];
 
-    double previousAmount = 0;
+    double sumAmount = 0;
+    double lastAmount = 0;
 
     for (int i = 0; i < trxs.length; i++) {
       trxs[i].isIncome
-          ? previousAmount += trxs[i].amount
-          : previousAmount -= trxs[i].amount;
+          ? sumAmount += trxs[i].amount
+          : sumAmount -= trxs[i].amount;
+      //  print(sumAmount);
 
-      if (i + 1 < trxs.length) {
-        previousIsIncome = trxs[i + 1].isIncome ? true : false;
+      previousIsIncome = sumAmount >= lastAmount ? false : true;
+
+      DateTime nextDate = ((i + 1) >= trxs.length)
+          ? trxs[i].date.add(Duration(days: 1))
+          : trxs[i + 1].date;
+
+      if ((trxs[i].date == nextDate)) {
+        continue;
       } else {
-        previousIsIncome = trxs[i].isIncome;
+        //  print("added");
+        datas.add(TimeSeriesSales(DateUtils.dateOnly(trxs[i].date),
+            sumAmount.toInt(), previousIsIncome));
+        lastAmount = sumAmount;
       }
-      //print("${trx.isIncome} ${trx.date}");
-      datas.add(TimeSeriesSales(DateUtils.dateOnly(trxs[i].date),
-          previousAmount.toInt(), previousIsIncome));
     }
 
-    datas.forEach((element) {
-      print(element.sales.toString() + " " + element.time.toString());
-    });
+    //  datas.forEach((element) {
+    //    print(element.sales.toString() + " " + element.isIncome.toString());
+    //  });
 
     return datas;
   }
