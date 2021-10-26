@@ -17,7 +17,7 @@ abstract class DatabaseManagerService {
   void copyTrx(Transaction trx, DateTime selectedDate);
   void deleteTrx(Transaction trx);
   void updateTrx(Transaction trx, double oldAmount);
-  void addWallet(Wallet wallet);
+  Future<void> addWallet(Wallet wallet);
   Future<void> deleteWallet(Wallet wallet);
   Future<void> updateWallet(Wallet wallet);
   void addTrxCategory(TrxCategory category);
@@ -43,9 +43,9 @@ class HiveDatabaseManagerService extends DatabaseManagerService {
 
   //ready
   @override
-  void addWallet(Wallet wallet) {
+  Future<void> addWallet(Wallet wallet) async {
     var box = Hive.box<Wallet>('walletsBox');
-    box.put(
+    await box.put(
       wallet.id,
       wallet,
     );

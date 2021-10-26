@@ -1,43 +1,45 @@
 import 'package:flutter/material.dart';
 import 'package:my_budget/models/reminder.dart';
-import 'package:my_budget/models/transaction.dart';
 import 'package:my_budget/models/transaction_category.dart';
 import 'package:my_budget/models/wallet.dart';
 import 'package:my_budget/models/wallet_type.dart';
 import 'package:my_budget/services/database_manager_service.dart';
 import 'package:my_budget/services/service_locator.dart';
 
+//ready v2
 class AddEditCategoryScreenProvider with ChangeNotifier {
   DatabaseManagerService _storageService;
 
   AddEditCategoryScreenProvider() {
     _storageService = getIt<DatabaseManagerService>();
-    allCategorys = _storageService.getAllTrxCategorys();
   }
 
   Color selectedCategoryColor = Colors.red;
-  List<TrxCategory> allCategorys;
   TrxCategory selectedCategory;
 
-  changeSelectedCategoryColor(Color color) {
+  List<TrxCategory> getAllCategorys =
+      getIt<DatabaseManagerService>().getAllTrxCategorys();
+  TrxCategory getTrxCategoryById(String id) =>
+      getIt<DatabaseManagerService>().getTrxCategoryById(id);
+
+  void changeSelectedCategoryColor(Color color) {
     selectedCategoryColor = color;
     notifyListeners();
   }
 
-  changeSelectedCategory(TrxCategory category) {
+  void changeSelectedCategory(TrxCategory category) {
     selectedCategoryColor = category.getColor();
     selectedCategory = category;
     notifyListeners();
   }
 
-  addCategory(TrxCategory category) {
+  void addCategory(TrxCategory category) {
     print("add Category");
     _storageService.addTrxCategory(category);
-    allCategorys.add(category);
     notifyListeners();
   }
 
-  updateCategory({
+  void updateCategory({
     @required String name,
   }) {
     print("update Category");
@@ -49,34 +51,33 @@ class AddEditCategoryScreenProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  deleteCategory() {
+  void deleteCategory() {
     print("delete Category");
     _storageService.deleteTrxCategory(selectedCategory);
-    allCategorys.remove(selectedCategory);
     notifyListeners();
   }
 }
 
-//ready
+//ready v2
 class WalletSettingsProvider with ChangeNotifier {
   DatabaseManagerService _storageService;
 
   WalletSettingsProvider() {
-    _storageService = _storageService = getIt<DatabaseManagerService>();
-    allWallets = _storageService.getAllWallets();
+    _storageService = getIt<DatabaseManagerService>();
   }
 
-  List<Wallet> allWallets;
-  Wallet selectedWallet;
+  List<Wallet> getAllWallets = getIt<DatabaseManagerService>().getAllWallets();
+  Wallet getWalletById(String id) =>
+      getIt<DatabaseManagerService>().getWalletById(id);
 
   addWallet(Wallet wallet) {
     print("add wallet");
+    print(wallet.toString());
     _storageService.addWallet(wallet);
-    allWallets.add(wallet);
     notifyListeners();
   }
 
-  updateWallet(Wallet wallet,
+  void updateWallet(Wallet wallet,
       {@required String name,
       @required double amount,
       @required WalletType type,
@@ -90,39 +91,37 @@ class WalletSettingsProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  deleteWallet(Wallet wallet) async {
+  void deleteWallet(Wallet wallet) async {
     print("delete wallet");
     await _storageService.deleteWallet(wallet);
-    allWallets.remove(wallet);
     notifyListeners();
   }
 }
 
+//ready v2
 class ReminderSettingsProvider with ChangeNotifier {
   DatabaseManagerService _storageService;
 
   ReminderSettingsProvider() {
     _storageService = _storageService = getIt<DatabaseManagerService>();
-    allReminders = _storageService.getAllReminders();
   }
 
-  List<Reminder> allReminders;
-  Wallet selectedWallet;
+  List<Reminder> getAllReminders =
+      getIt<DatabaseManagerService>().getAllReminders();
 
-  addReminder(Reminder reminder) {
+  void addReminder(Reminder reminder) {
     print("add Reminder");
     _storageService.addReminder();
-    allReminders.add(reminder);
     notifyListeners();
   }
 
-  updateReminder(Reminder reminder) {
+  void updateReminder(Reminder reminder) {
     print("update Reminder");
     _storageService.updateReminder();
     notifyListeners();
   }
 
-  deleteReminder(Reminder reminder) {
+  void deleteReminder(Reminder reminder) {
     print("delete Reminder");
     _storageService.deleteReminder();
     notifyListeners();
