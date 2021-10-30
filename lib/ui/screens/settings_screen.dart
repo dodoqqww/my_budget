@@ -4,6 +4,8 @@ import 'package:flutter_picker/flutter_picker.dart';
 import 'package:my_budget/models/transaction_category.dart';
 import 'package:my_budget/models/wallet_type.dart';
 import 'package:my_budget/providers/settings_screen_providers.dart';
+import 'package:my_budget/services/database_manager_service.dart';
+import 'package:my_budget/services/service_locator.dart';
 import 'package:my_budget/ui/widgets/add_category_dialog.dart';
 import 'package:my_budget/ui/widgets/fitted_text.dart';
 import 'package:my_budget/ui/widgets/legend_widget.dart';
@@ -39,7 +41,9 @@ class WalletsSettings extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     print("WalletSettings build()");
-    final walletSettingsProvider = context.watch<WalletSettingsProvider>();
+    //final walletSettingsProvider = context.watch<WalletSettingsProvider>().getAllWallets;
+    List<Wallet> walletList =
+        context.read<WalletSettingsProvider>().getAllWallets;
     return getAppCardStyle(
       child: ListView(
         physics: NeverScrollableScrollPhysics(),
@@ -67,11 +71,10 @@ class WalletsSettings extends StatelessWidget {
           ),
           ListView.builder(
             shrinkWrap: true,
-            itemCount: walletSettingsProvider.allWallets.length,
+            itemCount: walletList.length,
             itemBuilder: (BuildContext context, int index) {
-              print(walletSettingsProvider.allWallets[index].toString());
-              return WalletListWidget(
-                  wallet: walletSettingsProvider.allWallets[index]);
+              // print(allWallets[index].toString());
+              return WalletListWidget(wallet: walletList[index]);
             },
           )
         ],
@@ -160,6 +163,7 @@ class RemindersSettings extends StatelessWidget {
   Widget build(BuildContext context) {
     print("RemindersSettings build()");
     final reminderSettingsProvider = context.watch<ReminderSettingsProvider>();
+    List<Reminder> reminderList = reminderSettingsProvider.getAllReminders;
     return getAppCardStyle(
       child: ListView(
         physics: NeverScrollableScrollPhysics(),
@@ -188,10 +192,9 @@ class RemindersSettings extends StatelessWidget {
           ListView.builder(
               physics: ClampingScrollPhysics(),
               shrinkWrap: true,
-              itemCount: reminderSettingsProvider.allReminders.length,
+              itemCount: reminderList.length,
               itemBuilder: (BuildContext context, int index) {
-                return ReminderListWidget(
-                    reminder: reminderSettingsProvider.allReminders[index]);
+                return ReminderListWidget(reminder: reminderList[index]);
               }),
         ],
       ),
@@ -633,6 +636,9 @@ class AddEditCategoryScreen extends StatelessWidget {
     print("AddEditCategoryScreen build()");
     final addEditCategoryScreenProvider =
         context.watch<AddEditCategoryScreenProvider>();
+
+    List<TrxCategory> categoryList =
+        addEditCategoryScreenProvider.getAllCategorys;
     return Material(
         type: MaterialType.transparency,
         // make sure that the overlay content is not cut off
@@ -719,16 +725,12 @@ class AddEditCategoryScreen extends StatelessWidget {
                             height: 350,
                             child: ListView.builder(
                                 shrinkWrap: true,
-                                itemCount: addEditCategoryScreenProvider
-                                    .allCategorys.length,
+                                itemCount: categoryList.length,
                                 itemBuilder: (BuildContext context, int index) {
-                                  print(addEditCategoryScreenProvider
-                                      .allCategorys[index]
-                                      .toString());
+                                  print(categoryList[index].toString());
                                   return SettingsMyLegendWidget(
                                       nameCtrl: nameCtrl,
-                                      category: addEditCategoryScreenProvider
-                                          .allCategorys[index],
+                                      category: categoryList[index],
                                       context: context);
                                 }),
                           )

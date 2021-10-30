@@ -448,6 +448,10 @@ class AddTrxScreen extends StatelessWidget {
     final expenseWidgetProvider = context.watch<ExpenseWidgetProvider>();
     final mainScreenProvider = context.watch<MainScreenProvider>();
 
+    List<Wallet> walletList = walletSettingsProvider.getAllWallets;
+    List<TrxCategory> categoryList =
+        addEditCategoryScreenProvider.getAllCategorys;
+
     DateTime time = mainScreenProvider.selectedDate;
 
     return Material(
@@ -513,9 +517,8 @@ class AddTrxScreen extends StatelessWidget {
                                                   .bodyText1,
                                               value: addEditTrxScreenProvider
                                                   .selectedAddCategory,
-                                              items: _getCatDropDown(
-                                                  addEditCategoryScreenProvider
-                                                      .allCategorys),
+                                              items:
+                                                  _getCatDropDown(categoryList),
                                               onChanged:
                                                   (TrxCategory newValue) {
                                                 addEditTrxScreenProvider
@@ -559,8 +562,7 @@ class AddTrxScreen extends StatelessWidget {
                                             .bodyText1,
                                         value: addEditTrxScreenProvider
                                             .selectedAddWallet,
-                                        items: _getWalletDropDown(
-                                            walletSettingsProvider.allWallets),
+                                        items: _getWalletDropDown(walletList),
                                         onChanged: (Wallet newValue) {
                                           addEditTrxScreenProvider
                                               .changeSelectedAddWallet(
@@ -732,9 +734,14 @@ class EditTrxScreen extends StatelessWidget {
     final expenseWidgetProvider = context.watch<ExpenseWidgetProvider>();
     final mainScreenProvider = context.watch<MainScreenProvider>();
 
-    Wallet wallet = getIt<DatabaseManagerService>().getWalletById(trx.walletId);
+    Wallet wallet = walletSettingsProvider.getWalletById(trx.walletId);
+
     TrxCategory trxCategory =
-        getIt<DatabaseManagerService>().getTrxCategoryById(trx.categoryId);
+        addEditCategoryScreenProvider.getTrxCategoryById(trx.categoryId);
+
+    List<Wallet> walletList = walletSettingsProvider.getAllWallets;
+    List<TrxCategory> categoryList =
+        addEditCategoryScreenProvider.getAllCategorys;
 
     amountCtrl.text = trx.amount.toString();
     descCtrl.text = trx.desc;
@@ -803,8 +810,7 @@ class EditTrxScreen extends StatelessWidget {
                                               value: addEditTrxScreenProvider
                                                   .selectedEditCategory,
                                               items: _getCatDropDown(
-                                                  addEditCategoryScreenProvider
-                                                      .allCategorys,
+                                                  categoryList,
                                                   cat: trxCategory),
                                               onChanged:
                                                   (TrxCategory newValue) {
@@ -849,8 +855,7 @@ class EditTrxScreen extends StatelessWidget {
                                             .bodyText1,
                                         value: addEditTrxScreenProvider
                                             .selectedEditWallet,
-                                        items: _getWalletDropDown(
-                                            walletSettingsProvider.allWallets,
+                                        items: _getWalletDropDown(walletList,
                                             wallet: wallet),
                                         onChanged: (Wallet newValue) {
                                           addEditTrxScreenProvider
