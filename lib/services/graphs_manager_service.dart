@@ -1,10 +1,9 @@
-import 'package:charts_flutter/flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:my_budget/models/transaction.dart';
 import 'package:my_budget/models/transaction_category.dart';
 import 'package:my_budget/services/database_manager_service.dart';
 import 'package:my_budget/services/service_locator.dart';
 import 'package:my_budget/ui/widgets/chart_widgets.dart';
-import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:my_budget/ui/widgets/legend_widget.dart';
 import 'package:my_budget/utils/util_methods.dart';
 
@@ -64,41 +63,58 @@ class AppGraphsManagerService extends GraphsManagerService {
       return [];
     }
 
-    bool previousIsIncome = trxs[0].isIncome;
-    // = trxs[0].date.subtract(Duration(days: 1));
+    List<TimeSeriesSales> datas = [];
 
-    List<TimeSeriesSales> datas = [
-      TimeSeriesSales(DateTime(month.year, month.month, 1), 0, previousIsIncome)
-    ];
+    List<DateTime> trxsDate = [DateTime(month.year, month.month, 0)];
+    List<double> trxsAmount = [0];
 
     double sumAmount = 0;
     double lastAmount = 0;
 
     for (int i = 0; i < trxs.length; i++) {
-      trxs[i].isIncome
-          ? sumAmount += trxs[i].amount
-          : sumAmount -= trxs[i].amount;
-      //  print(sumAmount);
-
-      previousIsIncome = sumAmount >= lastAmount ? false : true;
-
-      DateTime nextDate = ((i + 1) >= trxs.length)
-          ? trxs[i].date.add(Duration(days: 1))
-          : trxs[i + 1].date;
-
-      if ((trxs[i].date == nextDate)) {
-        continue;
+      if (trxs[i].date == trxsDate.last) {
+        trxs[i].isIncome
+            ? trxsAmount[trxsDate.length - 1] += trxs[i].amount
+            : trxsAmount[trxsDate.length - 1] -= trxs[i].amount;
       } else {
-        //  print("added");
-        datas.add(TimeSeriesSales(DateUtils.dateOnly(trxs[i].date),
-            sumAmount.toInt(), previousIsIncome));
-        lastAmount = sumAmount;
+        trxsDate.add(trxs[i].date);
+
+        trxs[i].isIncome
+            ? trxsAmount.add(sumAmount + trxs[i].amount)
+            : trxsAmount.add(sumAmount - trxs[i].amount);
+
+        trxs[i].isIncome
+            ? sumAmount += trxs[i].amount
+            : sumAmount -= trxs[i].amount;
       }
     }
 
-    //  datas.forEach((element) {
-    //    print(element.sales.toString() + " " + element.isIncome.toString());
-    //  });
+    bool previousIsIncome = trxsAmount[1] >= 0;
+
+    datas.add(TimeSeriesSales(
+        DateTime(month.year, month.month, 0), 0, previousIsIncome));
+
+    int i = 1;
+
+    while (i + 1 < trxsDate.length) {
+      previousIsIncome = trxsAmount[i + 1] >= 0 ? true : false;
+
+      //  print(previousIsIncome);
+
+      datas.add(TimeSeriesSales(
+          DateTime(month.year, month.month, trxsDate[i].day),
+          trxsAmount[i].toInt(),
+          previousIsIncome));
+
+      i++;
+    }
+
+    datas.add(TimeSeriesSales(
+        DateTime(month.year, month.month, trxsDate[i].day),
+        trxsAmount[i].toInt(),
+        previousIsIncome));
+
+    // print("last: $lastAmount");
 
     return datas;
   }
@@ -187,6 +203,7 @@ class AppGraphsManagerService extends GraphsManagerService {
           .where((element) => element.isIncome == false)
           .toList()
           .fold(0, (previousValue, element) => previousValue + element.amount);
+
       print("expense: $expense");
 
       first.add(OrdinalSales(getFormatedyyyyMMMDate(date), income.toInt()));
