@@ -97,9 +97,9 @@ class AppGraphsManagerService extends GraphsManagerService {
     int i = 1;
 
     while (i + 1 < trxsDate.length) {
-      previousIsIncome = trxsAmount[i + 1] >= 0 ? true : false;
+      previousIsIncome = trxsAmount[i + 1] >= trxsAmount[i] ? true : false;
 
-      //  print(previousIsIncome);
+      print(previousIsIncome);
 
       datas.add(TimeSeriesSales(
           DateTime(month.year, month.month, trxsDate[i].day),
@@ -109,12 +109,14 @@ class AppGraphsManagerService extends GraphsManagerService {
       i++;
     }
 
+    //previousIsIncome = trxsAmount[i + 1] >= 0 ? true : false;
+
     datas.add(TimeSeriesSales(
         DateTime(month.year, month.month, trxsDate[i].day),
         trxsAmount[i].toInt(),
         previousIsIncome));
 
-    // print("last: $lastAmount");
+    // print("last: $lastAmount");a
 
     return datas;
   }
@@ -204,7 +206,7 @@ class AppGraphsManagerService extends GraphsManagerService {
           .toList()
           .fold(0, (previousValue, element) => previousValue + element.amount);
 
-      print("expense: $expense");
+      // print("expense: $expense month: $month i: $i");
 
       first.add(OrdinalSales(getFormatedyyyyMMMDate(date), income.toInt()));
       second
