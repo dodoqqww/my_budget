@@ -448,9 +448,9 @@ class AddTrxScreen extends StatelessWidget {
     final expenseWidgetProvider = context.watch<ExpenseWidgetProvider>();
     final mainScreenProvider = context.watch<MainScreenProvider>();
 
-    List<Wallet> walletList = walletSettingsProvider.getAllWallets;
+    List<Wallet> walletList = walletSettingsProvider.getAllWallets();
     List<TrxCategory> categoryList =
-        addEditCategoryScreenProvider.getAllCategorys;
+        addEditCategoryScreenProvider.getAllCategorys();
 
     DateTime time = mainScreenProvider.selectedDate;
 
@@ -739,9 +739,9 @@ class EditTrxScreen extends StatelessWidget {
     TrxCategory trxCategory =
         addEditCategoryScreenProvider.getTrxCategoryById(trx.categoryId);
 
-    List<Wallet> walletList = walletSettingsProvider.getAllWallets;
+    List<Wallet> walletList = walletSettingsProvider.getAllWallets();
     List<TrxCategory> categoryList =
-        addEditCategoryScreenProvider.getAllCategorys;
+        addEditCategoryScreenProvider.getAllCategorys();
 
     amountCtrl.text = trx.amount.toString();
     descCtrl.text = trx.desc;

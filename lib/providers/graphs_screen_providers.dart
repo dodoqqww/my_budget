@@ -2,47 +2,35 @@ import 'package:flutter/material.dart';
 import 'package:my_budget/services/database_manager_service.dart';
 import 'package:my_budget/services/graphs_manager_service.dart';
 import 'package:my_budget/services/service_locator.dart';
+import 'package:my_budget/ui/widgets/chart_widgets.dart';
+import 'package:my_budget/ui/widgets/legend_widget.dart';
 
 class GraphsScreenProvider with ChangeNotifier {
-  DatabaseManagerService _storageService;
-
   GraphsManagerService _graphsManagerService;
 
   GraphsScreenProvider() {
-    _storageService = getIt<DatabaseManagerService>();
     _graphsManagerService = getIt<GraphsManagerService>();
 
     selectedDate = DateTime.now();
   }
+
   DateTime selectedDate;
 
+  List<MyLegendWidget> getLegendsDatasByDate() =>
+      _graphsManagerService.getLegendsDatasByDate(selectedDate);
+
+  List<TimeSeriesSales> getMonthChartDatasByDate() =>
+      _graphsManagerService.getMonthChartDatasByDate(selectedDate);
+
+  List<LinearSales> getPieChartDatasByDate() =>
+      _graphsManagerService.getPieChartDatasByDate(selectedDate);
+
+  List<List<OrdinalSales>> getPreviousMonthsDatasByDate() =>
+      _graphsManagerService.getPreviousMonthsDatasByDate(selectedDate);
+
   void changeSelectedDate(DateTime newDate) {
-    print("changeSelectedDate()");
+    print("changeSelectedDate() in GraphsScreenProvider");
     selectedDate = newDate;
     notifyListeners();
   }
-
-  // getPieChartDatas() {
-  //   print("getPieChartDatas()");
-  //   _graphsManagerService.getPieChartDatasByDate();
-  //   notifyListeners();
-  // }
-//
-  // getMonthChartDatas() {
-  //   print("getMonthChartDatas()");
-  //   _graphsManagerService.getMonthChartDatasByDate();
-  //   notifyListeners();
-  // }
-//
-  // getPreviousMonthsDatas() {
-  //   print("getPreviousMonthsDatas()");
-  //   _graphsManagerService.getPreviousMonthsDatasByDate();
-  //   notifyListeners();
-  // }
-//
-  // getLegendsDatas() {
-  //   print("getLegendsDatas()");
-  //   _graphsManagerService.getLegendsDatasByDate();
-  //   notifyListeners();
-  // }
 }

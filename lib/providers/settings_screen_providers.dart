@@ -6,7 +6,7 @@ import 'package:my_budget/models/wallet_type.dart';
 import 'package:my_budget/services/database_manager_service.dart';
 import 'package:my_budget/services/service_locator.dart';
 
-//ready v2
+//ready
 class AddEditCategoryScreenProvider with ChangeNotifier {
   DatabaseManagerService _storageService;
 
@@ -17,24 +17,27 @@ class AddEditCategoryScreenProvider with ChangeNotifier {
   Color selectedCategoryColor = Colors.red;
   TrxCategory selectedCategory;
 
-  List<TrxCategory> getAllCategorys =
-      getIt<DatabaseManagerService>().getAllTrxCategorys();
+  List<TrxCategory> getAllCategorys() => _storageService.getAllTrxCategorys();
+
   TrxCategory getTrxCategoryById(String id) =>
-      getIt<DatabaseManagerService>().getTrxCategoryById(id);
+      _storageService.getTrxCategoryById(id);
 
   void changeSelectedCategoryColor(Color color) {
+    print(
+        "changeSelectedCategoryColor() Color: ${selectedCategoryColor.value}");
     selectedCategoryColor = color;
     notifyListeners();
   }
 
   void changeSelectedCategory(TrxCategory category) {
+    print("changeSelectedCategory() Id: ${selectedCategory.id}");
     selectedCategoryColor = category.getColor();
     selectedCategory = category;
     notifyListeners();
   }
 
   void addCategory(TrxCategory category) {
-    print("add Category");
+    print("added: ${category.toString()}");
     _storageService.addTrxCategory(category);
     notifyListeners();
   }
@@ -42,7 +45,7 @@ class AddEditCategoryScreenProvider with ChangeNotifier {
   void updateCategory({
     @required String name,
   }) {
-    print("update Category");
+    print("updated Category Id: ${selectedCategory.id}");
     var category = selectedCategory;
     category.name = name;
     category.colorCode = selectedCategoryColor.value;
@@ -52,13 +55,13 @@ class AddEditCategoryScreenProvider with ChangeNotifier {
   }
 
   void deleteCategory() {
-    print("delete Category");
+    print("deleted Category Id: ${selectedCategory.id}");
     _storageService.deleteTrxCategory(selectedCategory);
     notifyListeners();
   }
 }
 
-//ready v2
+//ready
 class WalletSettingsProvider with ChangeNotifier {
   DatabaseManagerService _storageService;
 
@@ -66,13 +69,12 @@ class WalletSettingsProvider with ChangeNotifier {
     _storageService = getIt<DatabaseManagerService>();
   }
 
-  List<Wallet> getAllWallets = getIt<DatabaseManagerService>().getAllWallets();
-  Wallet getWalletById(String id) =>
-      getIt<DatabaseManagerService>().getWalletById(id);
+  List<Wallet> getAllWallets() => _storageService.getAllWallets();
 
-  addWallet(Wallet wallet) {
-    print("add wallet");
-    print(wallet.toString());
+  Wallet getWalletById(String id) => _storageService.getWalletById(id);
+
+  void addWallet(Wallet wallet) {
+    print("added: ${wallet.toString()}");
     _storageService.addWallet(wallet);
     notifyListeners();
   }
@@ -82,7 +84,7 @@ class WalletSettingsProvider with ChangeNotifier {
       @required double amount,
       @required WalletType type,
       @required List<String> transactions}) {
-    print("update wallet");
+    print("updated Wallet Id: ${wallet.id}");
     wallet.amount = amount;
     wallet.name = name;
     wallet.type = type;
@@ -91,14 +93,14 @@ class WalletSettingsProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void deleteWallet(Wallet wallet) async {
-    print("delete wallet");
-    await _storageService.deleteWallet(wallet);
+  void deleteWallet(Wallet wallet) {
+    _storageService.deleteWallet(wallet);
+    print("deleted Wallet Id: ${wallet.id}");
     notifyListeners();
   }
 }
 
-//ready v2
+//ready
 class ReminderSettingsProvider with ChangeNotifier {
   DatabaseManagerService _storageService;
 
@@ -106,23 +108,22 @@ class ReminderSettingsProvider with ChangeNotifier {
     _storageService = _storageService = getIt<DatabaseManagerService>();
   }
 
-  List<Reminder> getAllReminders =
-      getIt<DatabaseManagerService>().getAllReminders();
+  List<Reminder> getAllReminders() => _storageService.getAllReminders();
 
   void addReminder(Reminder reminder) {
-    print("add Reminder");
+    print("added: ${reminder.toString()}");
     _storageService.addReminder();
     notifyListeners();
   }
 
   void updateReminder(Reminder reminder) {
-    print("update Reminder");
+    print("updated Reminder Id: ${reminder.id}");
     _storageService.updateReminder();
     notifyListeners();
   }
 
   void deleteReminder(Reminder reminder) {
-    print("delete Reminder");
+    print("deleted Reminder Id: ${reminder.id}");
     _storageService.deleteReminder();
     notifyListeners();
   }

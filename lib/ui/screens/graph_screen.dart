@@ -2,10 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:month_picker_dialog/month_picker_dialog.dart';
 import 'package:my_budget/providers/graphs_screen_providers.dart';
-import 'package:my_budget/services/graphs_manager_service.dart';
-import 'package:my_budget/services/service_locator.dart';
 import 'package:my_budget/ui/widgets/chart_widgets.dart';
-import 'package:my_budget/ui/widgets/legend_widget.dart';
 import 'package:my_budget/utils/util_methods.dart';
 import './/ui/common/style.dart';
 import 'package:provider/provider.dart';
@@ -14,8 +11,6 @@ class GraphScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     print("GraphScreen build()");
-    final GraphsManagerService graphsManagerService =
-        getIt<GraphsManagerService>();
     final graphsScreenProvider = context.watch<GraphsScreenProvider>();
     return Scaffold(
       body: Container(
@@ -26,19 +21,11 @@ class GraphScreen extends StatelessWidget {
           //mainAxisSpacing: 1,
           //mainAxisSpacing: 4,
           children: <Widget>[
-            LastFourMonthChartWidget(
-                graphsManagerService: graphsManagerService,
-                month: graphsScreenProvider.selectedDate),
-            PieChart(
-                graphsManagerService: graphsManagerService,
-                month: graphsScreenProvider.selectedDate),
+            LastFourMonthChartWidget(provider: graphsScreenProvider),
+            PieChart(provider: graphsScreenProvider),
             MonthSelectorWidget(),
-            LegendWidget(
-                graphsManagerService: graphsManagerService,
-                month: graphsScreenProvider.selectedDate),
-            MonthChartWidget(
-                graphsManagerService: graphsManagerService,
-                month: graphsScreenProvider.selectedDate),
+            LegendWidget(provider: graphsScreenProvider),
+            MonthChartWidget(provider: graphsScreenProvider),
           ],
           staggeredTiles: [
             StaggeredTile.extent(4, 235.0),
@@ -54,14 +41,13 @@ class GraphScreen extends StatelessWidget {
 }
 
 class LegendWidget extends StatelessWidget {
-  final GraphsManagerService graphsManagerService;
-  final DateTime month;
-  const LegendWidget(
-      {@required this.graphsManagerService, @required this.month});
+  final GraphsScreenProvider provider;
+  const LegendWidget({@required this.provider});
 
   @override
   Widget build(BuildContext context) {
-    var list = graphsManagerService.getLegendsDatasByDate(month);
+    print("LegendWidget build()");
+    var list = provider.getLegendsDatasByDate();
     return Padding(
       padding: const EdgeInsets.only(right: 10),
       child: getAppCardStyle(
@@ -72,7 +58,7 @@ class LegendWidget extends StatelessWidget {
               : ListView(
                   shrinkWrap: true,
                   physics: ClampingScrollPhysics(),
-                  children: graphsManagerService.getLegendsDatasByDate(month),
+                  children: list,
                 ),
         ),
       ),
@@ -81,17 +67,16 @@ class LegendWidget extends StatelessWidget {
 }
 
 class MonthChartWidget extends StatelessWidget {
-  final GraphsManagerService graphsManagerService;
-  final DateTime month;
+  final GraphsScreenProvider provider;
 
   MonthChartWidget({
-    @required this.graphsManagerService,
-    @required this.month,
+    @required this.provider,
   });
 
   @override
   Widget build(BuildContext context) {
-    var list = graphsManagerService.getMonthChartDatasByDate(month);
+    print("MonthChartWidget build()");
+    var list = provider.getMonthChartDatasByDate();
     return Padding(
         padding: const EdgeInsets.only(left: 10, right: 10),
         child: getAppCardStyle(
@@ -99,8 +84,7 @@ class MonthChartWidget extends StatelessWidget {
                 padding: EdgeInsets.all(5),
                 child: list.isEmpty
                     ? Center(child: Text("No Data"))
-                    : MonthLineChart(graphsManagerService
-                        .getMonthChartDatasByDate(month)))));
+                    : MonthLineChart(list))));
   }
 }
 
@@ -112,6 +96,7 @@ class MonthSelectorWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final graphsScreenProvider = context.read<GraphsScreenProvider>();
+    DateTime selectedDate = graphsScreenProvider.selectedDate;
     return Padding(
       padding: const EdgeInsets.only(right: 10),
       child: getAppCardStyle(
@@ -120,7 +105,7 @@ class MonthSelectorWidget extends StatelessWidget {
           padding: const EdgeInsets.only(left: 20, right: 15),
           child: TextButton(
             child: Text(
-              getFormatedyyyyMMMDate(graphsScreenProvider.selectedDate),
+              getFormatedyyyyMMMDate(selectedDate),
               style: Theme.of(context).textTheme.headline3.copyWith(
                   decoration: TextDecoration.underline, color: Colors.blue),
             ),
@@ -130,10 +115,10 @@ class MonthSelectorWidget extends StatelessWidget {
                 context: context,
                 // firstDate: DateTime(DateTime.now().year - 1, 5),
                 // lastDate: DateTime(DateTime.now().year + 1, 9),
-                initialDate: graphsScreenProvider.selectedDate,
+                initialDate: selectedDate,
                 //locale: Locale("es"),
               ).then((date) {
-                if (date != null && date != graphsScreenProvider.selectedDate) {
+                if (date != null && date != selectedDate) {
                   graphsScreenProvider.changeSelectedDate(date);
                 }
                 // if (date != null) {
@@ -155,45 +140,40 @@ class MonthSelectorWidget extends StatelessWidget {
 }
 
 class PieChart extends StatelessWidget {
-  final GraphsManagerService graphsManagerService;
-  final DateTime month;
-  const PieChart({@required this.graphsManagerService, @required this.month});
+  final GraphsScreenProvider provider;
+  const PieChart({@required this.provider});
 
   @override
   Widget build(BuildContext context) {
-    var list = graphsManagerService.getPieChartDatasByDate(month);
+    print("PieChart build()");
+    var list = provider.getPieChartDatasByDate();
 
     return Padding(
       padding: const EdgeInsets.only(left: 10),
       child: getAppCardStyle(
-        child: Center(
-            child: list.isEmpty
-                ? Text("No Data")
-                : PieCHart(graphsManagerService.getPieChartDatasByDate(month))),
+        child: Center(child: list.isEmpty ? Text("No Data") : PieCHart(list)),
       ),
     );
   }
 }
 
 class LastFourMonthChartWidget extends StatelessWidget {
-  final GraphsManagerService graphsManagerService;
-  final DateTime month;
+  final GraphsScreenProvider provider;
 
   LastFourMonthChartWidget({
     Key key,
-    @required this.graphsManagerService,
-    @required this.month,
+    @required this.provider,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    print("LastFourMonthChartWidget build()");
     return Padding(
       padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
       child: getAppCardStyle(
         child: Padding(
             padding: EdgeInsets.all(5),
-            child: ComboChart(
-                graphsManagerService.getPreviousMonthsDatasByDate(month))),
+            child: ComboChart(provider.getPreviousMonthsDatasByDate())),
       ),
     );
   }

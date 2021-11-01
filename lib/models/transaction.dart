@@ -3,8 +3,6 @@ import 'package:hive/hive.dart';
 import 'package:my_budget/hive_helper/hive_types.dart';
 import 'package:my_budget/hive_helper/hive_adapters.dart';
 import 'package:my_budget/hive_helper/fields/transaction_fields.dart';
-import 'package:my_budget/models/transaction_category.dart';
-import 'package:my_budget/models/wallet.dart';
 import 'package:uuid/uuid.dart';
 
 part 'transaction.g.dart';

@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-import 'package:my_budget/models/transaction.dart';
 import 'package:my_budget/models/transaction_category.dart';
 import 'package:my_budget/services/database_manager_service.dart';
 import 'package:my_budget/services/service_locator.dart';
@@ -69,7 +67,6 @@ class AppGraphsManagerService extends GraphsManagerService {
     List<double> trxsAmount = [0];
 
     double sumAmount = 0;
-    double lastAmount = 0;
 
     for (int i = 0; i < trxs.length; i++) {
       if (trxs[i].date == trxsDate.last) {
@@ -99,7 +96,7 @@ class AppGraphsManagerService extends GraphsManagerService {
     while (i + 1 < trxsDate.length) {
       previousIsIncome = trxsAmount[i + 1] >= trxsAmount[i] ? true : false;
 
-      print(previousIsIncome);
+      //print(previousIsIncome);
 
       datas.add(TimeSeriesSales(
           DateTime(month.year, month.month, trxsDate[i].day),
@@ -221,26 +218,5 @@ class AppGraphsManagerService extends GraphsManagerService {
     data.add(third);
 
     return data;
-
-    //return [
-    //  [
-    //    new OrdinalSales('2014.Jan', 2000),
-    //    new OrdinalSales('2015.Jan', 250000),
-    //    new OrdinalSales('2016.Jan', 100000),
-    //    //  new OrdinalSales('2017.Jan', 175000),
-    //  ],
-    //  [
-    //    new OrdinalSales('2014.Jan', -150000),
-    //    new OrdinalSales('2015.Jan', -100000),
-    //    new OrdinalSales('2016.Jan', -100000),
-    //    // new OrdinalSales('2017.Jan', -81500),
-    //  ],
-    //  [
-    //    new OrdinalSales('2014.Jan', 10000),
-    //    new OrdinalSales('2015.Jan', 150000),
-    //    new OrdinalSales('2016.Jan', 200000),
-    //    //  new OrdinalSales('2017.Jan', 1500000),
-    //  ]
-    //];
   }
 }

@@ -4,8 +4,6 @@ import 'package:flutter_picker/flutter_picker.dart';
 import 'package:my_budget/models/transaction_category.dart';
 import 'package:my_budget/models/wallet_type.dart';
 import 'package:my_budget/providers/settings_screen_providers.dart';
-import 'package:my_budget/services/database_manager_service.dart';
-import 'package:my_budget/services/service_locator.dart';
 import 'package:my_budget/ui/widgets/add_category_dialog.dart';
 import 'package:my_budget/ui/widgets/fitted_text.dart';
 import 'package:my_budget/ui/widgets/legend_widget.dart';
@@ -41,9 +39,9 @@ class WalletsSettings extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     print("WalletSettings build()");
-    //final walletSettingsProvider = context.watch<WalletSettingsProvider>().getAllWallets;
-    List<Wallet> walletList =
-        context.read<WalletSettingsProvider>().getAllWallets;
+    final walletSettingsProvider = context.watch<WalletSettingsProvider>();
+    List<Wallet> walletList = walletSettingsProvider.getAllWallets();
+
     return getAppCardStyle(
       child: ListView(
         physics: NeverScrollableScrollPhysics(),
@@ -163,7 +161,7 @@ class RemindersSettings extends StatelessWidget {
   Widget build(BuildContext context) {
     print("RemindersSettings build()");
     final reminderSettingsProvider = context.watch<ReminderSettingsProvider>();
-    List<Reminder> reminderList = reminderSettingsProvider.getAllReminders;
+    List<Reminder> reminderList = reminderSettingsProvider.getAllReminders();
     return getAppCardStyle(
       child: ListView(
         physics: NeverScrollableScrollPhysics(),
@@ -476,7 +474,7 @@ class AddEditWalletScreen extends StatelessWidget {
                                   child: Icon(Icons.delete),
                                   backgroundColor: Colors.red,
                                   onPressed: () {
-                                    print(wallet.toString());
+                                    //print(wallet.toString());
                                     walletSettingsProvider.deleteWallet(wallet);
                                     Navigator.pop(context);
                                   }),
@@ -636,9 +634,8 @@ class AddEditCategoryScreen extends StatelessWidget {
     print("AddEditCategoryScreen build()");
     final addEditCategoryScreenProvider =
         context.watch<AddEditCategoryScreenProvider>();
-
     List<TrxCategory> categoryList =
-        addEditCategoryScreenProvider.getAllCategorys;
+        addEditCategoryScreenProvider.getAllCategorys();
     return Material(
         type: MaterialType.transparency,
         // make sure that the overlay content is not cut off
