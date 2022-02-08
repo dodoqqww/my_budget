@@ -111,7 +111,6 @@ class HiveDatabaseManagerService extends DatabaseManagerService {
   void updateTrxCategory(TrxCategory category) {
     print("updateTrxCategory() from service");
     var box = Hive.box<TrxCategory>('trxCategoryBox');
-    //box.delete(category.id);
     box.put(
       category.id,
       category,
@@ -123,7 +122,6 @@ class HiveDatabaseManagerService extends DatabaseManagerService {
   Future<void> updateWallet(Wallet wallet) async {
     print("updateWallet() from service");
     var box = Hive.box<Wallet>('walletsBox');
-    // await box.delete(wallet.id);
     box.put(
       wallet.id,
       wallet,
@@ -212,10 +210,9 @@ class HiveDatabaseManagerService extends DatabaseManagerService {
   //ready
   @override
   void copyTrx(Transaction trx, DateTime selectedDate) {
-    Transaction newTrx = Transaction.copy(trx: trx, date: selectedDate);
     print("copyTrx() from service");
+    Transaction newTrx = Transaction.copy(trx: trx, date: selectedDate);
     addTrx(newTrx);
-    // TODO: implement updateTrx
   }
 
   //ready
@@ -234,8 +231,6 @@ class HiveDatabaseManagerService extends DatabaseManagerService {
   Wallet getWalletById(String id) {
     print("getWalletById() from service");
     var box = Hive.box<Wallet>('walletsBox');
-    print("id: " + id);
-    print(box.values);
     return box.values.firstWhere((element) => element.id == id, orElse: () {
       return Wallet.fromId(id: id);
     });
@@ -246,8 +241,6 @@ class HiveDatabaseManagerService extends DatabaseManagerService {
   TrxCategory getTrxCategoryById(String id) {
     print("getTrxCategoryById() from service");
     var box = Hive.box<TrxCategory>('trxCategoryBox');
-    print("id: " + id);
-    print(box.values);
     return box.values.firstWhere((element) => element.id == id, orElse: () {
       return TrxCategory.fromId(id: id);
     });

@@ -59,10 +59,8 @@ class MainScreen extends StatelessWidget {
                                 if (date != null &&
                                     date != mainScreenProvider.selectedDate) {
                                   mainScreenProvider.changeDate(date);
-                                  incomeWidgetProvider.refreshIncome(
-                                      month: date);
-                                  expenseWidgetProvider.refreshExpense(
-                                      month: date);
+                                  incomeWidgetProvider.refreshIncomeWidget();
+                                  expenseWidgetProvider.refreshExpenseWidget();
                                 }
                               });
                             },
@@ -130,7 +128,7 @@ class IncomeWidget extends StatelessWidget {
                             .headline1
                             .copyWith(color: Colors.green),
                         text:
-                            "+ ${getFormattedCurrency(context: context, value: incomeWidgetProvider.sumIncome)}",
+                            "+ ${getFormattedCurrency(context: context, value: incomeWidgetProvider.sumIncome())}",
                         fitSize: 250,
                       )
                     ],
@@ -176,7 +174,7 @@ class IncomeWidget extends StatelessWidget {
                 ),
 
                 expanded: TrxDetailsWidget(
-                  list: incomeWidgetProvider.allIncomeTrxs,
+                  list: incomeWidgetProvider.allIncomeTrxs(),
                   isIncome: true,
                 ),
               ),
@@ -219,7 +217,7 @@ class ExpenseWidget extends StatelessWidget {
                             .headline1
                             .copyWith(color: Colors.red),
                         text:
-                            "- ${getFormattedCurrency(context: context, value: expenseWidgetProvider.sumExpense)}",
+                            "- ${getFormattedCurrency(context: context, value: expenseWidgetProvider.sumExpense())}",
                         fitSize: 250,
                       )
                     ],
@@ -261,7 +259,7 @@ class ExpenseWidget extends StatelessWidget {
                 ),
 
                 expanded: TrxDetailsWidget(
-                  list: expenseWidgetProvider.allExpenseTrxs,
+                  list: expenseWidgetProvider.allExpenseTrxs(),
                   isIncome: false,
                 ),
               ),
@@ -298,7 +296,7 @@ class TrxDetailsWidget extends StatelessWidget {
               shrinkWrap: true,
               itemCount: list.length,
               itemBuilder: (BuildContext context, int index) {
-                print("$isIncome " + list[index].toString());
+                //print("$isIncome " + list[index].toString());
                 return TrxListItem(
                     trx: list[index],
                     amountColor: isIncome ? Colors.green : Colors.red);
@@ -484,7 +482,7 @@ class AddTrxScreen extends StatelessWidget {
                           initialSelectedDate: time,
                           onSelectedDateChange: (DateTime dateTime) {
                             time = dateTime;
-                            print(dateTime);
+                            // print(dateTime);
                           },
                         ),
                       ),
@@ -673,12 +671,10 @@ class AddTrxScreen extends StatelessWidget {
                                       date: time);
 
                                   isIncome
-                                      ? incomeWidgetProvider.refreshIncome(
-                                          month:
-                                              mainScreenProvider.selectedDate)
-                                      : expenseWidgetProvider.refreshExpense(
-                                          month:
-                                              mainScreenProvider.selectedDate);
+                                      ? incomeWidgetProvider
+                                          .refreshIncomeWidget()
+                                      : expenseWidgetProvider
+                                          .refreshExpenseWidget();
                                 }),
                           ],
                         ),
@@ -776,7 +772,7 @@ class EditTrxScreen extends StatelessWidget {
                               daysInMonth(time.year, time.month)),
                           initialSelectedDate: time,
                           onSelectedDateChange: (DateTime dateTime) {
-                            print(dateTime);
+                            // print(dateTime);
                             time = dateTime;
                           },
                         ),
@@ -964,13 +960,11 @@ class EditTrxScreen extends StatelessWidget {
                                         .deleteTrx(trx);
 
                                     isIncome
-                                        ? incomeWidgetProvider.refreshIncome(
-                                            month:
-                                                mainScreenProvider.selectedDate)
-                                        : expenseWidgetProvider.refreshExpense(
-                                            month: mainScreenProvider
-                                                .selectedDate);
-                                    print("itt:  + $isIncome");
+                                        ? incomeWidgetProvider
+                                            .refreshIncomeWidget()
+                                        : expenseWidgetProvider
+                                            .refreshExpenseWidget();
+                                    //  print("itt:  + $isIncome");
                                     Navigator.pop(context);
                                   }),
                               SizedBox(
@@ -1044,17 +1038,15 @@ class EditTrxScreen extends StatelessWidget {
                                                       .secondaryHeaderColor,
                                             ));
 
-                                    print(selectedDate.toString());
+                                    //  print(selectedDate.toString());
 
                                     await addEditTrxScreenProvider.copyTrx(
                                         trx, selectedDate);
                                     isIncome
-                                        ? incomeWidgetProvider.refreshIncome(
-                                            month:
-                                                mainScreenProvider.selectedDate)
-                                        : expenseWidgetProvider.refreshExpense(
-                                            month: mainScreenProvider
-                                                .selectedDate);
+                                        ? incomeWidgetProvider
+                                            .refreshIncomeWidget()
+                                        : expenseWidgetProvider
+                                            .refreshExpenseWidget();
                                     Navigator.pop(context);
                                   }),
                               SizedBox(
@@ -1072,12 +1064,10 @@ class EditTrxScreen extends StatelessWidget {
                                     Navigator.pop(context);
 
                                     isIncome
-                                        ? incomeWidgetProvider.refreshIncome(
-                                            month:
-                                                mainScreenProvider.selectedDate)
-                                        : expenseWidgetProvider.refreshExpense(
-                                            month: mainScreenProvider
-                                                .selectedDate);
+                                        ? incomeWidgetProvider
+                                            .refreshIncomeWidget()
+                                        : expenseWidgetProvider
+                                            .refreshExpenseWidget();
                                   }),
                             ])
                           ],

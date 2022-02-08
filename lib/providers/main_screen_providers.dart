@@ -6,58 +6,56 @@ import 'package:my_budget/services/database_manager_service.dart';
 import 'package:my_budget/services/service_locator.dart';
 import 'package:my_budget/services/transaction_manager_service.dart';
 
+//ready
 class IncomeWidgetProvider with ChangeNotifier {
   TransactionManagerService _trxManagerService;
   DatabaseManagerService _storageService;
+  DateTime _selectedDate;
+
+  set selectedDate(DateTime date) => _selectedDate = date;
 
   IncomeWidgetProvider() {
     _trxManagerService = getIt<TransactionManagerService>();
     _storageService = getIt<DatabaseManagerService>();
-    allIncomeTrxs = _trxManagerService.getIncomeTrxs(
-        _storageService.getAllTransactionByMonth(DateTime.now()));
-    sumIncome = _trxManagerService.getSumTrxAmount(allIncomeTrxs);
   }
 
-  double sumIncome;
-  List<Transaction> allIncomeTrxs;
+  double sumIncome() => _trxManagerService.getSumTrxAmount(allIncomeTrxs());
 
-  refreshIncome({@required DateTime month}) {
-    print("getSumIncome()");
-    allIncomeTrxs = _trxManagerService
-        .getIncomeTrxs(_storageService.getAllTransactionByMonth(month));
-    sumIncome = _trxManagerService.getSumTrxAmount(allIncomeTrxs);
-    print(month);
+  List<Transaction> allIncomeTrxs() => _trxManagerService
+      .getIncomeTrxs(_storageService.getAllTransactionByMonth(_selectedDate));
+
+  void refreshIncomeWidget() {
+    print("refreshIncomeWidget()");
     notifyListeners();
   }
 }
 
+//ready
 class ExpenseWidgetProvider with ChangeNotifier {
   TransactionManagerService _trxManagerService;
   DatabaseManagerService _storageService;
 
+  DateTime _selectedDate;
+
+  set selectedDate(DateTime date) => _selectedDate = date;
+
   ExpenseWidgetProvider() {
     _trxManagerService = getIt<TransactionManagerService>();
     _storageService = getIt<DatabaseManagerService>();
-    allExpenseTrxs = _trxManagerService.getExpenseTrxs(
-        _storageService.getAllTransactionByMonth(DateTime.now()));
-    sumExpense = _trxManagerService.getSumTrxAmount(allExpenseTrxs);
   }
 
-  // double sumIncome;
-  double sumExpense;
-  // List<Transaction> allIncomeTrxs;
-  List<Transaction> allExpenseTrxs;
+  double sumExpense() => _trxManagerService.getSumTrxAmount(allExpenseTrxs());
 
-  refreshExpense({@required DateTime month}) {
-    print("getSumExpense()");
-    allExpenseTrxs = _trxManagerService
-        .getExpenseTrxs(_storageService.getAllTransactionByMonth(month));
-    sumExpense = _trxManagerService.getSumTrxAmount(allExpenseTrxs);
-    print(month);
+  List<Transaction> allExpenseTrxs() => _trxManagerService
+      .getExpenseTrxs(_storageService.getAllTransactionByMonth(_selectedDate));
+
+  void refreshExpenseWidget() {
+    print("refreshExpenseWidget()");
     notifyListeners();
   }
 }
 
+//ready
 class MainScreenProvider with ChangeNotifier {
   DateTime selectedDate;
 
@@ -65,12 +63,13 @@ class MainScreenProvider with ChangeNotifier {
     selectedDate = DateTime.now();
   }
 
-  changeDate(DateTime newDate) {
+  void changeDate(DateTime newDate) {
     selectedDate = newDate;
     notifyListeners();
   }
 }
 
+//ready
 class AddEditTrxScreenProvider with ChangeNotifier {
   DatabaseManagerService _storageService;
 
@@ -106,14 +105,13 @@ class AddEditTrxScreenProvider with ChangeNotifier {
   }
 
   //ready
-  addTrx(
+  void addTrx(
       {@required double amount,
       @required String desc,
       @required DateTime date,
-      @required bool isIncome}) async {
-    print("add Trx");
-    print(date);
-    await _storageService.addTrx(Transaction(
+      @required bool isIncome}) {
+    print("added Trasaction Amount: $amount IsIncome: $isIncome Date: $date");
+    _storageService.addTrx(Transaction(
         categoryId: selectedAddCategory.id,
         isIncome: isIncome,
         date: date,
@@ -124,11 +122,11 @@ class AddEditTrxScreenProvider with ChangeNotifier {
   }
 
   //ready
-  updateTrx(Transaction trx,
+  void updateTrx(Transaction trx,
       {@required String desc,
       @required double amount,
       @required DateTime time}) {
-    print("update Trx");
+    print("updated Trasaction Id: ${trx.id}");
     double oldAmount = trx.amount;
     trx.amount = amount;
     trx.desc = desc;
@@ -140,15 +138,15 @@ class AddEditTrxScreenProvider with ChangeNotifier {
   }
 
   //ready
-  copyTrx(Transaction trx, DateTime selectedDate) {
-    print("copy Trx");
+  void copyTrx(Transaction trx, DateTime selectedDate) {
+    print("copied Trasaction Id: ${trx.id}");
     _storageService.copyTrx(trx, selectedDate);
     notifyListeners();
   }
 
   //ready
-  deleteTrx(Transaction trx) {
-    print("delete Trx");
+  void deleteTrx(Transaction trx) {
+    print("deleted Trasaction Id: ${trx.id}");
     _storageService.deleteTrx(trx);
     notifyListeners();
   }
