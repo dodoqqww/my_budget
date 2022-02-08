@@ -84,17 +84,22 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<GraphsScreenProvider>(
             child: GraphScreen(),
             create: (BuildContext context) => GraphsScreenProvider()),
-        // CartModel is implemented as a ChangeNotifier, which calls for the use
-        // of ChangeNotifierProvider. Moreover, CartModel depends
-        // on CatalogModel, so a ProxyProvider is needed.
 
-        // ChangeNotifierProxyProvider<CatalogModel, CartModel>(
-        //   create: (context) => CartModel(),
-        //   update: (context, catalog, cart) {
-        //     cart.catalog = catalog;
-        //     return cart;
-        //   },
-        // ),
+        ChangeNotifierProxyProvider<MainScreenProvider, IncomeWidgetProvider>(
+          create: (context) => IncomeWidgetProvider(),
+          update: (context, mainScreenProvider, incomeWidgetProvider) {
+            incomeWidgetProvider.selectedDate = mainScreenProvider.selectedDate;
+            return incomeWidgetProvider;
+          },
+        ),
+
+        ChangeNotifierProxyProvider<MainScreenProvider, ExpenseWidgetProvider>(
+          create: (context) => ExpenseWidgetProvider(),
+          update: (context, mainScreenProvider, incomeWidgetProvider) {
+            incomeWidgetProvider.selectedDate = mainScreenProvider.selectedDate;
+            return incomeWidgetProvider;
+          },
+        ),
       ],
       child: MaterialApp(
         // scale
